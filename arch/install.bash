@@ -1,5 +1,7 @@
 #!/bin/bash
 
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.bash -o arch-install2.bash
+
 pwd=$1
 device=$2
 #uefiSpace=$2
