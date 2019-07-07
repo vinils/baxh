@@ -1,8 +1,10 @@
 # baxh
 batchs and bash
 
-## arch-install
--execute<br>
-eval $(curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install.bash)<br>
--download<br>
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install.bash -o arch-install2.bash<br>
+to execute: eval $(curl URL_HERE)<br>
+to download: curl URL_HERE -o FILE_NAME<br>
+
+- arch-install<br>
+https://raw.githubusercontent.com/vinils/baxh/master/arch/install.bash
+- firstboot<br>
+https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.bash
