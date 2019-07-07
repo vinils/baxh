@@ -72,7 +72,7 @@ sudo sed --in-place 's/^#\s*\(%$wheelGrp\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/'
 #################################################################
 #Install dev tools for AUR
 
-#pacman -S --noconfirm --needed base-devel
+#pacman -S --noconfirm base-devel
 #pacman -S --noconfirm wget
 #################################################################
 
