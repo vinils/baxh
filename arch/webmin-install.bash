@@ -7,7 +7,7 @@ cd ~
 mkdir builds
 cd builds
 
-sudo pacman -S --needed base-devel
+sudo pacman -S --noconfirm --needed base-devel
 
 git clone https://aur.archlinux.org/perl-authen-pam.git
 cd perl-authen-pam
