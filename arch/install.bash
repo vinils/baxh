@@ -1,6 +1,6 @@
 #!/bin/bash
-
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.bash -o arch-install2.bash
+install2="arch-install2.bash"
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.bash -o $install2
 
 pwd=$1
 device=$2
@@ -123,9 +123,9 @@ pacstrap /"$mntDir" base
 genfstab -U /"$mntDir" >> /"$mntDir"/etc/fstab
 #check
 #cat /mnt/etc/fstab
-cp arch-install2.bash /mnt/root
-arch-chroot /"$mntDir" /root/arch-install2.bash $bootDir $pwd $hostName
-rm /mnt/root/arch-install2.bash
+cp $install2 /mnt/root
+arch-chroot /"$mntDir" /root/$install2 $bootDir $pwd $hostName
+rm /mnt/root/$install2
 
 umount /dev/"$device""$uefiPartitionNumber"
 umount /dev/"$device""$linuxFSPartitionNumber"
