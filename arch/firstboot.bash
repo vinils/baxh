@@ -33,22 +33,13 @@ ln -s /usr/share/dhcpcd/hooks/10-wpa_supplicant /usr/lib/dhcpcd/dhcpcd-hooks/
 #pacman -S --noconfirm open-vm-tools open-vm-tools-dkms
 #dkms add open-vm-tools/9.4.0
 #cat /proc/version > /etc/arch-release
-#systemctl start vmtoolsd
-#systemctl enable vmtoolsd
+#systemctl --now enable vmtoolsd
 #vmware-toolbox-cmd timesync enable
 #################################################################
 
 #################################################################
 pacman -S --noconfirm ntp
-systemctl enable ntpd
-#################################################################
-
-#################################################################
-#pacman -S --noconfirm webmin
-#https://gitlab.com/mauriciobaeza/empresa-libre/wikis/Instalando-Webmin-en-la-M%C3%A1quina-Virtual-Arch-Linux-de-Empresa-Libre
-#https://www.hiroom2.com/2017/10/21/archlinux-20171001-webmin-en/
-#systemctl start webmin
-#systemctl enable webmin
+systemctl --now enable ntpd
 #################################################################
 
 myusr="myuser"
@@ -72,29 +63,8 @@ sudo sed --in-place 's/^#\s*\(%$wheelGrp\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/'
 #################################################################
 #Install dev tools for AUR
 
-#pacman -S --noconfirm base-devel
-#pacman -S --noconfirm wget
+pacman -S --noconfirm base-devel
 #################################################################
 
-#################################################################
-#Install Yaourt
-
-#su $myusr
-#cd ~
-#mkdir builds && cd builds
-
-#wget https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz
-#tar -xvzf package-query.tar.gz
-#cd package-query
-#makepkg -s
-#sudo pacman -U package-query-*.xz
-
-#cd ~/builds
-#wget https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz
-#tar -xvzf yaourt.tar.gz
-#cd yaourt
-#makepkg -s
-#sudo pacman -U yaourt-*.xz
-#################################################################
 
 reboot
