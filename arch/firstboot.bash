@@ -1,5 +1,17 @@
 !/bin/bash
 
+pwd=$1
+
+if [[ -z "$pwd" ]]; then
+  printf "Password: "
+  read -r pwd
+fi
+
+if [[ -z "$pwd" ]]; then
+  echo "Password required!"
+  exit 1
+fi
+
 pacman -Syu
 
 #################################################################
