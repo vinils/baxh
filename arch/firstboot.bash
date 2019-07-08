@@ -72,7 +72,7 @@ echo "$myusr:$pwd" | chpasswd
 #passwd -Sa
 
 pacman -S --noconfirm sudo
-sudo sed --in-place 's/^#\s*\(%$wheelGrp\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
+echo "$myusr ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$myusr
 #check
 #visudo
 #################################################################
