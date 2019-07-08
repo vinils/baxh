@@ -86,6 +86,7 @@ p
 $uefiPartitionNumber
 
 $ttt1
+Y
 t
 ef
 n
