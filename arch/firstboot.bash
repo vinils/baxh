@@ -2,16 +2,16 @@
 
 pwd=$1
 
-if [ -z "$pwd" ]; then 
+if [[ -z "$pwd" ]]; then
   printf "Password: "
   read -r pwd
 fi
- 
-if [ -z "$pwd" ]; then 
+
+if [[ -z "$pwd" ]]; then
   echo "Password required!"
   exit 1
 fi
- 
+
 
 echo "[archlinuxfr]" >> /etc/pacman.conf
 echo "SigLevel = Never" >> /etc/pacman.conf
