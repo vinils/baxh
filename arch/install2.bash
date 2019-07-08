@@ -71,4 +71,10 @@ systemctl enable dhcpcd.service
 pacman -S --noconfirm openssh
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 systemctl enable sshd.socket
-© 2019 GitHub, Inc.
+
+
+firstBootFile="firstboot.bash"
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.bash -o $firstBootFile
+chmod 777 $firstBootFile
+./$firstBootFile
+rm $firstBootFile
