@@ -84,12 +84,15 @@ o
 n
 p
 $uefiPartitionNumber
+
 $ttt1
+Y
 t
 ef
 n
 p
 $swapPartitionNumber
+
 $ttt2
 t
 $swapPartitionNumber
@@ -97,6 +100,8 @@ $swapPartitionNumber
 n
 p
 $linuxFSPartitionNumber
+
+
 w
 EEOF
 #check
