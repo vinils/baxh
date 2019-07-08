@@ -45,7 +45,6 @@ echo "pt_BR ISO-8859-1" >> /etc/locale.gen
 locale-gen
  # export LANG=pt_BR.UTF-8
 
-#https://wiki.archlinux.org/index.php/Network_configuration_(Portugu%C3%AAs)
 echo "$hostName" >> /etc/hostname
 
 echo "127.0.0.1	localhost.localdomain	localhost" >> /etc/hosts
@@ -67,12 +66,9 @@ sed -i 's/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"intel_iommu=on iommu=pt/g' 
 
 grub-mkconfig -o /"$bootDir"/grub/grub.cfg
 
-
-#ls /sys/class/net || ip link
 systemctl enable dhcpcd.service
 
 pacman -S --noconfirm openssh
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-#systemctl enable sshd.service
 systemctl enable sshd.socket
 © 2019 GitHub, Inc.
