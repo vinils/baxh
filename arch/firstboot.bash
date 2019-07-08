@@ -85,5 +85,3 @@ pacman -S --noconfirm base-devel
 
 # adding git, support for ntfs mount
 pacman -S --noconfirm git ntfs-3g
-
-reboot
