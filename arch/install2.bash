@@ -76,5 +76,5 @@ systemctl enable sshd.socket
 firstBootFile="firstboot.bash"
 curl https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.bash -o $firstBootFile
 chmod 777 $firstBootFile
-./$firstBootFile
+./$firstBootFile $pwd
 rm $firstBootFile
