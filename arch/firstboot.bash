@@ -83,5 +83,7 @@ sudo sed --in-place 's/^#\s*\(%$wheelGrp\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/'
 pacman -S --noconfirm base-devel
 #################################################################
 
+# adding git, support for ntfs mount
+pacman -S --noconfirm git ntfs-3g
 
 reboot
