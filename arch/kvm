@@ -186,6 +186,7 @@ virsh net-define --file /etc/libvirt/bridge.xml
 virsh net-autostart kvm0
 virsh net-start kvm0
 virsh net-destroy default
+virsh net-undefine default
 sudo systemctl disable nftables
 sudo systemctl stop nftables
 pacman -S --noconfirm dnsmasq firewalld
@@ -203,7 +204,7 @@ sudo firewall-cmd --zone=public --permanent --add-service=https
 sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
 
 
-#mkdir /etc/libvirt/volume
+mkdir /etc/libvirt/volume
 #echo "<pool type=\"logical\">" >> /etc/libvirt/volume/isos.vol
 #echo "  <name>isoimages</name>" >> /etc/libvirt/volume/isos.vol
 #echo "  <source>" >> /etc/libvirt/volume/isos.vol
@@ -238,3 +239,9 @@ echo "</pool>" >> /etc/libvirt/volume/isos.vol
 
 mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
+
+#chmod +rx /var/lib/libvirt/images/win2k16.qcow2 
+#chown kvm:kvm /var/lib/libvirt/images/
+#chmod 777 /var/lib/libvirt/images/
+#chown kvm:kvm /var/lib/libvirt/images/win2k16.qcow2
+#chmod 777 /var/lib/libvirt/images/win2k16.qcow2
