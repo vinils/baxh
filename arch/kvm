@@ -240,6 +240,8 @@ echo "</pool>" >> /etc/libvirt/volume/isos.vol
 mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 
+chown kvm:kvm /var/lib/libvirt/images/
+
 #chmod +rx /var/lib/libvirt/images/win2k16.qcow2 
 #chown kvm:kvm /var/lib/libvirt/images/
 #chmod 777 /var/lib/libvirt/images/
