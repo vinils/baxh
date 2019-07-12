@@ -241,6 +241,7 @@ mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 
 chown kvm:kvm /var/lib/libvirt/images/
+#sudo chown kvm:kvm /var/lib/libvirt/images/ubuntu18.04-2.qcow2
 
 #chmod +rx /var/lib/libvirt/images/win2k16.qcow2 
 #chown kvm:kvm /var/lib/libvirt/images/
