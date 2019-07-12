@@ -3,9 +3,9 @@
 
 myusr="myuser"
 
-if [ $(whoami) != "root" ]; then
-  echo "Password required!"
-  exit 1
+if [ "$(id -u)" -ne 0 ]; then
+    echo 'This script must be run with root privileges' >&2
+    exit 1
 fi
 
 sudo -H -u $myusr bash -c "sudo pacman -S --noconfirm dmidecode ovmf qemu-headless qemu-headless-arch-extra libvirt bridge-utils openbsd-netcat virt-install"
