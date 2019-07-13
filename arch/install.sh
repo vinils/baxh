@@ -1,6 +1,6 @@
 #!/bin/bash
 install2="arch-install2.bash"
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.bash -o $install2
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.sh -o $install2
 chmod 777 $install2
 
 pwd=$1
