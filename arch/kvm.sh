@@ -8,8 +8,6 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-sudo -H -u $myusr bash -c "sudo pacman -S --noconfirm dmidecode ovmf qemu-headless qemu-headless-arch-extra libvirt bridge-utils ebtables openbsd-netcat virt-install"
-
 ###### VT-x
 sudo modprobe -r kvm_intel
 sudo modprobe kvm_intel nested=1
@@ -20,6 +18,7 @@ echo 'options kvm_intel nested=1' >> /etc/modprobe.d/kvm_intel.conf
 #echo "9pnet_virtio" >> /etc/modules-load.d/virtio.conf
 #echo "virtio_net" >> /etc/modules-load.d/virtio.conf
 #echo "virtio_pci" >> /etc/modules-load.d/virtio.conf
+sudo -H -u $myusr bash -c "sudo pacman -S --noconfirm dmidecode ovmf qemu-headless qemu-headless-arch-extra libvirt bridge-utils ebtables openbsd-netcat virt-install"
 
 #echo "dynamic_ownership = 0" >> /etc/libvirt/qemu.conf
 ##check
