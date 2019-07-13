@@ -257,3 +257,8 @@ sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 #chmod 777 /var/lib/libvirt/images/
 #chown kvm:kvm /var/lib/libvirt/images/win2k16.qcow2
 #chmod 777 /var/lib/libvirt/images/win2k16.qcow2
+
+#bug unknown
+sudo firewall-cmd --set-log-denied=all
+sudo firewall-cmd --set-log-denied=off
+sudo systemctl restart firewalld
