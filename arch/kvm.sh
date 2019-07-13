@@ -207,7 +207,8 @@ firewall-cmd --permanent --zone=public --add-interface=kvm0
 
 #other permanent services
 sudo firewall-cmd --zone=public --permanent --add-service=https
-#sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
+sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
+sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
 
 mkdir /etc/libvirt/volume
 #echo "<pool type=\"logical\">" >> /etc/libvirt/volume/isos.vol
