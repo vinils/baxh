@@ -13,13 +13,13 @@ sudo -H -u $myusr bash -c "sudo pacman -S --noconfirm dmidecode ovmf qemu-headle
 ###### VT-x
 sudo modprobe -r kvm_intel
 sudo modprobe kvm_intel nested=1
-#echo "options kvm_intel nested=1" >> /etc/modprobe.d/kvm_intel.conf
-#/etc/modules-load.d/virtio.conf
-sudo modprobe 9pnet_virtio virtio_net virtio_pci
-echo "options kvm_intel nested=1" >> /etc/modules-load.d/virtio.conf
-echo "9pnet_virtio" >> /etc/modules-load.d/virtio.conf
-echo "virtio_net" >> /etc/modules-load.d/virtio.conf
-echo "virtio_pci" >> /etc/modules-load.d/virtio.conf
+echo "options kvm_intel nested=1" >> /etc/modprobe.d/kvm_intel.conf
+##/etc/modules-load.d/virtio.conf
+#sudo modprobe 9pnet_virtio virtio_net virtio_pci
+#echo "options kvm_intel nested=1" >> /etc/modules-load.d/virtio.conf
+#echo "9pnet_virtio" >> /etc/modules-load.d/virtio.conf
+#echo "virtio_net" >> /etc/modules-load.d/virtio.conf
+#echo "virtio_pci" >> /etc/modules-load.d/virtio.conf
 
 echo "dynamic_ownership = 0" >> /etc/libvirt/qemu.conf
 ##check
@@ -201,8 +201,7 @@ firewall-cmd --permanent --zone=public --add-interface=kvm0
 
 #other permanent services
 sudo firewall-cmd --zone=public --permanent --add-service=https
-sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
-
+#sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
 
 mkdir /etc/libvirt/volume
 #echo "<pool type=\"logical\">" >> /etc/libvirt/volume/isos.vol
