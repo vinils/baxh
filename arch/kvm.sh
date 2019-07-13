@@ -8,12 +8,12 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-sudo -H -u $myusr bash -c "sudo pacman -S --noconfirm dmidecode ovmf qemu-headless qemu-headless-arch-extra libvirt bridge-utils openbsd-netcat virt-install"
+sudo -H -u $myusr bash -c "sudo pacman -S --noconfirm dmidecode ovmf qemu-headless qemu-headless-arch-extra libvirt bridge-utils ebtables openbsd-netcat virt-install"
 
 ###### VT-x
 sudo modprobe -r kvm_intel
 sudo modprobe kvm_intel nested=1
-echo "options kvm_intel nested=1" >> /etc/modprobe.d/kvm_intel.conf
+echo 'options kvm_intel nested=1' >> /etc/modprobe.d/kvm_intel.conf
 ##/etc/modules-load.d/virtio.conf
 #sudo modprobe 9pnet_virtio virtio_net virtio_pci
 #echo "options kvm_intel nested=1" >> /etc/modules-load.d/virtio.conf
@@ -21,7 +21,7 @@ echo "options kvm_intel nested=1" >> /etc/modprobe.d/kvm_intel.conf
 #echo "virtio_net" >> /etc/modules-load.d/virtio.conf
 #echo "virtio_pci" >> /etc/modules-load.d/virtio.conf
 
-echo "dynamic_ownership = 0" >> /etc/libvirt/qemu.conf
+#echo "dynamic_ownership = 0" >> /etc/libvirt/qemu.conf
 ##check
 #sudo systool -m kvm_intel -v | grep nested
 
@@ -39,11 +39,14 @@ sudo gpasswd -a $myusr libvirt
 sudo gpasswd -a root kvm
 sudo gpasswd -a root libvirt
 
+#This solution is not persistent across reboots, for that you have to create an udev rule: /etc/udev/rules.d/65-kvm.rules
+#KERNEL=="kvm", NAME="%k", GROUP="kvm", MODE="0660"
+
 echo "/* Allow users in kvm group to manage the libvirt daemon without authentication */" >> /etc/polkit-1/rules.d/50-libvirt.rules
 echo "polkit.addRule(function(action, subject) {" >> /etc/polkit-1/rules.d/50-libvirt.rules
 echo "    if (action.id == \"org.libvirt.unix.manage\" &&" >> /etc/polkit-1/rules.d/50-libvirt.rules
-echo "        subject.isInGroup(\"libvirt\")) {" >> /etc/polkit-1/rules.d/50-libvirt.rules
-echo "            return polkit.Result.YES;" >> /etc/polkit-1/rules.d/50-libvirt.rules
+echo "      subject.isInGroup(\"libvirt\")) {" >> /etc/polkit-1/rules.d/50-libvirt.rules
+echo "        return polkit.Result.YES;" >> /etc/polkit-1/rules.d/50-libvirt.rules
 echo "    }" >> /etc/polkit-1/rules.d/50-libvirt.rules
 echo "});" >> /etc/polkit-1/rules.d/50-libvirt.rules
 
@@ -62,6 +65,9 @@ echo 15360 | sudo tee /proc/sys/vm/nr_hugepages
 echo "vm.nr_hugepages = 15360" >> /etc/sysctl.d/40-hugepages.conf
 ##check
 #grep HugePages_Total /proc/meminfo
+#cat /proc/meminfo
+#output >> HugePages_Total:   15360
+#output >> HugePages_Free:    15360
 
 echo "hugetlbfs_mount = \"/dev/hugepages\"" >> /etc/libvirt/qemu.conf
 ##veriy IOMMU
@@ -235,11 +241,15 @@ echo "    <group>78</group>" >> /etc/libvirt/volume/isos.vol
 echo "  </permissions>" >> /etc/libvirt/volume/isos.vol
 echo "  </target>" >> /etc/libvirt/volume/isos.vol
 echo "</pool>" >> /etc/libvirt/volume/isos.vol
+chown kvm:kvm /var/lib/libvirt/images/
+echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" >> /etc/udev/rules.d/90-kvm.rules
+virsh pool-define /etc/libvirt/volume/isos.vol
+virsh pool-build isoimages
+virsh pool-autostart isoimages
 
 mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 
-chown kvm:kvm /var/lib/libvirt/images/
 #sudo chown kvm:kvm /var/lib/libvirt/images/ubuntu18.04-2.qcow2
 
 #chmod +rx /var/lib/libvirt/images/win2k16.qcow2 
