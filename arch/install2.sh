@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 bootDir=$1
 pwd=$2
 hostName=$3
