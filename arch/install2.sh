@@ -39,8 +39,8 @@ fi
 mirrlistFile="/etc/pacman.d/mirrorlist"
 rm $mirrlistFile
 curl "https://www.archlinux.org/mirrorlist/?country=BR&protocol=http&protocol=https&ip_version=4" -o $mirrlistFile
-sudo sed -i 's/#S/S/g' $mirrlistFile
-sudo pacman -Syy
+sed -i 's/#S/S/g' $mirrlistFile
+pacman -Syy
 
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc --utc
