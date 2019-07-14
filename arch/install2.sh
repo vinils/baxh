@@ -37,7 +37,7 @@ if [[ -z "$hostName" ]]; then
 fi
 
 mirrlistFile="/etc/pacman.d/mirrorlist"
-rm $mirrlistFile
+mv $mirrlistFile $mirrlistFile.bkp
 curl "https://www.archlinux.org/mirrorlist/?country=BR&protocol=http&protocol=https&ip_version=4" -o $mirrlistFile
 sed -i 's/#S/S/g' $mirrlistFile
 pacman -Syy
