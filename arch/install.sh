@@ -64,7 +64,16 @@ if [[ -z "$hostName" ]]; then
   exit 1
 fi
 
+
+mirrlistFile="/etc/pacman.d/mirrorlist"
+mv $mirrlistFile $mirrlistFile.bkp
+curl "https://www.archlinux.org/mirrorlist/?country=BR&protocol=http&protocol=https&ip_version=4" -o $mirrlistFile
+sed -i 's/#S/S/g' $mirrlistFile
+pacman -Syy
+
+
 timedatectl set-ntp true
+
 
 uefiPartitionNumber="1"
 swapPartitionNumber="2"
