@@ -64,12 +64,6 @@ if [[ -z "$hostName" ]]; then
   exit 1
 fi
 
-mirrlistFile="mirrolist.sh"
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/mirrolist.sh -o $mirrlistFile
-chmod +xr $mirrlistFile
-./$mirrlistFile
-rm $mirrlistFile
-
 timedatectl set-ntp true
 
 uefiPartitionNumber="1"
