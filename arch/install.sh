@@ -1,7 +1,13 @@
 #!/bin/bash
-install2="arch-install2.bash"
+install2="arch-install2.sh"
 curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.sh -o $install2
-chmod 777 $install2
+chmod +xr $install2
+
+mirrlistFile="mirrolist.sh"
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/mirrolist.sh -o $mirrlistFile
+chmod +xr $mirrlistFile
+./$mirrlistFile
+rm $mirrlistFile
 
 pwd=$1
 device=$2
