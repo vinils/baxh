@@ -1,4 +1,5 @@
 #!/bin/bash
+
 bootDir=$1
 pwd=$2
 hostName=$3
@@ -34,6 +35,12 @@ if [[ -z "$hostName" ]]; then
   echo "Host name required!"
   exit 1
 fi
+
+mirrlistFile="mirrolist.sh"
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/mirrolist.sh -o $mirrlistFile
+chmod +xr $mirrlistFile
+./$mirrlistFile
+rm $mirrlistFile
 
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc --utc
