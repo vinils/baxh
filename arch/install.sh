@@ -1,13 +1,4 @@
 #!/bin/bash
-install2="arch-install2.sh"
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.sh -o $install2
-chmod +xr $install2
-
-mirrlistFile="mirrolist.sh"
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/mirrolist.sh -o $mirrlistFile
-chmod +xr $mirrlistFile
-./$mirrlistFile
-rm $mirrlistFile
 
 pwd=$1
 device=$2
@@ -73,6 +64,11 @@ if [[ -z "$hostName" ]]; then
   exit 1
 fi
 
+mirrlistFile="mirrolist.sh"
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/mirrolist.sh -o $mirrlistFile
+chmod +xr $mirrlistFile
+./$mirrlistFile
+rm $mirrlistFile
 
 timedatectl set-ntp true
 
@@ -135,6 +131,10 @@ pacstrap /"$mntDir" base
 genfstab -U /"$mntDir" >> /"$mntDir"/etc/fstab
 #check
 #cat /mnt/etc/fstab
+
+install2="arch-install2.sh"
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/install2.sh -o $install2
+chmod +xr $install2
 cp $install2 /mnt/root
 arch-chroot /"$mntDir" /root/$install2 $bootDir $pwd $hostName
 rm /mnt/root/$install2
