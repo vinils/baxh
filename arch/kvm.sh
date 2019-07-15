@@ -245,11 +245,17 @@ sudo systemctl enable libvirt-guests
 
 
 #################################################################
-sudo modprobe 9pnet_virtio virtio_net virtio_pci
+sudo modprobe 9pnet_virtio virtio_net virtio_pci virtio 9p 9pnet 9pnet_virtio
 echo "options kvm_intel nested=1" | sudo tee -a /etc/modules-load.d/virtio.conf
 echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
 echo "virtio_net" | sudo tee -a /etc/modules-load.d/virtio.conf
 echo "virtio_pci" | sudo tee -a /etc/modules-load.d/virtio.conf
+echo "9p" | sudo tee -a /etc/modules-load.d/virtio.conf
+echo "9pnet" | sudo tee -a /etc/modules-load.d/virtio.conf
+echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
+
+echo " mymount /mnt/fs            9p             trans=virtio    0       0" >> sudo tee -a /etc/fstab
+sudo mount -a
 
 #If 9pnet is going to be used, change the global QEMU config to turn off dynamic file ownership.
 echo "dynamic_ownership = 0" | sudo tee -a /etc/libvirt/qemu.conf
