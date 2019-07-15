@@ -36,7 +36,7 @@ sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
 #allow remote connection from users in libvirt group
 sudo gpasswd -a $(whoami) libvirt
 sudo gpasswd -a root libvirt
-newgrp libvirt
+#newgrp libvirt
 sudo pacman -S --noconfirm polkit
 echo "/* Allow users in kvm group to manage the libvirt daemon without authentication */" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
 echo "polkit.addRule(function(action, subject) {" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
