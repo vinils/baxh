@@ -53,7 +53,7 @@ sudo systemctl enable --now libvirtd
 
 #################################################################
 #Adding the OVMF firmware to libvirt.
-sudo pacman -S ovmf
+sudo pacman -S --noconfirm ovmf
 echo "nvram = [" | sudo tee -a /etc/libvirt/qemu.conf
 echo "	\"/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd\"" | sudo tee -a /etc/libvirt/qemu.conf
 echo "]" | sudo tee -a /etc/libvirt/qemu.conf
