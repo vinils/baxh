@@ -13,11 +13,10 @@ if [[ -z "$pwd" ]]; then
 fi
 
 
-echo "[archlinuxfr]" >> /etc/pacman.conf
-echo "SigLevel = Never" >> /etc/pacman.conf
-echo "Server = http://repo.archlinux.fr/\$arch" >> /etc/pacman.conf
-
-pacman -Syu
+#echo "[archlinuxfr]" >> /etc/pacman.conf
+#echo "SigLevel = Never" >> /etc/pacman.conf
+#echo "Server = http://repo.archlinux.fr/\$arch" >> /etc/pacman.conf
+#pacman -Syu
 
 #################################################################
 #wifi
