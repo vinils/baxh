@@ -127,8 +127,8 @@ sudo virsh net-undefine default
 
 #################################################################
 sudo useradd -g kvm -s /usr/bin/nologin kvm
-echo "user = \"kvm\"" | sudo tee -a /etc/libvirt/qemu.conf
-echo "group = \"kvm\"" | sudo tee -a /etc/libvirt/qemu.conf
+echo "user = \"root\"" | sudo tee -a /etc/libvirt/qemu.conf
+echo "group = \"root\"" | sudo tee -a /etc/libvirt/qemu.conf
 sudo usermod -a -G kvm $(whoami)
 sudo usermod -a -G kvm root
 ##check
