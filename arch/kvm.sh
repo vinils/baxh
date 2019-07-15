@@ -34,8 +34,8 @@ sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
 
 #################################################################
 #allow remote connection from users in libvirt group
-sudo usermod -a -G $(whoami) libvirt
-sudo usermod -a -G root libvirt
+sudo usermod -a -G libvirt $(whoami)
+sudo usermod -a -G libvirt root
 #newgrp libvirt
 sudo pacman -S --noconfirm polkit
 echo "/* Allow users in kvm group to manage the libvirt daemon without authentication */" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
@@ -129,8 +129,8 @@ sudo virsh net-undefine default
 sudo useradd -g kvm -s /usr/bin/nologin kvm
 echo "user = \"kvm\"" | sudo tee -a /etc/libvirt/qemu.conf
 echo "group = \"kvm\"" | sudo tee -a /etc/libvirt/qemu.conf
-sudo usermod -a -G $(whoami) kvm
-sudo usermod -a -G root kvm
+sudo usermod -a -G kvm $(whoami)
+sudo usermod -a -G kvm root
 ##check
 #virsh list --all
 # wrong output >> libvir: Remote error : Permission denied
