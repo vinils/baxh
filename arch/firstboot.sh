@@ -25,22 +25,23 @@ wlanDevName="wlp4s0"
 
 pacman -S --noconfirm wpa_supplicant
 ln -s /usr/share/dhcpcd/hooks/10-wpa_supplicant /usr/lib/dhcpcd/dhcpcd-hooks/
-echo "#/usr/share/doc/wpa_supplicant/wpa_supplicant.conf" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "#wpa_supplicant -B -i $wlanDevName -c <(wpa_passphrase essid pwd_phrase)"  >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "ctrl_interface=/run/wpa_supplicant" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "#ctrl_interface_group=wheel" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "update_config=1" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo " " >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "network={" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "        ssid=\"VIVO-F762\"" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "        priority=1" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "        psk=23acc791a3c554a22ec2e4684f35923679b89bca32c236b332d697269eea3a43" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "}" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo " " >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "network={" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "        ssid=\"Gil\"" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "        psk=baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-echo "}" >> /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
+cat << EOF | sudo tee -a /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
+#wpa_supplicant -B -i $wlanDevName -c <(wpa_passphrase essid pwd_phrase)
+ctrl_interface=/run/wpa_supplicant
+#ctrl_interface_group=wheel
+update_config=1
+ 
+network={
+        ssid=\"VIVO-F762\"
+        priority=1
+        psk=23acc791a3c554a22ec2e4684f35923679b89bca32c236b332d697269eea3a43
+}
+ 
+network={
+        ssid=\"Gil\"
+        psk=baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
+}
+EOT
 #################################################################
 
 #################################################################
