@@ -34,8 +34,8 @@ sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
 
 #################################################################
 #allow remote connection from users in libvirt group
-sudo gpasswd -a $(whoami) libvirt
-sudo gpasswd -a root libvirt
+sudo usermod -a -G $(whoami) libvirt
+sudo usermod -a -G root libvirt
 #newgrp libvirt
 sudo pacman -S --noconfirm polkit
 echo "/* Allow users in kvm group to manage the libvirt daemon without authentication */" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
@@ -129,8 +129,8 @@ sudo virsh net-undefine default
 sudo useradd -g kvm -s /usr/bin/nologin kvm
 echo "user = \"kvm\"" | sudo tee -a /etc/libvirt/qemu.conf
 echo "group = \"kvm\"" | sudo tee -a /etc/libvirt/qemu.conf
-sudo gpasswd -a $(whoami) kvm
-sudo gpasswd -a root kvm
+sudo usermod -a -G $(whoami) kvm
+sudo usermod -a -G root kvm
 ##check
 #virsh list --all
 # wrong output >> libvir: Remote error : Permission denied
@@ -245,7 +245,7 @@ sudo systemctl enable libvirt-guests
 
 
 #################################################################
-sudo modprobe 9pnet_virtio virtio_net virtio_pci VirtIO-gpu
+sudo modprobe 9pnet_virtio virtio_net virtio_pci
 
 echo "options kvm_intel nested=1" | sudo tee -a /etc/modules-load.d/virtio.conf
 echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
