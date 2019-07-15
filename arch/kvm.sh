@@ -246,14 +246,12 @@ sudo systemctl enable libvirt-guests
 
 #################################################################
 sudo modprobe 9pnet_virtio virtio_net virtio_pci
-
 echo "options kvm_intel nested=1" | sudo tee -a /etc/modules-load.d/virtio.conf
 echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
 echo "virtio_net" | sudo tee -a /etc/modules-load.d/virtio.conf
 echo "virtio_pci" | sudo tee -a /etc/modules-load.d/virtio.conf
-#If 9pnet is going to be used, change the global QEMU config to turn off dynamic file ownership.
-echo "virtio_pci" | sudo tee -a /etc/modules-load.d/virtio.conf
 
+#If 9pnet is going to be used, change the global QEMU config to turn off dynamic file ownership.
 echo "dynamic_ownership = 0" | sudo tee -a /etc/libvirt/qemu.conf
 #################################################################
 
