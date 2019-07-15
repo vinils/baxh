@@ -38,13 +38,15 @@ sudo usermod -a -G libvirt $(whoami)
 sudo usermod -a -G libvirt root
 #newgrp libvirt
 sudo pacman -S --noconfirm polkit
-echo "/* Allow users in kvm group to manage the libvirt daemon without authentication */" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
-echo "polkit.addRule(function(action, subject) {" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
-echo "    if (action.id == \"org.libvirt.unix.manage\" &&" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
-echo "      subject.isInGroup(\"libvirt\")) {" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
-echo "        return polkit.Result.YES;" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
-echo "    }" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
-echo "});" | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
+cat << EOF | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
+/* Allow users in kvm group to manage the libvirt daemon without authentication */
+polkit.addRule(function(action, subject) {
+    if (action.id == \"org.libvirt.unix.manage\" &&
+      subject.isInGroup(\"libvirt\")) {
+        return polkit.Result.YES;
+    }
+});
+EOF
 #################################################################
 
 
@@ -62,61 +64,75 @@ echo "]" | sudo tee -a /etc/libvirt/qemu.conf
 
 #################################################################
 #network
-echo "[Match]" | sudo tee -a /etc/systemd/network/management.network
-echo "Name=enp5s0" | sudo tee -a /etc/systemd/network/management.network
-echo " " | sudo tee -a /etc/systemd/network/management.network
-echo "[Network]" | sudo tee -a /etc/systemd/network/management.network
-echo "DHCP=ipv4" | sudo tee -a /etc/systemd/network/management.network
-echo "LinkLocalAddressing=no" | sudo tee -a /etc/systemd/network/management.network
-echo "[DHCP]" | sudo tee -a /etc/systemd/network/management.network
-echo "UseDomains=true" | sudo tee -a /etc/systemd/network/management.network
+cat << EOF | sudo tee -a /etc/systemd/network/management.network
+[Match]
+Name=enp5s0
+ 
+[Network]
+DHCP=ipv4
+LinkLocalAddressing=no
+[DHCP]
+UseDomains=true
+EOF
 
-echo "[NetDev]" | sudo tee -a /etc/systemd/network/bond0.netdev
-echo "Name=bond0" | sudo tee -a /etc/systemd/network/bond0.netdev
-echo "Description=KVM vSwitch" | sudo tee -a /etc/systemd/network/bond0.netdev
-echo "Kind=bond" | sudo tee -a /etc/systemd/network/bond0.netdev
-echo " " | sudo tee -a /etc/systemd/network/bond0.netdev
-echo "[Bond]" | sudo tee -a /etc/systemd/network/bond0.netdev
-#echo "Mode=balance-rr" | sudo tee -a /etc/systemd/network/bond0.netdev
-echo "Mode=balance-tlb" | sudo tee -a /etc/systemd/network/bond0.netdev
-#echo "TransmitHashPolicy=layer3+4" | sudo tee -a /etc/systemd/network/bond0.netdev
-echo "MIIMonitorSec=1s" | sudo tee -a /etc/systemd/network/bond0.netdev
-echo "LACPTransmitRate=fast" | sudo tee -a /etc/systemd/network/bond0.netdev	
+cat << EOF | sudo tee -a /etc/systemd/network/bond0.netdev
+[NetDev]
+Name=bond0
+Description=KVM vSwitch
+Kind=bond
+ 
+[Bond]
+#Mode=balance-rr
+Mode=balance-tlb
+#TransmitHashPolicy=layer3+4
+MIIMonitorSec=1s
+LACPTransmitRate=fast	
+EOF
 
-echo "[Match]" | sudo tee -a /etc/systemd/network/bond0.network
-echo "Name=enp0s31f6" | sudo tee -a /etc/systemd/network/bond0.network
-echo "Name=wlp4s0" | sudo tee -a /etc/systemd/network/bond0.network
-echo " "
-echo "[Network]" | sudo tee -a /etc/systemd/network/bond0.network
-echo "Bond=bond0" | sudo tee -a /etc/systemd/network/bond0.network
+cat << EOF | sudo tee -a /etc/systemd/network/bond0.network
+[Match]
+Name=enp0s31f6
+Name=wlp4s0
+ "
+[Network]
+Bond=bond0
+EOF
 
-echo "[Match]" | sudo tee -a /etc/systemd/network/vswitch.network
-echo "Name=kvm0" | sudo tee -a /etc/systemd/network/vswitch.network
-echo " " | sudo tee -a /etc/systemd/network/vswitch.network
-echo "[Network]" | sudo tee -a /etc/systemd/network/vswitch.network
-echo "DHCP=ipv4" | sudo tee -a /etc/systemd/network/vswitch.network
-echo "LinkLocalAddressing=no" | sudo tee -a /etc/systemd/network/vswitch.network
-echo "[DHCP]" | sudo tee -a /etc/systemd/network/vswitch.network
-echo "UseDomains=true" | sudo tee -a /etc/systemd/network/vswitch.network
+cat << EOF | sudo tee -a /etc/systemd/network/vswitch.network
+[Match]
+Name=kvm0
+ 
+[Network]
+DHCP=ipv4
+LinkLocalAddressing=no
+[DHCP]
+UseDomains=true
+EOF
 
-echo "[NetDev]" | sudo tee -a /etc/systemd/network/kvm0.netdev
-echo "Name=kvm0" | sudo tee -a /etc/systemd/network/kvm0.netdev
-echo "Kind=bridge" | sudo tee -a /etc/systemd/network/kvm0.netdev
+cat << EOF | sudo tee -a /etc/systemd/network/kvm0.netdev
+[NetDev]
+Name=kvm0
+Kind=bridge
+EOF
 
-echo "[Match]" | sudo tee -a /etc/systemd/network/kvm0.network
-echo "Name=bond0" | sudo tee -a /etc/systemd/network/kvm0.network
-echo " " | sudo tee -a /etc/systemd/network/kvm0.network
-echo "[Network]" | sudo tee -a /etc/systemd/network/kvm0.network
-echo "Bridge=kvm0" | sudo tee -a /etc/systemd/network/kvm0.network
+cat << EOF | sudo tee -a /etc/systemd/network/kvm0.network
+[Match]
+Name=bond0
+ 
+[Network]
+Bridge=kvm0
 
 sudo systemctl --now enable systemd-networkd
 sudo systemctl restart systemd-networkd
 
-echo "<network>" | sudo tee -a /etc/libvirt/bridge.xml
-echo "        <name>kvm0</name>" | sudo tee -a /etc/libvirt/bridge.xml
-echo "        <forward mode=\"bridge\"/>" | sudo tee -a /etc/libvirt/bridge.xml
-echo "        <bridge name=\"kvm0\"/>" | sudo tee -a /etc/libvirt/bridge.xml
-echo "</network>" | sudo tee -a /etc/libvirt/bridge.xml
+cat << EOF | sudo tee -a /etc/libvirt/bridge.xml
+<network>
+        <name>kvm0</name>
+        <forward mode=\"bridge\"/>
+        <bridge name=\"kvm0\"/>
+</network>
+EOF
+
 sudo virsh net-define --file /etc/libvirt/bridge.xml
 sudo virsh net-autostart kvm0
 sudo virsh net-start kvm0
@@ -140,17 +156,19 @@ sudo usermod -a -G kvm root
 #################################################################
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 sudo mkdir /etc/libvirt/volume
-echo "<pool type=\"dir\">" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "  <name>isoimages</name>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "  <target>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "  <path>/mnt/dados/SOFTWARES/WORK/MS Windows/2016 Server/</path>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "  <permissions>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "    <mode>0770</mode>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "    <owner>78</owner>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "    <group>78</group>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "  </permissions>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "  </target>" | sudo tee -a /etc/libvirt/volume/isos.vol
-echo "</pool>" | sudo tee -a /etc/libvirt/volume/isos.vol
+cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
+<pool type=\"dir\">
+  <name>isoimages</name>
+  <target>
+  <path>/mnt/dados/SOFTWARES/WORK/MS Windows/2016 Server/</path>
+  <permissions>
+    <mode>0770</mode>
+    <owner>78</owner>
+    <group>78</group>
+  </permissions>
+  </target>
+</pool>
+EOF
 sudo chown kvm:kvm /var/lib/libvirt/images/
 echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" | sudo tee -a /etc/udev/rules.d/90-kvm.rules
 sudo virsh pool-define /etc/libvirt/volume/isos.vol
