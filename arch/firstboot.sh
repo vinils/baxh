@@ -25,7 +25,7 @@ wlanDevName="wlp4s0"
 
 pacman -S --noconfirm wpa_supplicant
 ln -s /usr/share/dhcpcd/hooks/10-wpa_supplicant /usr/lib/dhcpcd/dhcpcd-hooks/
-cat << EOF | sudo tee -a /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
+cat << EOF | tee -a /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
 #wpa_supplicant -B -i $wlanDevName -c <(wpa_passphrase essid pwd_phrase)
 ctrl_interface=/run/wpa_supplicant
 #ctrl_interface_group=wheel
@@ -41,7 +41,7 @@ network={
         ssid=\"Gil\"
         psk=baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
 }
-EOT
+EOF
 #################################################################
 
 #################################################################
