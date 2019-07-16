@@ -41,8 +41,8 @@ sudo pacman -S --noconfirm polkit
 cat << EOF | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
 /* Allow users in kvm group to manage the libvirt daemon without authentication */
 polkit.addRule(function(action, subject) {
-    if (action.id == \"org.libvirt.unix.manage\" &&
-      subject.isInGroup(\"libvirt\")) {
+    if (action.id == "org.libvirt.unix.manage" &&
+      subject.isInGroup("libvirt")) {
         return polkit.Result.YES;
     }
 });
@@ -128,8 +128,8 @@ sudo systemctl restart systemd-networkd
 cat << EOF | sudo tee -a /etc/libvirt/bridge.xml
 <network>
         <name>kvm0</name>
-        <forward mode=\"bridge\"/>
-        <bridge name=\"kvm0\"/>
+        <forward mode="bridge"/>
+        <bridge name="kvm0"/>
 </network>
 EOF
 
@@ -158,7 +158,7 @@ sudo mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 sudo mkdir /etc/libvirt/volume
 cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
-<pool type=\"dir\">
+<pool type="dir">
   <name>isoimages</name>
   <target>
   <path>/mnt/dados/SOFTWARES/WORK/MS Windows/2016 Server/</path>
