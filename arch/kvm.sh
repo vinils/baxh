@@ -154,6 +154,7 @@ sudo usermod -a -G kvm root
 
 
 #################################################################
+sudo mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 sudo mkdir /etc/libvirt/volume
 cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
