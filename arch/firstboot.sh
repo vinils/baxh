@@ -32,13 +32,14 @@ ctrl_interface=/run/wpa_supplicant
 update_config=1
  
 network={
-        ssid=\"VIVO-F762\"
+        ssid="VIVO-F762"
         priority=1
         psk=23acc791a3c554a22ec2e4684f35923679b89bca32c236b332d697269eea3a43
 }
  
 network={
-        ssid=\"Gil\"
+        ssid=\
+        Gil\"
         psk=baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
 }
 EOF
