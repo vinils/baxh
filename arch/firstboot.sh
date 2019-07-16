@@ -38,8 +38,7 @@ network={
 }
  
 network={
-        ssid=\
-        Gil\"
+        ssid="Gil"
         psk=baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
 }
 EOF
