@@ -91,9 +91,9 @@ EOF
 
 cat << EOF | sudo tee -a /etc/systemd/network/bond0.network
 [Match]
-Name=enp0s31f6
+Name=eno1
 Name=wlp4s0
- "
+
 [Network]
 Bond=bond0
 EOF
