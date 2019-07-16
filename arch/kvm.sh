@@ -121,6 +121,7 @@ Name=bond0
  
 [Network]
 Bridge=kvm0
+EOF
 
 sudo systemctl --now enable systemd-networkd
 sudo systemctl restart systemd-networkd
