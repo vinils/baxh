@@ -63,6 +63,9 @@ echo "noipv6rs" >> /etc/dhcpcd.conf
 echo "noipv6" >> /etc/dhcpcd.conf
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
+#if no ipv6 - disable ntpd
+echo "NTPD_OPTS='-4 -g'" >> /etc/default/ntp
+
 ip link set $wlanDevName down
 systemctl enable --now netctl-auto@$wlanDevName.service
 netctl-auto enable $wlanDevName.VIVO-F762
