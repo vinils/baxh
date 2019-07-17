@@ -81,7 +81,7 @@ netctl-auto switch-to wlp4s0.VIVO-F762
 #################################################################
 pacman -S --noconfirm ntp
 
-#if no ipv6 - disable ntp
+#if no ipv6 - disable ntp - err msg : ntpd unable to create socket on
 echo "NTPD_OPTS='-4 -g'" >> /etc/default/ntp
 
 systemctl --now enable ntpd
