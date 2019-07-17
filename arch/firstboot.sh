@@ -59,13 +59,14 @@ Key='J629109887'
 EOF
 
 #BUG - DHCPv6 REPLY: No addresses available for this interface
-sudo echo "noipv6rs" | sudo tee -a /etc/dhcpcd.conf
-sudo echo "noipv6" | sudo tee -a /etc/dhcpcd.conf
+echo "noipv6rs" >> /etc/dhcpcd.conf
+echo "noipv6" >> /etc/dhcpcd.conf
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
 ip link set $wlanDevName down
-sudo systemctl enable --now netctl-auto@$wlanDevName.service
-sudo netctl-auto enable $wlanDevName.VIVO-F762
-sudo netctl-auto switch-to wlp4s0.VIVO-F762
+systemctl enable --now netctl-auto@$wlanDevName.service
+netctl-auto enable $wlanDevName.VIVO-F762
+netctl-auto switch-to wlp4s0.VIVO-F762
 #################################################################
 
 #################################################################
