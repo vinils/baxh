@@ -7,7 +7,7 @@
 sudo modprobe -r kvm_intel
 sudo modprobe kvm_intel nested=1
 ## virtio conf below
-#echo "options kvm_intel nested=1" | sudo tee -a /etc/modprobe.d/kvm_intel.conf
+echo "options kvm_intel nested=1" | sudo tee -a /etc/modprobe.d/kvm_intel.conf
 
 #################################################################
 
@@ -56,11 +56,11 @@ sudo systemctl enable --now libvirtd
 
 
 #################################################################
-#Adding the OVMF firmware to libvirt.
-sudo pacman -S --noconfirm ovmf
-echo "nvram = [" | sudo tee -a /etc/libvirt/qemu.conf
-echo "	\"/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd\"" | sudo tee -a /etc/libvirt/qemu.conf
-echo "]" | sudo tee -a /etc/libvirt/qemu.conf
+##Adding the OVMF firmware to libvirt.
+#sudo pacman -S --noconfirm ovmf
+#echo "nvram = [" | sudo tee -a /etc/libvirt/qemu.conf
+#echo "	\"/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd\"" | sudo tee -a /etc/libvirt/qemu.conf
+#echo "]" | sudo tee -a /etc/libvirt/qemu.conf
 #################################################################
 
 
@@ -160,6 +160,7 @@ sudo usermod -a -G kvm root
 sudo mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 sudo mkdir /etc/libvirt/volume
+
 cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
 <pool type="dir">
   <name>isoimages</name>
@@ -173,6 +174,7 @@ cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
   </target>
 </pool>
 EOF
+
 sudo chown kvm:kvm /var/lib/libvirt/images/
 sudo setfacl -m u:kvm:rx /var/lib/libvirt/images/
 echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" | sudo tee -a /etc/udev/rules.d/90-kvm.rules
@@ -268,20 +270,20 @@ sudo systemctl enable libvirt-guests
 
 
 #################################################################
-sudo modprobe 9pnet_virtio virtio_net virtio_pci virtio 9p 9pnet 9pnet_virtio
-echo "options kvm_intel nested=1" | sudo tee -a /etc/modules-load.d/virtio.conf
-echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
-echo "virtio_net" | sudo tee -a /etc/modules-load.d/virtio.conf
-echo "virtio_pci" | sudo tee -a /etc/modules-load.d/virtio.conf
-echo "9p" | sudo tee -a /etc/modules-load.d/virtio.conf
-echo "9pnet" | sudo tee -a /etc/modules-load.d/virtio.conf
-echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
+#sudo modprobe 9pnet_virtio virtio_net virtio_pci virtio 9p 9pnet 9pnet_virtio
+#echo "options kvm_intel nested=1" | sudo tee -a /etc/modules-load.d/virtio.conf
+#echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
+#echo "virtio_net" | sudo tee -a /etc/modules-load.d/virtio.conf
+#echo "virtio_pci" | sudo tee -a /etc/modules-load.d/virtio.conf
+#echo "9p" | sudo tee -a /etc/modules-load.d/virtio.conf
+#echo "9pnet" | sudo tee -a /etc/modules-load.d/virtio.conf
+#echo "9pnet_virtio" | sudo tee -a /etc/modules-load.d/virtio.conf
 
-echo " mymount /mnt/fs            9p             trans=virtio    0       0" >> sudo tee -a /etc/fstab
-sudo mount -a
+#echo " mymount /mnt/fs            9p             trans=virtio    0       0" >> sudo tee -a /etc/fstab
+#sudo mount -a
 
-#If 9pnet is going to be used, change the global QEMU config to turn off dynamic file ownership.
-echo "dynamic_ownership = 0" | sudo tee -a /etc/libvirt/qemu.conf
+##If 9pnet is going to be used, change the global QEMU config to turn off dynamic file ownership.
+#echo "dynamic_ownership = 0" | sudo tee -a /etc/libvirt/qemu.conf
 #################################################################
 
 
