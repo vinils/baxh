@@ -38,7 +38,7 @@ Key='maria123'
 # Uncomment this if your ssid is hidden
 #Hidden=yes
 # Set a priority for automatic profile selection
-Priority=10
+#Priority=10
 EOF
 
 cat << EOF | tee /etc/netctl/$wlanDevName.VIVO-F762
@@ -58,9 +58,14 @@ Key='J629109887'
 #Priority=10
 EOF
 
+#BUG - DHCPv6 REPLY: No addresses available for this interface
+sudo echo "noipv6rs" | sudo tee -a /etc/dhcpcd.conf
+sudo echo "noipv6" | sudo tee -a /etc/dhcpcd.conf
+
 ip link set $wlanDevName down
 sudo systemctl enable --now netctl-auto@$wlanDevName.service
 sudo netctl-auto enable $wlanDevName.VIVO-F762
+sudo netctl-auto switch-to wlp4s0.VIVO-F762
 #################################################################
 
 #################################################################
