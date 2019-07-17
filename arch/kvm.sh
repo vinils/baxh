@@ -196,7 +196,7 @@ sudo mount /dev/hugepages
 # ls -FalG /dev/ | grep huge
 
 echo 15360 | sudo tee /proc/sys/vm/nr_hugepages
-echo "vm.nr_hugepages = 15360" | sudo tee -a /etc/sysctl.d/40-hugepages.conf
+echo "vm.nr_hugepages = 9000" | sudo tee -a /etc/sysctl.d/40-hugepages.conf
 ##check
 #grep HugePages_Total /proc/meminfo
 #cat /proc/meminfo
