@@ -55,6 +55,7 @@ Key='J629109887'
 #Hidden=yes
 # Set a priority for automatic profile selection
 #Priority=10EOF
+EOF
 
 sudo systemctl enable netctl-auto@$wlanDevName.service
 sudo netctl-auto enable $wlanDevName.VIVO-F762
