@@ -23,25 +23,41 @@ fi
 
 wlanDevName="wlp4s0"
 
-pacman -S --noconfirm wpa_supplicant
-ln -s /usr/share/dhcpcd/hooks/10-wpa_supplicant /usr/lib/dhcpcd/dhcpcd-hooks/
-cat << EOF | tee /etc/wpa_supplicant/wpa_supplicant-$wlanDevName.conf
-#wpa_supplicant -B -i $wlanDevName -c <(wpa_passphrase essid pwd_phrase)
-ctrl_interface=/run/wpa_supplicant
-#ctrl_interface_group=wheel
-update_config=1
- 
-network={
-        ssid="VIVO-F762"
-        priority=1
-        psk=23acc791a3c554a22ec2e4684f35923679b89bca32c236b332d697269eea3a43
-}
- 
-network={
-        ssid="Gil"
-        psk=baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
-}
+cat << EOF | tee /etc/netctl/$wlanDevName.Gil
+Description='GIL'
+Interface=$wlanDevName
+Connection=wireless
+Security=wpa
+IP=dhcp
+ESSID='Gil'
+# Prepend hexadecimal keys with \"
+# If your key starts with ", write it as '""<key>"'
+# See also: the section on special quoting rules in netctl.profile(5)
+Key='maria123'
+# Uncomment this if your ssid is hidden
+#Hidden=yes
+# Set a priority for automatic profile selection
+Priority=10
 EOF
+
+cat << EOF | tee /etc/netctl/$wlanDevName.VIVO-F762
+Description='A simple WPA encrypted wireless connection'
+Interface=$wlanDevName
+Connection=wireless
+Security=wpa
+IP=dhcp
+ESSID='VIVO-F762'
+# Prepend hexadecimal keys with \"
+# If your key starts with ", write it as '""<key>"'
+# See also: the section on special quoting rules in netctl.profile(5)
+Key='J629109887'
+# Uncomment this if your ssid is hidden
+#Hidden=yes
+# Set a priority for automatic profile selection
+#Priority=10EOF
+
+sudo systemctl enable netctl-auto@$wlanDevName.service
+sudo netctl-auto enable $wlanDevName.VIVO-F762
 #################################################################
 
 #################################################################
