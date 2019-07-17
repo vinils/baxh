@@ -6,7 +6,9 @@
 #enable VTd
 sudo modprobe -r kvm_intel
 sudo modprobe kvm_intel nested=1
-echo "options kvm_intel nested=1" | sudo tee -a /etc/modprobe.d/kvm_intel.conf
+## virtio conf below
+#echo "options kvm_intel nested=1" | sudo tee -a /etc/modprobe.d/kvm_intel.conf
+
 #################################################################
 
 
