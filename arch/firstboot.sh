@@ -58,7 +58,7 @@ Key='J629109887'
 #Priority=10
 EOF
 
-#BUG - DHCPv6 REPLY: No addresses available for this interface
+#PROBLEM - DHCPv6 REPLY: No addresses available for this interface
 echo "noipv6rs" >> /etc/dhcpcd.conf
 echo "noipv6" >> /etc/dhcpcd.conf
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
