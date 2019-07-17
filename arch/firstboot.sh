@@ -54,7 +54,7 @@ Key='J629109887'
 # Uncomment this if your ssid is hidden
 #Hidden=yes
 # Set a priority for automatic profile selection
-#Priority=10EOF
+#Priority=10
 EOF
 
 sudo systemctl enable netctl-auto@$wlanDevName.service
