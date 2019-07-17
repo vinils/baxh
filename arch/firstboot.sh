@@ -22,6 +22,7 @@ fi
 #wifi
 
 wlanDevName="wlp4s0"
+pacman -S --noconfirm wpa_supplicant
 
 cat << EOF | tee /etc/netctl/$wlanDevName.Gil
 Description='GIL'
@@ -57,7 +58,8 @@ Key='J629109887'
 #Priority=10
 EOF
 
-sudo systemctl enable netctl-auto@$wlanDevName.service
+ip link set $wlanDevName down
+sudo systemctl enable --now netctl-auto@$wlanDevName.service
 sudo netctl-auto enable $wlanDevName.VIVO-F762
 #################################################################
 
