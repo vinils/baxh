@@ -80,6 +80,7 @@ netctl-auto switch-to wlp4s0.VIVO-F762
 
 #################################################################
 pacman -S --noconfirm ntp
+ntpd -q
 systemctl --now enable ntpd
 #################################################################
 
