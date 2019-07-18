@@ -61,7 +61,7 @@ pacman -S --noconfirm wpa_supplicant
 ## Prepend hexadecimal keys with \"
 ## If your key starts with ", write it as '""<key>"'
 ## See also: the section on special quoting rules in netctl.profile(5)
-#Key='maria123'
+#Key=\"baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
 ## Uncomment this if your ssid is hidden
 ##Hidden=yes
 ## Set a priority for automatic profile selection
@@ -78,7 +78,7 @@ pacman -S --noconfirm wpa_supplicant
 ## Prepend hexadecimal keys with \"
 ## If your key starts with ", write it as '""<key>"'
 ## See also: the section on special quoting rules in netctl.profile(5)
-#Key='J629109887'
+#Key=\"23acc791a3c554a22ec2e4684f35923679b89bca32c236b332d697269eea3a43
 ## Uncomment this if your ssid is hidden
 ##Hidden=yes
 ## Set a priority for automatic profile selection
