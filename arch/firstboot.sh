@@ -1,4 +1,8 @@
 #!/bin/bash
+#helpfull links
+#https://www.youtube.com/watch?v=qHoXTjrbLlo&t=523s
+#https://github.com/Lend27/linuxstuff/blob/master/15thingsArch
+#https://www.youtube.com/watch?v=DAmXKDJ3D7M
 
 pwd=$1
 
