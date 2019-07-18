@@ -16,6 +16,29 @@ if [[ -z "$pwd" ]]; then
   exit 1
 fi
 
+#################################################################
+#devices drives sonds
+
+pacman -S --noconfirm alsa-utils
+#alsamixer
+#speaker-test -c 2
+
+#################################################################
+#video
+
+pacman -S --noconfirm mesa
+#check video
+#lspci | grep VGA
+#>> 65:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Cedar [Radeon HD 5000/6000/7350/8350 Series]
+#https://wiki.archlinux.org/index.php/AMDGPU
+#check pacman -Ss xf86-video | less
+pacman -S --noconfirm xf86-video-amdgpu
+
+#################################################################
+
+#pacman -S --noconfirm xorg-server xorg-xinit xorg-server-utils
+
+#################################################################
 
 #echo "[archlinuxfr]" >> /etc/pacman.conf
 #echo "SigLevel = Never" >> /etc/pacman.conf
