@@ -116,6 +116,9 @@ pacman -S --noconfirm base-devel
 # adding git, support for ntfs mount
 pacman -S --noconfirm git ntfs-3g
 
+# removing unecessary packages
+pacman -Rns $(pacman -Qtdq)
 
-## removing unecessary packages
-#pacman -Rns $(pacman -Qtdq)
+#update mirror list
+pacman -S --noconfirm reflector
+reflector --latest 200 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist && sudo pacman -Syy &
