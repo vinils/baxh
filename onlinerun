@@ -2,7 +2,7 @@
 
 randomStr=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
 fileName="tmp$randomStr.sh"
-curl $1 > /var/onlinerun/$filePath.sh
-chmod +xr /var/onlinerun/$filePath.sh
-./var/onlinerun/$filePath.sh $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 
-rm $filePath.sh
+curl $1 > /var/onlinerun/$randomStr.sh
+chmod +xr /var/onlinerun/$randomStr.sh
+./var/onlinerun/$randomStr.sh $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 
+rm $randomStr.sh
