@@ -47,7 +47,7 @@ sed -i 's/#S/S/g' $mirrlistFile
 pacman -Syy
 
 #replace to 64 bits versions
-sudo pacman -S multilib-devel fakeroot git jshon wget make pkg-config autoconf automake patch
+pacman -S multilib-devel fakeroot git jshon wget make pkg-config autoconf automake patch
 
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc --utc
