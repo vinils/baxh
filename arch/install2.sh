@@ -36,6 +36,10 @@ if [[ -z "$hostName" ]]; then
   exit 1
 fi
 
+cat << EOF | tee -a /etc/pacman.conf
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+EOF
 mirrlistFile="/etc/pacman.d/mirrorlist"
 mv $mirrlistFile $mirrlistFile.bkp
 curl "https://www.archlinux.org/mirrorlist/?country=BR&protocol=http&protocol=https&ip_version=4" -o $mirrlistFile
