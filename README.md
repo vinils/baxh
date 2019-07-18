@@ -1,10 +1,10 @@
 # baxh
 batchs and bash
 
-to execute: eval $(curl URL_HERE)<br>
-to download: curl URL_HERE -o FILE_NAME && chmod +xr FILE_NAME<br>
+curl https://raw.githubusercontent.com/vinils/baxh/master/onlinerun -o /bin/onlinerun
+chmod +xr /bin/onlinerun
 
 - arch-install<br>
-https://raw.githubusercontent.com/vinils/baxh/master/arch/install.sh
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/install.sh
 - firstboot<br>
-https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $PWD
