@@ -93,9 +93,8 @@ pacman -S --noconfirm wpa_supplicant
 #sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
 #ip link set $wlanDevName down
-#systemctl enable --now netctl-auto@$wlanDevName.service
-#netctl-auto enable $wlanDevName.VIVO-F762
-#netctl-auto switch-to wlp4s0.VIVO-F762
+#sudo systemctl enable --now netctl-auto@$wlanDevName.service
+#netctl-auto switch-to $wlanDevName.VIVO-F762
 #################################################################
 
 #################################################################
