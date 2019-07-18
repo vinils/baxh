@@ -162,6 +162,11 @@ sudo usermod -a -G kvm root
 
 
 #################################################################
+cat << EOF | sudo tee -a /etc/fstab
+
+# /dev/sda2
+UUID="98B88774B8875024"  /mnt/dados  ntfs-3g  defaults  0 0
+EOF
 sudo mkdir /mnt/dados
 sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
 sudo mkdir /etc/libvirt/volume
