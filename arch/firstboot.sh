@@ -24,39 +24,39 @@ fi
 wlanDevName="wlp4s0"
 pacman -S --noconfirm wpa_supplicant
 
-cat << EOF | tee /etc/netctl/$wlanDevName.Gil
-Description='GIL'
-Interface=$wlanDevName
-Connection=wireless
-Security=wpa
-IP=dhcp
-ESSID='Gil'
-# Prepend hexadecimal keys with \"
-# If your key starts with ", write it as '""<key>"'
-# See also: the section on special quoting rules in netctl.profile(5)
-Key='maria123'
-# Uncomment this if your ssid is hidden
-#Hidden=yes
-# Set a priority for automatic profile selection
-#Priority=10
-EOF
+#cat << EOF | tee /etc/netctl/$wlanDevName.Gil
+#Description='GIL'
+#Interface=$wlanDevName
+#Connection=wireless
+#Security=wpa
+#IP=dhcp
+#ESSID='Gil'
+## Prepend hexadecimal keys with \"
+## If your key starts with ", write it as '""<key>"'
+## See also: the section on special quoting rules in netctl.profile(5)
+#Key='maria123'
+## Uncomment this if your ssid is hidden
+##Hidden=yes
+## Set a priority for automatic profile selection
+##Priority=10
+#EOF
 
-cat << EOF | tee /etc/netctl/$wlanDevName.VIVO-F762
-Description='A simple WPA encrypted wireless connection'
-Interface=$wlanDevName
-Connection=wireless
-Security=wpa
-IP=dhcp
-ESSID='VIVO-F762'
-# Prepend hexadecimal keys with \"
-# If your key starts with ", write it as '""<key>"'
-# See also: the section on special quoting rules in netctl.profile(5)
-Key='J629109887'
-# Uncomment this if your ssid is hidden
-#Hidden=yes
-# Set a priority for automatic profile selection
+#cat << EOF | tee /etc/netctl/$wlanDevName.VIVO-F762
+#Description='A simple WPA encrypted wireless connection'
+#Interface=$wlanDevName
+#Connection=wireless
+#Security=wpa
+#IP=dhcp
+#ESSID='VIVO-F762'
+## Prepend hexadecimal keys with \"
+## If your key starts with ", write it as '""<key>"'
+## See also: the section on special quoting rules in netctl.profile(5)
+#Key='J629109887'
+## Uncomment this if your ssid is hidden
+##Hidden=yes
+## Set a priority for automatic profile selection
 #Priority=10
-EOF
+#EOF
 
 ##PROBLEM - DHCPv6 REPLY: No addresses available for this interface
 #cat << EOF | sudo tee -a /etc/dhcpcd.conf
@@ -65,10 +65,10 @@ EOF
 #EOF
 #sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
-ip link set $wlanDevName down
-systemctl enable --now netctl-auto@$wlanDevName.service
-netctl-auto enable $wlanDevName.VIVO-F762
-netctl-auto switch-to wlp4s0.VIVO-F762
+#ip link set $wlanDevName down
+#systemctl enable --now netctl-auto@$wlanDevName.service
+#netctl-auto enable $wlanDevName.VIVO-F762
+#netctl-auto switch-to wlp4s0.VIVO-F762
 #################################################################
 
 #################################################################
