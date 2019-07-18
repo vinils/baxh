@@ -59,8 +59,10 @@ Key='J629109887'
 EOF
 
 #PROBLEM - DHCPv6 REPLY: No addresses available for this interface
-echo "noipv6rs" >> /etc/dhcpcd.conf
-echo "noipv6" >> /etc/dhcpcd.conf
+cat << EOF | sudo tee -a /etc/dhcpcd.conf
+noipv6rs
+noipv6
+EOF
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
 ip link set $wlanDevName down
