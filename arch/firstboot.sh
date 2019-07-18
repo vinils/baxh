@@ -76,12 +76,20 @@ pacman -S --noconfirm wpa_supplicant
 #################################################################
 
 #################################################################
-#(If running under VMWare) Install VM tools
+#(If running under VMWare) Install VM tools - (*never tested)
 #pacman -S --noconfirm open-vm-tools open-vm-tools-dkms
 #dkms add open-vm-tools/9.4.0
 #cat /proc/version > /etc/arch-release
 #systemctl --now enable vmtoolsd
 #vmware-toolbox-cmd timesync enable
+
+#pacman -S --noconfirm virtualbox-guest-utils
+#cat << EOF | tee -a /etc/modules-load.d/virtualbox.conf
+#vboxguest
+#vboxsf
+#vboxvideo
+#EOF
+#sudo systemctl enable vboxservice.service
 #################################################################
 
 #################################################################
@@ -112,9 +120,8 @@ echo "$myusr ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$myusr
 #################################################################
 
 #################################################################
-#Install dev tools for AUR
-
-pacman -S --noconfirm base-devel
+##Install dev tools for AUR
+#pacman -S --noconfirm base-devel
 #################################################################
 
 # adding git, support for ntfs mount
