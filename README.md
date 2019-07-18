@@ -1,7 +1,7 @@
 # baxh
 batchs and bash
 
-curl https://raw.githubusercontent.com/vinils/baxh/master/onlinerun -o /bin/onlinerun
+curl https://raw.githubusercontent.com/vinils/baxh/master/onlinerun -o /bin/onlinerun<br>
 chmod +xr /bin/onlinerun
 
 - arch-install<br>
