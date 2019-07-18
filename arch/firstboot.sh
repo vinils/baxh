@@ -58,12 +58,12 @@ Key='J629109887'
 #Priority=10
 EOF
 
-#PROBLEM - DHCPv6 REPLY: No addresses available for this interface
-cat << EOF | sudo tee -a /etc/dhcpcd.conf
-noipv6rs
-noipv6
-EOF
-sysctl -w net.ipv6.conf.all.disable_ipv6=1
+##PROBLEM - DHCPv6 REPLY: No addresses available for this interface
+#cat << EOF | sudo tee -a /etc/dhcpcd.conf
+#noipv6rs
+#noipv6
+#EOF
+#sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
 ip link set $wlanDevName down
 systemctl enable --now netctl-auto@$wlanDevName.service
