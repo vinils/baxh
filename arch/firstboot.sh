@@ -127,17 +127,6 @@ echo "$myusr ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$myusr
 # adding git, support for ntfs mount
 pacman -S --noconfirm ntfs-3g
 
-##video
-sudo pacman -S --noconfirm mesa
-#check video
-#lspci | grep VGA
-#>> 65:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Cedar [Radeon HD 5000/6000/7350/8350 Series]
-#https://wiki.archlinux.org/index.php/AMDGPU
-#check pacman -Ss xf86-video | less
-sudo pacman -S --noconfirm xf86-video-amdgpu
-
-#sudo pacman -S --noconfirm xorg-server xorg-xinit xorg-server-utils
-
 # removing unecessary packages
 pacman -Rns $(pacman -Qtdq)
 
