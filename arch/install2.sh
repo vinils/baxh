@@ -36,6 +36,9 @@ if [[ -z "$hostName" ]]; then
   exit 1
 fi
 
+curl https://raw.githubusercontent.com/vinils/baxh/master/onlinerun -o /bin/onlinerun
+chmod +xr /bin/onlinerun
+
 cat << EOF | tee -a /etc/pacman.conf
 [multilib]
 Include = /etc/pacman.d/mirrorlist
@@ -83,12 +86,8 @@ pacman -S --noconfirm openssh
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 systemctl enable sshd.socket
 
-
-firstBootFile="firstboot.bash"
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh -o $firstBootFile
-chmod +xr $firstBootFile
-./$firstBootFile $pwd
-rm $firstBootFile
+#firstboot
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $pwd
 
 ####################################################################################################
 #LAN
@@ -97,9 +96,5 @@ rm $firstBootFile
 #systemctl enable dhcpcd.service
 
 #custom way
-lanFile="lan.bash"
-curl https://raw.githubusercontent.com/vinils/baxh/master/arch/lan.sh -o $lanFile
-chmod +xr $lanFile
-./$lanFile
-rm $lanFile
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/lan.sh
 ####################################################################################################
