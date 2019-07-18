@@ -74,13 +74,10 @@ grub-install --target=x86_64-efi --efi-directory=/"$bootDir"
 cd /boot/efi/arch
 grub-install --target=x86_64-efi --efi-directory=/"$bootDir" --recheck
 grub-install --target=x86_64-efi --efi-directory=/"$bootDir" --bootloader-id=arch_gru
-
 #(if intell virtualization VT-x)
 sed -i 's/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"intel_iommu=on\ iommu=pt/g' /etc/default/grub
-
 grub-mkconfig -o /"$bootDir"/grub/grub.cfg
 
-systemctl enable dhcpcd.service
 
 pacman -S --noconfirm openssh
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
@@ -89,6 +86,20 @@ systemctl enable sshd.socket
 
 firstBootFile="firstboot.bash"
 curl https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh -o $firstBootFile
-chmod 777 $firstBootFile
+chmod +xr $firstBootFile
 ./$firstBootFile $pwd
 rm $firstBootFile
+
+####################################################################################################
+#LAN
+
+##light way
+#systemctl enable dhcpcd.service
+
+#custom way
+lanFile="lan.bash"
+curl https://raw.githubusercontent.com/vinils/baxh/master/arch/lan.sh -o $lanFile
+chmod +xr $lanFile
+./$lanFile
+rm $lanFile
+####################################################################################################
