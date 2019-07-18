@@ -86,7 +86,7 @@ pacman -S --noconfirm wpa_supplicant
 #EOF
 
 ##PROBLEM - DHCPv6 REPLY: No addresses available for this interface
-#cat << EOF | sudo tee -a /etc/dhcpcd.conf
+#cat << EOF | tee -a /etc/dhcpcd.conf
 #noipv6rs
 #noipv6
 #EOF
@@ -112,7 +112,7 @@ pacman -S --noconfirm wpa_supplicant
 #vboxsf
 #vboxvideo
 #EOF
-#sudo systemctl enable vboxservice.service
+#systemctl enable vboxservice.service
 #################################################################
 
 #################################################################
