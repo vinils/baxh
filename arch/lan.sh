@@ -38,7 +38,6 @@ Name=$wifi
 
 [Network]
 Bond=$bnd
-PrimarySlave=true
 EOF
 
 cat << EOF | sudo tee -a /etc/systemd/network/10-$bnd.network
