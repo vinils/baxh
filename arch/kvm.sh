@@ -28,7 +28,7 @@ sudo systemctl --now enable firewalld
 #sudo firewall-cmd --state
 #sudo systemctl status firewalld
 sudo firewall-cmd --permanent --zone=public --add-interface=enp5s0
-sudo firewall-cmd --permanent --zone=public --add-interface=bond0
+sudo firewall-cmd --permanent --zone=public --add-interface=kvm0
 sudo firewall-cmd --zone=public --permanent --add-service=https
 sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
 sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
@@ -74,15 +74,15 @@ EOF
 
 cat << EOF | sudo tee -a /etc/libvirt/bridge.xml
 <network>
-        <name>bond0</name>
+        <name>kvm0</name>
         <forward mode="bridge"/>
-        <bridge name="bond0"/>
+        <bridge name="kvm0"/>
 </network>
 EOF
 
 sudo virsh net-define --file /etc/libvirt/bridge.xml
-sudo virsh net-autostart bond0
-sudo virsh net-start bond0
+sudo virsh net-autostart kvm0
+sudo virsh net-start kvm0
 sudo virsh net-destroy default
 sudo virsh net-undefine default
 #################################################################
