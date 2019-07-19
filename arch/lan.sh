@@ -79,7 +79,6 @@ update_config=1
  
 network={
         ssid="VIVO-F762"
-        priority=1
         psk=23acc791a3c554a22ec2e4684f35923679b89bca32c236b332d697269eea3a43
 }
  
