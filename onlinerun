@@ -1,7 +1,8 @@
 #!/bin/bash
-#v0;0.0rc-1
+#v0.0.0rc-2
 
 randomStr=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
+mkdir /var/onlinerun
 filePath="/var/onlinerun/tmp$randomStr.sh"
 curl $1 > $filePath
 chmod +xr $filePath
