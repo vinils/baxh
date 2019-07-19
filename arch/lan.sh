@@ -4,7 +4,7 @@ ethGig=enp5s0
 ether2=eno1
 wifi=wlp4s0
 
-cat << EOF | sudo tee -a /etc/systemd/network/management.network
+cat << EOF | tee -a /etc/systemd/network/management.network
 [Match]
 Name=$ethGig
 
@@ -23,7 +23,7 @@ EOF
 
 bnd=bond0
 
-cat << EOF | sudo tee -a /etc/systemd/network/20-$ether2.network
+cat << EOF | tee -a /etc/systemd/network/20-$ether2.network
 [Match]
 Name=$ether2
 
@@ -32,7 +32,7 @@ Bond=$bnd
 PrimarySlave=true
 EOF
 
-cat << EOF | sudo tee -a /etc/systemd/network/20-$wifi.network
+cat << EOF | tee -a /etc/systemd/network/20-$wifi.network
 [Match]
 Name=$wifi
 
@@ -40,7 +40,7 @@ Name=$wifi
 Bond=$bnd
 EOF
 
-cat << EOF | sudo tee -a /etc/systemd/network/10-$bnd.network
+cat << EOF | tee -a /etc/systemd/network/10-$bnd.network
 [Match]
 Name=$bnd
 
@@ -50,7 +50,7 @@ LinkLocalAddressing=no
 UseDomains=true
 EOF
 
-cat << EOF | sudo tee -a /etc/systemd/network/10-$bnd.netdev
+cat << EOF | tee -a /etc/systemd/network/10-$bnd.netdev
 [NetDev]
 Name=$bnd
 Description=Bond 0
@@ -66,7 +66,7 @@ EOF
 
 mv /etc/resolv.conf /etc/resolv.conf.bak
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
-sudo systemctl enable --now systemd-networkd
+systemctl enable --now systemd-networkd
 systemctl enable --now systemd-resolved
 
 
@@ -88,4 +88,4 @@ network={
         psk=baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
 }
 EOF
-sudo systemctl enable --now wpa_supplicant@$wifi
+systemctl enable --now wpa_supplicant@$wifi
