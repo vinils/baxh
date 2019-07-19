@@ -28,7 +28,7 @@ sudo systemctl --now enable firewalld
 #sudo firewall-cmd --state
 #sudo systemctl status firewalld
 sudo firewall-cmd --permanent --zone=public --add-interface=enp5s0
-sudo firewall-cmd --permanent --zone=public --add-interface=kvm0
+sudo firewall-cmd --permanent --zone=public --add-interface=bond0
 sudo firewall-cmd --zone=public --permanent --add-service=https
 sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
 sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
@@ -71,79 +71,18 @@ EOF
 
 #################################################################
 #network
-cat << EOF | sudo tee -a /etc/systemd/network/management.network
-[Match]
-Name=enp5s0
- 
-[Network]
-DHCP=ipv4
-LinkLocalAddressing=no
-[DHCP]
-UseDomains=true
-EOF
-
-cat << EOF | sudo tee -a /etc/systemd/network/bond0.netdev
-[NetDev]
-Name=bond0
-Description=KVM vSwitch
-Kind=bond
- 
-[Bond]
-#Mode=balance-rr
-Mode=balance-tlb
-#TransmitHashPolicy=layer3+4
-MIIMonitorSec=1s
-LACPTransmitRate=fast	
-EOF
-
-cat << EOF | sudo tee -a /etc/systemd/network/bond0.network
-[Match]
-Name=eno1
-Name=wlp4s0
-
-[Network]
-Bond=bond0
-EOF
-
-cat << EOF | sudo tee -a /etc/systemd/network/vswitch.network
-[Match]
-Name=kvm0
- 
-[Network]
-DHCP=ipv4
-LinkLocalAddressing=no
-[DHCP]
-UseDomains=true
-EOF
-
-cat << EOF | sudo tee -a /etc/systemd/network/kvm0.netdev
-[NetDev]
-Name=kvm0
-Kind=bridge
-EOF
-
-cat << EOF | sudo tee -a /etc/systemd/network/kvm0.network
-[Match]
-Name=bond0
- 
-[Network]
-Bridge=kvm0
-EOF
-
-sudo systemctl --now enable systemd-networkd
-sudo systemctl restart systemd-networkd
 
 cat << EOF | sudo tee -a /etc/libvirt/bridge.xml
 <network>
-        <name>kvm0</name>
+        <name>bond0</name>
         <forward mode="bridge"/>
-        <bridge name="kvm0"/>
+        <bridge name="bond0"/>
 </network>
 EOF
 
 sudo virsh net-define --file /etc/libvirt/bridge.xml
-sudo virsh net-autostart kvm0
-sudo virsh net-start kvm0
+sudo virsh net-autostart bond0
+sudo virsh net-start bond0
 sudo virsh net-destroy default
 sudo virsh net-undefine default
 #################################################################
