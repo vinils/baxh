@@ -4,7 +4,7 @@ ethGig=enp5s0
 ether2=eno1
 wifi=wlp4s0
 
-cat << EOF | tee -a /etc/systemd/network/management.network
+cat << EOF | tee /etc/systemd/network/management.network
 [Match]
 Name=$ethGig
 
@@ -23,7 +23,7 @@ EOF
 
 bnd=bond0
 
-cat << EOF | tee -a /etc/systemd/network/20-$ether2.network
+cat << EOF | tee /etc/systemd/network/20-$ether2.network
 [Match]
 Name=$ether2
 
@@ -32,7 +32,7 @@ Bond=$bnd
 PrimarySlave=true
 EOF
 
-cat << EOF | tee -a /etc/systemd/network/20-$wifi.network
+cat << EOF | tee /etc/systemd/network/20-$wifi.network
 [Match]
 Name=$wifi
 
@@ -40,7 +40,7 @@ Name=$wifi
 Bond=$bnd
 EOF
 
-cat << EOF | tee -a /etc/systemd/network/10-$bnd.network
+cat << EOF | tee /etc/systemd/network/10-$bnd.network
 [Match]
 Name=$bnd
 
@@ -50,7 +50,7 @@ LinkLocalAddressing=no
 UseDomains=true
 EOF
 
-cat << EOF | tee -a /etc/systemd/network/10-$bnd.netdev
+cat << EOF | tee /etc/systemd/network/10-$bnd.netdev
 [NetDev]
 Name=$bnd
 Description=Bond 0
@@ -62,6 +62,31 @@ PrimaryReselectPolicy=always
 TransmitHashPolicy=layer3+4
 MIIMonitorSec=1s
 LACPTransmitRate=fast
+EOF
+
+cat << EOF | tee /etc/systemd/network/vswitch.network	
+[Match]	
+Name=kvm0	
+ 	
+[Network]	
+DHCP=ipv4	
+LinkLocalAddressing=no	
+[DHCP]	
+UseDomains=true	
+EOF	
+
+cat << EOF | tee /etc/systemd/network/kvm0.netdev	
+[NetDev]	
+Name=kvm0	
+Kind=bridge	
+EOF	
+
+cat << EOF | tee /etc/systemd/network/kvm0.network	
+[Match]	
+Name=bond0	
+ 	
+[Network]	
+Bridge=kvm0	
 EOF
 
 mv /etc/resolv.conf /etc/resolv.conf.bak
