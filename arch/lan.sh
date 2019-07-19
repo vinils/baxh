@@ -11,6 +11,8 @@ Name=$ethGig
 [Network]
 DHCP=yes
 #DHCP=ipv4
+LinkLocalAddressing=no
+UseDomains=true
 #RouteMetric=10
 #IPv6PrivacyExtensions=true
 ## to use static IP uncomment these instead of DHCP
@@ -19,39 +21,52 @@ DHCP=yes
 #Gateway=192.168.1.254
 EOF
 
-cat << EOF | sudo tee -a /etc/systemd/network/$ether2.network
+bnd=bond0
+
+cat << EOF | sudo tee -a /etc/systemd/network/20-$ether2.network
 [Match]
 Name=$ether2
 
 [Network]
-DHCP=yes
-#DHCP=ipv4
-#RouteMetric=10
-#IPv6PrivacyExtensions=true
-## to use static IP uncomment these instead of DHCP
-#DNS=192.168.1.254
-#Address=192.168.1.87/24
-#Gateway=192.168.1.254
+Bond=$bnd
+PrimarySlave=true
 EOF
 
-cat << EOF | sudo tee -a /etc/systemd/network/$wifi.network
+cat << EOF | sudo tee -a /etc/systemd/network/20-$wifi.network
 [Match]
 Name=$wifi
 
 [Network]
+Bond=$bnd
+PrimarySlave=true
+EOF
+
+cat << EOF | sudo tee -a /etc/systemd/network/10-$bnd.network
+[Match]
+Name=$bnd
+
+[Network]
 DHCP=yes
-#DHCP=ipv4
-#RouteMetric=10
-#IPv6PrivacyExtensions=true
-## to use static IP uncomment these instead of DHCP
-#DNS=192.168.1.254
-#Address=192.168.1.87/24
-#Gateway=192.168.1.254
+LinkLocalAddressing=no
+UseDomains=true
+EOF
+
+cat << EOF | sudo tee -a /etc/systemd/network/10-$bnd.netdev
+[NetDev]
+Name=$bnd
+Description=Bond 0
+Kind=bond
+
+[Bond]
+Mode=active-backup
+PrimaryReselectPolicy=always
+TransmitHashPolicy=layer3+4
+MIIMonitorSec=1s
+LACPTransmitRate=fast
 EOF
 
 mv /etc/resolv.conf /etc/resolv.conf.bak
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
-#sudo systemctl start systemd-networkd
 sudo systemctl enable --now systemd-networkd
 systemctl enable --now systemd-resolved
 
