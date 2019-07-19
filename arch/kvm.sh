@@ -22,7 +22,7 @@ sudo pacman -S --noconfirm qemu-headless libvirt bridge-utils openbsd-netcat dmi
 #Cannot check dnsmasq binary /usr/bin/dnsmasq: No such file or directory direct firewall backend requested,
 sudo systemctl disable nftables
 sudo systemctl stop nftables
-sudo pacman -S --noconfirm dnsmasq ebtables firewalld
+sudo pacman -S --noconfirm dnsmasq ebtables ipset firewalld
 sudo systemctl --now enable firewalld
 ##check
 #sudo firewall-cmd --state
