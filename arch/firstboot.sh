@@ -46,59 +46,8 @@ pacman -S --noconfirm xf86-video-amdgpu
 #pacman -Syu
 
 #################################################################
-#wifi
-
-wlanDevName="wlp4s0"
-pacman -S --noconfirm wpa_supplicant
-
-#cat << EOF | tee /etc/netctl/$wlanDevName.Gil
-#Description='GIL'
-#Interface=$wlanDevName
-#Connection=wireless
-#Security=wpa
-#IP=dhcp
-#ESSID='Gil'
-## Prepend hexadecimal keys with \"
-## If your key starts with ", write it as '""<key>"'
-## See also: the section on special quoting rules in netctl.profile(5)
-#Key=\"baf4fd23d657dbf3bdd65caaec79dcbb669e9e1d26932d2acae01987a1b6b4b0
-## Uncomment this if your ssid is hidden
-##Hidden=yes
-## Set a priority for automatic profile selection
-##Priority=10
-#EOF
-
-#cat << EOF | tee /etc/netctl/$wlanDevName.VIVO-F762
-#Description='A simple WPA encrypted wireless connection'
-#Interface=$wlanDevName
-#Connection=wireless
-#Security=wpa
-#IP=dhcp
-#ESSID='VIVO-F762'
-## Prepend hexadecimal keys with \"
-## If your key starts with ", write it as '""<key>"'
-## See also: the section on special quoting rules in netctl.profile(5)
-#Key=\"23acc791a3c554a22ec2e4684f35923679b89bca32c236b332d697269eea3a43
-## Uncomment this if your ssid is hidden
-##Hidden=yes
-## Set a priority for automatic profile selection
-#Priority=10
-#EOF
-
-##PROBLEM - DHCPv6 REPLY: No addresses available for this interface
-#cat << EOF | tee -a /etc/dhcpcd.conf
-#noipv6rs
-#noipv6
-#EOF
-#sysctl -w net.ipv6.conf.all.disable_ipv6=1
-
-#ip link set $wlanDevName down
-#sudo systemctl enable --now netctl-auto@$wlanDevName.service
-#netctl-auto switch-to $wlanDevName.VIVO-F762
-#################################################################
-
-#################################################################
 #(If running under VMWare) Install VM tools - (*never tested)
+
 #pacman -S --noconfirm open-vm-tools open-vm-tools-dkms
 #dkms add open-vm-tools/9.4.0
 #cat /proc/version > /etc/arch-release
@@ -112,6 +61,7 @@ pacman -S --noconfirm wpa_supplicant
 #vboxvideo
 #EOF
 #systemctl enable vboxservice.service
+
 #################################################################
 
 #################################################################
