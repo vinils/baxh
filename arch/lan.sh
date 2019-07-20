@@ -66,29 +66,29 @@ EOF
 
 kvm=kvm0
 
-cat << EOF | tee /etc/systemd/network/vswitch.network	
-[Match]	
-Name=$kvm	
- 	
-[Network]	
-DHCP=yes	
-LinkLocalAddressing=no	
-[DHCP]	
-UseDomains=true	
-EOF	
+cat << EOF | tee /etc/systemd/network/vswitch.network
+[Match]
+Name=$kvm
 
-cat << EOF | tee /etc/systemd/network/$kvm.netdev	
-[NetDev]	
-Name=$kvm	
-Kind=bridge	
-EOF	
+[Network]
+DHCP=yes
+LinkLocalAddressing=no
+[DHCP]
+UseDomains=true
+EOF
 
-cat << EOF | tee /etc/systemd/network/$kvm.network	
-[Match]	
-Name=$bnd	
- 	
-[Network]	
-Bridge=$kvm	
+cat << EOF | tee /etc/systemd/network/$kvm.netdev
+[NetDev]
+Name=$kvm
+Kind=bridge
+EOF
+
+cat << EOF | tee /etc/systemd/network/$kvm.network
+[Match]
+Name=$bnd
+
+[Network]
+Bridge=$kvm
 EOF
 
 mv /etc/resolv.conf /etc/resolv.conf.bak
