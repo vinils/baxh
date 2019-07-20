@@ -127,7 +127,7 @@ EOF
 
 cat << EOF | tee -a /etc/libvirt/volume/kvmDrivers.vol
 <pool type="dir">
-  <name>isoimages</name>
+  <name>kvmDrivers</name>
   <target>
   <path>/mnt/dados/SOFTWARES/WORK/KVM/</path>
   <permissions>
