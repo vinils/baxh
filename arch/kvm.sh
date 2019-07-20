@@ -28,6 +28,7 @@ sudo systemctl --now enable firewalld
 #sudo firewall-cmd --state
 #sudo systemctl status firewalld
 sudo firewall-cmd --permanent --zone=public --add-interface=enp5s0
+sudo firewall-cmd --permanent --zone=public --add-interface=bond0
 sudo firewall-cmd --permanent --zone=public --add-interface=kvm0
 sudo firewall-cmd --zone=public --permanent --add-service=https
 sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
