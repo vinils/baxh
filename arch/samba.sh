@@ -1,5 +1,5 @@
 #!/bin/bash
-usr=$q
+usr=$1
 pwd=$2
 
 if [[ -z "$usr" ]]; then
