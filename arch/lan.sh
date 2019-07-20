@@ -1,4 +1,5 @@
 #!/bin/bash
+#https://www.reddit.com/r/linux/comments/30hk8e/creating_a_bridge_for_virtual_machines_using/
 
 ethGig=enp5s0
 ether2=eno1
