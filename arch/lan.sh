@@ -15,14 +15,13 @@ DHCP=yes
 LinkLocalAddressing=no
 #RouteMetric=10
 #IPv6PrivacyExtensions=true
-
-[DHCP]
-UseDomains=true
-
 ## to use static IP uncomment these instead of DHCP
 #DNS=192.168.1.254
 #Address=192.168.1.87/24
 #Gateway=192.168.1.254
+
+[DHCP]
+UseDomains=true
 EOF
 
 bnd=bond0
@@ -44,6 +43,8 @@ Name=$wifi
 Bond=$bnd
 EOF
 
+kvm=kvm0
+
 cat << EOF | tee /etc/systemd/network/10-$bnd.network
 [Match]
 Name=$bnd
@@ -51,6 +52,7 @@ Name=$bnd
 [Network]
 DHCP=yes
 LinkLocalAddressing=no
+Bridge=$kvm
 
 [DHCP]
 UseDomains=true
@@ -70,19 +72,17 @@ MIIMonitorSec=1s
 LACPTransmitRate=fast
 EOF
 
-kvm=kvm0
-
-cat << EOF | tee /etc/systemd/network/vswitch.network
-[Match]
-Name=$kvm
-
-[Network]
-DHCP=yes
-LinkLocalAddressing=no
-
-[DHCP]
-UseDomains=true
-EOF
+#cat << EOF | tee /etc/systemd/network/vswitch.network
+#[Match]
+#Name=$kvm
+#
+#[Network]
+#DHCP=yes
+#LinkLocalAddressing=no
+#
+#[DHCP]
+#UseDomains=true
+#EOF
 
 cat << EOF | tee /etc/systemd/network/$kvm.netdev
 [NetDev]
@@ -92,10 +92,13 @@ EOF
 
 cat << EOF | tee /etc/systemd/network/$kvm.network
 [Match]
-Name=$bnd
+Name=$kvm
 
 [Network]
-Bridge=$kvm
+DHCP=yes
+
+[DHCP]
+UseDomains=true
 EOF
 
 mv /etc/resolv.conf /etc/resolv.conf.bak
