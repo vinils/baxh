@@ -64,9 +64,11 @@ MIIMonitorSec=1s
 LACPTransmitRate=fast
 EOF
 
+kvm=kvm0
+
 cat << EOF | tee /etc/systemd/network/vswitch.network	
 [Match]	
-Name=kvm0	
+Name=$kvm	
  	
 [Network]	
 DHCP=ipv4	
@@ -75,18 +77,18 @@ LinkLocalAddressing=no
 UseDomains=true	
 EOF	
 
-cat << EOF | tee /etc/systemd/network/kvm0.netdev	
+cat << EOF | tee /etc/systemd/network/$kvm.netdev	
 [NetDev]	
-Name=kvm0	
+Name=$kvm	
 Kind=bridge	
 EOF	
 
-cat << EOF | tee /etc/systemd/network/kvm0.network	
+cat << EOF | tee /etc/systemd/network/$kvm.network	
 [Match]	
-Name=bond0	
+Name=$bnd	
  	
 [Network]	
-Bridge=kvm0	
+Bridge=$kvm	
 EOF
 
 mv /etc/resolv.conf /etc/resolv.conf.bak
