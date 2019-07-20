@@ -35,11 +35,10 @@ cat <<EOF | tee -a /etc/samba/smb.conf
    read only = no
    guest only = no
    guest ok = no
-   share modes = yes
 
 EOF
 
-mkdir /mnt/dados
+#mkdir /mnt/dados
 #chmod 0777 /mnt/dados
 
 systemctl enable --now smb.service nmb.service
