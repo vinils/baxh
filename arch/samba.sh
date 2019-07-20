@@ -15,6 +15,7 @@ fi
 pacman -Sy --noconfirm samba
 
 useradd -m $usr
+#(echo "$pwd"; sleep 1; echo "$pwd" ) | sudo smbpasswd -s -a $usr
 yes "$pwd" | pdbedit -a $usr -t
 
 cat <<EOF | tee /etc/samba/smb.conf
