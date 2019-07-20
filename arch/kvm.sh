@@ -38,6 +38,9 @@ firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
 #################################################################
 
 
+systemctl enable --now libvirtd
+
+
 #################################################################
 #allow remote connection from users in libvirt group
 usermod -a -G libvirt $(whoami)
@@ -54,9 +57,6 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 #################################################################
-
-
-systemctl enable --now libvirtd
 
 
 #################################################################
