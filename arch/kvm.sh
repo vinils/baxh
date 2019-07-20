@@ -1,6 +1,7 @@
 #!/bin/bash
 #https://kyau.net/wiki/ArchLinux:KVM
 
+myusr=myuser
 
 #################################################################
 #enable VTd
@@ -43,7 +44,7 @@ systemctl enable --now libvirtd
 
 #################################################################
 #allow remote connection from users in libvirt group
-usermod -a -G libvirt $(whoami)
+usermod -a -G libvirt $myusr
 usermod -a -G libvirt root
 #newgrp libvirt
 pacman -S --noconfirm polkit
