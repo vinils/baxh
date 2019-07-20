@@ -1,5 +1,4 @@
-pacman -Sy --noconfirm samba
-
+#!/bin/bash
 usr=$q
 pwd=$2
 
@@ -12,6 +11,8 @@ if [[ -z "$pwd" ]]; then
   printf "Password: "
   read -r pwd
 fi
+
+pacman -Sy --noconfirm samba
 
 useradd -m $usr
 yes "$pwd" | pdbedit -a $usr -t
