@@ -146,3 +146,7 @@ rm $install2
 umount /dev/"$device""$uefiPartitionNumber"
 umount /dev/"$device""$linuxFSPartitionNumber"
 reboot
+
+##check
+#journalctl -ex
+#dmesg | grep iwlwifi
