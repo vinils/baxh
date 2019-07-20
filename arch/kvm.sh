@@ -125,10 +125,25 @@ cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
 </pool>
 EOF
 
+cat << EOF | sudo tee -a /etc/libvirt/volume/kvmDrivers.vol
+<pool type="dir">
+  <name>isoimages</name>
+  <target>
+  <path>/mnt/dados/SOFTWARES/WORK/KVM/</path>
+  <permissions>
+    <mode>0770</mode>
+    <owner>78</owner>
+    <group>78</group>
+  </permissions>
+  </target>
+</pool>
+EOF
+
 sudo chown kvm:kvm /var/lib/libvirt/images/
 sudo setfacl -m u:kvm:rx /var/lib/libvirt/images/
 echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" | sudo tee -a /etc/udev/rules.d/90-kvm.rules
 sudo virsh pool-define /etc/libvirt/volume/isos.vol
+sudo virsh pool-define /etc/libvirt/volume/kvmDrivers.vol
 sudo virsh pool-build isoimages
 sudo virsh pool-autostart isoimages
 #################################################################
