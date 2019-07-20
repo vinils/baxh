@@ -47,3 +47,9 @@ systemctl enable --now smb.service nmb.service
 
 firewall-cmd --zone=public --permanent --add-port=137-139/tcp
 firewall-cmd --zone=public --permanent --add-port=445/tcp
+
+#################################################################
+#BUG Unkwon connection problem
+firewall-cmd --set-log-denied=all
+firewall-cmd --set-log-denied=off
+#################################################################
