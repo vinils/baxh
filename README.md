@@ -8,3 +8,7 @@ chmod +xr /bin/onlinerun
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/install.sh
 - firstboot<br>
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $PWD
+- samba<br>
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/samba.sh $PWD
+- kvm<br>
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/kvm.sh
