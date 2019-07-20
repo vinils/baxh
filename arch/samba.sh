@@ -1,7 +1,20 @@
 pacman -Sy --noconfirm samba
 
-useradd -m samba
-yes "samba01" | pdbedit -a samba -t
+usr=$q
+pwd=$2
+
+if [[ -z "$usr" ]]; then
+  printf "User: "
+  read -r usr
+fi
+
+if [[ -z "$pwd" ]]; then
+  printf "Password: "
+  read -r pwd
+fi
+
+useradd -m $usr
+yes "$pwd" | pdbedit -a $usr -t
 
 cat <<EOF | tee /etc/samba/smb.conf
 [global]
