@@ -107,8 +107,14 @@ cat << EOF | tee -a /etc/fstab
 # /dev/sda2
 UUID="98B88774B8875024"  /mnt/dados  ntfs-3g  defaults  0 0
 EOF
+
 mkdir /mnt/dados
 mount -t ntfs-3g /dev/sda2 /mnt/dados
+
+chown kvm:kvm /var/lib/libvirt/images/
+setfacl -m u:kvm:rx /var/lib/libvirt/images/
+echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" | tee -a /etc/udev/rules.d/90-kvm.rules
+
 mkdir /etc/libvirt/volume
 
 cat << EOF | tee -a /etc/libvirt/volume/isos.vol
@@ -125,6 +131,10 @@ cat << EOF | tee -a /etc/libvirt/volume/isos.vol
 </pool>
 EOF
 
+virsh pool-define /etc/libvirt/volume/isos.vol
+virsh pool-build isoimages
+virsh pool-autostart isoimages
+
 cat << EOF | tee -a /etc/libvirt/volume/kvmDrivers.vol
 <pool type="dir">
   <name>kvmDrivers</name>
@@ -139,13 +149,9 @@ cat << EOF | tee -a /etc/libvirt/volume/kvmDrivers.vol
 </pool>
 EOF
 
-chown kvm:kvm /var/lib/libvirt/images/
-setfacl -m u:kvm:rx /var/lib/libvirt/images/
-echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" | tee -a /etc/udev/rules.d/90-kvm.rules
-virsh pool-define /etc/libvirt/volume/isos.vol
 virsh pool-define /etc/libvirt/volume/kvmDrivers.vol
-virsh pool-build isoimages
-virsh pool-autostart isoimages
+virsh pool-build kvmDrivers
+virsh pool-autostart kvmDrivers
 #################################################################
 
 
