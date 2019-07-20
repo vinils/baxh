@@ -71,7 +71,7 @@ cat << EOF | tee /etc/systemd/network/vswitch.network
 Name=$kvm	
  	
 [Network]	
-DHCP=ipv4	
+DHCP=yes	
 LinkLocalAddressing=no	
 [DHCP]	
 UseDomains=true	
