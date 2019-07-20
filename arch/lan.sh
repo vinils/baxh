@@ -12,9 +12,12 @@ Name=$ethGig
 DHCP=yes
 #DHCP=ipv4
 LinkLocalAddressing=no
-UseDomains=true
 #RouteMetric=10
 #IPv6PrivacyExtensions=true
+
+[DHCP]
+UseDomains=true
+
 ## to use static IP uncomment these instead of DHCP
 #DNS=192.168.1.254
 #Address=192.168.1.87/24
@@ -47,6 +50,8 @@ Name=$bnd
 [Network]
 DHCP=yes
 LinkLocalAddressing=no
+
+[DHCP]
 UseDomains=true
 EOF
 
@@ -73,6 +78,7 @@ Name=$kvm
 [Network]
 DHCP=yes
 LinkLocalAddressing=no
+
 [DHCP]
 UseDomains=true
 EOF
