@@ -4,9 +4,9 @@
 
 #################################################################
 #enable VTd
-sudo modprobe -r kvm_intel
-sudo modprobe kvm_intel nested=1
-cat << EOF | sudo tee -a /etc/modprobe.d/kvm_intel.conf
+modprobe -r kvm_intel
+modprobe kvm_intel nested=1
+cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
 options kvm-intel nested=1
 options kvm-intel enable_shadow_vmcs=1
 options kvm-intel enable_apicv=1
@@ -15,24 +15,24 @@ EOF
 #################################################################
 
 
-sudo pacman -S --noconfirm qemu-headless libvirt bridge-utils openbsd-netcat dmidecode
+pacman -S --noconfirm qemu-headless libvirt bridge-utils openbsd-netcat dmidecode
 
 
 #################################################################
 #Cannot check dnsmasq binary /usr/bin/dnsmasq: No such file or directory direct firewall backend requested,
-sudo systemctl disable nftables
-sudo systemctl stop nftables
-sudo pacman -S --noconfirm dnsmasq ebtables ipset firewalld
-sudo systemctl --now enable firewalld
+systemctl disable nftables
+systemctl stop nftables
+pacman -S --noconfirm dnsmasq ebtables ipset firewalld
+systemctl --now enable firewalld
 ##check
 #sudo firewall-cmd --state
 #sudo systemctl status firewalld
-sudo firewall-cmd --permanent --zone=public --add-interface=enp5s0
-sudo firewall-cmd --permanent --zone=public --add-interface=bond0
-sudo firewall-cmd --permanent --zone=public --add-interface=kvm0
-sudo firewall-cmd --zone=public --permanent --add-service=https
-sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
-sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
+firewall-cmd --permanent --zone=public --add-interface=enp5s0
+firewall-cmd --permanent --zone=public --add-interface=bond0
+firewall-cmd --permanent --zone=public --add-interface=kvm0
+firewall-cmd --zone=public --permanent --add-service=https
+firewall-cmd --zone=public --permanent --add-port=5900-5950/udp
+firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
 #check
 #sudo firewall-cmd --list-all
 #################################################################
@@ -40,11 +40,11 @@ sudo firewall-cmd --zone=public --permanent --add-port=5900-5950/tcp
 
 #################################################################
 #allow remote connection from users in libvirt group
-sudo usermod -a -G libvirt $(whoami)
-sudo usermod -a -G libvirt root
+usermod -a -G libvirt $(whoami)
+usermod -a -G libvirt root
 #newgrp libvirt
-sudo pacman -S --noconfirm polkit
-cat << EOF | sudo tee -a /etc/polkit-1/rules.d/50-libvirt.rules
+pacman -S --noconfirm polkit
+cat << EOF | tee -a /etc/polkit-1/rules.d/50-libvirt.rules
 /* Allow users in kvm group to manage the libvirt daemon without authentication */
 polkit.addRule(function(action, subject) {
     if (action.id == "org.libvirt.unix.manage" &&
@@ -56,13 +56,13 @@ EOF
 #################################################################
 
 
-sudo systemctl enable --now libvirtd
+systemctl enable --now libvirtd
 
 
 #################################################################
 #Adding the OVMF firmware to libvirt.
-sudo pacman -S --noconfirm ovmf
-cat << EOF | sudo tee -a /etc/libvirt/qemu.conf
+pacman -S --noconfirm ovmf
+cat << EOF | tee -a /etc/libvirt/qemu.conf
 nvram = [
     "/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"
 ]
@@ -73,7 +73,7 @@ EOF
 #################################################################
 #network
 
-cat << EOF | sudo tee -a /etc/libvirt/bridge.xml
+cat << EOF | tee -a /etc/libvirt/bridge.xml
 <network>
         <name>kvm0</name>
         <forward mode="bridge"/>
@@ -81,20 +81,20 @@ cat << EOF | sudo tee -a /etc/libvirt/bridge.xml
 </network>
 EOF
 
-sudo virsh net-define --file /etc/libvirt/bridge.xml
-sudo virsh net-autostart kvm0
-sudo virsh net-start kvm0
-sudo virsh net-destroy default
-sudo virsh net-undefine default
+virsh net-define --file /etc/libvirt/bridge.xml
+virsh net-autostart kvm0
+virsh net-start kvm0
+virsh net-destroy default
+virsh net-undefine default
 #################################################################
 
 
 #################################################################
-sudo useradd -g kvm -s /usr/bin/nologin kvm
-echo "user = \"root\"" | sudo tee -a /etc/libvirt/qemu.conf
-echo "group = \"root\"" | sudo tee -a /etc/libvirt/qemu.conf
-sudo usermod -a -G kvm $(whoami)
-sudo usermod -a -G kvm root
+useradd -g kvm -s /usr/bin/nologin kvm
+echo "user = \"root\"" | tee -a /etc/libvirt/qemu.conf
+echo "group = \"root\"" | tee -a /etc/libvirt/qemu.conf
+usermod -a -G kvm $(whoami)
+usermod -a -G kvm root
 ##check
 #virsh list --all
 # wrong output >> libvir: Remote error : Permission denied
@@ -102,16 +102,16 @@ sudo usermod -a -G kvm root
 
 
 #################################################################
-cat << EOF | sudo tee -a /etc/fstab
+cat << EOF | tee -a /etc/fstab
 
 # /dev/sda2
 UUID="98B88774B8875024"  /mnt/dados  ntfs-3g  defaults  0 0
 EOF
-sudo mkdir /mnt/dados
-sudo mount -t ntfs-3g /dev/sda2 /mnt/dados
-sudo mkdir /etc/libvirt/volume
+mkdir /mnt/dados
+mount -t ntfs-3g /dev/sda2 /mnt/dados
+mkdir /etc/libvirt/volume
 
-cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
+cat << EOF | tee -a /etc/libvirt/volume/isos.vol
 <pool type="dir">
   <name>isoimages</name>
   <target>
@@ -125,7 +125,7 @@ cat << EOF | sudo tee -a /etc/libvirt/volume/isos.vol
 </pool>
 EOF
 
-cat << EOF | sudo tee -a /etc/libvirt/volume/kvmDrivers.vol
+cat << EOF | tee -a /etc/libvirt/volume/kvmDrivers.vol
 <pool type="dir">
   <name>isoimages</name>
   <target>
@@ -139,38 +139,38 @@ cat << EOF | sudo tee -a /etc/libvirt/volume/kvmDrivers.vol
 </pool>
 EOF
 
-sudo chown kvm:kvm /var/lib/libvirt/images/
-sudo setfacl -m u:kvm:rx /var/lib/libvirt/images/
-echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" | sudo tee -a /etc/udev/rules.d/90-kvm.rules
-sudo virsh pool-define /etc/libvirt/volume/isos.vol
-sudo virsh pool-define /etc/libvirt/volume/kvmDrivers.vol
-sudo virsh pool-build isoimages
-sudo virsh pool-autostart isoimages
+chown kvm:kvm /var/lib/libvirt/images/
+setfacl -m u:kvm:rx /var/lib/libvirt/images/
+echo "ENV{DM_VG_NAME}==\"vdisk\" ENV{DM_LV_NAME}==\"*\" OWNER=\"kvm\"" | tee -a /etc/udev/rules.d/90-kvm.rules
+virsh pool-define /etc/libvirt/volume/isos.vol
+virsh pool-define /etc/libvirt/volume/kvmDrivers.vol
+virsh pool-build isoimages
+virsh pool-autostart isoimages
 #################################################################
 
 
 #################################################################
 #Hugepages
 grpKvmId="78"
-sudo groupmod -g $grpKvmId kvm
-sudo usermod -u $grpKvmId kvm
+groupmod -g $grpKvmId kvm
+usermod -u $grpKvmId kvm
 
-echo "hugetlbfs /dev/hugepages hugetlbfs mode=1770,gid=$grpKvmId 0 0" | sudo tee -a /etc/fstab
-sudo umount /dev/hugepages
-sudo mount /dev/hugepages
+echo "hugetlbfs /dev/hugepages hugetlbfs mode=1770,gid=$grpKvmId 0 0" | tee -a /etc/fstab
+umount /dev/hugepages
+mount /dev/hugepages
 ##check
 # sudo mount | grep huge
 # ls -FalG /dev/ | grep huge
 
-echo 9000 | sudo tee /proc/sys/vm/nr_hugepages
-echo "vm.nr_hugepages = 9000" | sudo tee -a /etc/sysctl.d/40-hugepages.conf
+echo 9000 | tee /proc/sys/vm/nr_hugepages
+echo "vm.nr_hugepages = 9000" | tee -a /etc/sysctl.d/40-hugepages.conf
 ##check
 #grep HugePages_Total /proc/meminfo
 #cat /proc/meminfo
 #output >> HugePages_Total:   15360
 #output >> HugePages_Free:    15360
 
-echo "hugetlbfs_mount = \"/dev/hugepages\"" | sudo tee -a /etc/libvirt/qemu.conf
+echo "hugetlbfs_mount = \"/dev/hugepages\"" | tee -a /etc/libvirt/qemu.conf
 ##veriy IOMMU
 #sudo dmesg | grep -e DMAR -e IOMMU
 ##output >>  [ 0.000000] DMAR: IOMMU enabled.
@@ -179,9 +179,9 @@ echo "hugetlbfs_mount = \"/dev/hugepages\"" | sudo tee -a /etc/libvirt/qemu.conf
 
 #################################################################
 #Enable SPICE over TLS will allow SPICE to be exposed externally.
-echo "spice_listen = \"0.0.0.0\"" | sudo tee -a /etc/libvirt/qemu.conf
-echo "spice_tls = 1" | sudo tee -a /etc/libvirt/qemu.conf
-echo "spice_tls_x509_cert_dir = \"/etc/pki/libvirt-spice\"" | sudo tee -a /etc/libvirt/qemu.conf
+echo "spice_listen = \"0.0.0.0\"" | tee -a /etc/libvirt/qemu.conf
+echo "spice_tls = 1" | tee -a /etc/libvirt/qemu.conf
+echo "spice_tls_x509_cert_dir = \"/etc/pki/libvirt-spice\"" | tee -a /etc/libvirt/qemu.conf
 SERVER_KEY=server-key.pem
 /bin/bash << EndOfMessage
 #!/bin/bash
@@ -216,21 +216,21 @@ openssl req -noout -text -in server-key.csr
 openssl x509 -noout -text -in server-cert.pem
 openssl x509 -noout -text -in ca-cert.pem
 EndOfMessage
-sudo mkdir -p /etc/pki/libvirt-spice
-sudo chmod -R a+rx /etc/pki
-sudo mv ca-* server-* /etc/pki/libvirt-spice
-sudo chmod 660 /etc/pki/libvirt-spice/*
-sudo chown kvm:kvm /etc/pki/libvirt-spice/*
+mkdir -p /etc/pki/libvirt-spice
+chmod -R a+rx /etc/pki
+mv ca-* server-* /etc/pki/libvirt-spice
+chmod 660 /etc/pki/libvirt-spice/*
+chown kvm:kvm /etc/pki/libvirt-spice/*
 #################################################################
 
 
-sudo systemctl restart libvirtd
+systemctl restart libvirtd
 
 
 #################################################################
 #let's be nice to the VMs and give them some time to perform a graceful shutdown before the host powers off
-sudo sed -i 's/#ON_SHUTDOWN=.*/ON_SHUTDOWN=shutdown/' /etc/conf.d/libvirt-guests
-sudo systemctl enable libvirt-guests
+sed -i 's/#ON_SHUTDOWN=.*/ON_SHUTDOWN=shutdown/' /etc/conf.d/libvirt-guests
+systemctl enable libvirt-guests
 #################################################################
 
 
@@ -254,8 +254,8 @@ sudo systemctl enable libvirt-guests
 
 #################################################################
 #bug unknown I/O socket timeout
-sudo firewall-cmd --set-log-denied=all
-sudo firewall-cmd --set-log-denied=off
+firewall-cmd --set-log-denied=all
+firewall-cmd --set-log-denied=off
 #################################################################
 
 
