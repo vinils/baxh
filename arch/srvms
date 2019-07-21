@@ -5,7 +5,7 @@ virsh vol-create-as default win2k16.qcow2 20GiB
 cat << EOF | tee -a ./tmp.xml
 <domain type='kvm' id='25'>
   <name>win2k16</name>
-  <uuid>57808a18-6887-4a8f-9853-8cbc8603b844</uuid>
+  <uuid>57808a18-6887-4a8f-9853-8cbc8603b845</uuid>
   <memory unit='KiB'>10240000</memory>
   <currentMemory unit='KiB'>10240000</currentMemory>
   <vcpu placement='static' current='1'>10</vcpu>
