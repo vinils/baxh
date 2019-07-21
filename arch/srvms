@@ -183,6 +183,6 @@ cat << EOF | tee -a ./tmp.xml
 </domain>
 EOF
 
-virsh create temp.xml
+virsh create tmp.xml
 
-rm ./temp.xml
+rm ./tmp.xml
