@@ -4,12 +4,23 @@ virsh vol-create-as default win2k16.qcow2 20GiB --format=qcow2
 #virsh vol-delete --pool default win2k16.qcow2
 
 cat << EOF | tee -a ./tmp.xml
-<domain type='kvm' id='25'>
+<domain type='kvm' id='39'>
   <name>win2k16</name>
-  <uuid>57808a18-6887-4a8f-9853-8cbc8603b845</uuid>
+  <uuid>57808a18-6887-4a8f-9853-8cbc8603b844</uuid>
   <memory unit='KiB'>10240000</memory>
-  <currentMemory unit='KiB'>10240000</currentMemory>
-  <vcpu placement='static' current='1'>10</vcpu>
+  <currentMemory unit='KiB'>6144000</currentMemory>
+  <vcpu placement='static' current='2'>8</vcpu>
+  <cputune>
+    <vcpupin vcpu='0' cpuset='2'/>
+    <vcpupin vcpu='1' cpuset='8'/>
+    <vcpupin vcpu='2' cpuset='3'/>
+    <vcpupin vcpu='3' cpuset='9'/>
+    <vcpupin vcpu='4' cpuset='4'/>
+    <vcpupin vcpu='5' cpuset='10'/>
+    <vcpupin vcpu='6' cpuset='5'/>
+    <vcpupin vcpu='7' cpuset='11'/>
+    <emulatorpin cpuset='0,6'/>
+  </cputune>
   <resource>
     <partition>/machine</partition>
   </resource>
@@ -28,21 +39,8 @@ cat << EOF | tee -a ./tmp.xml
     </hyperv>
     <vmport state='off'/>
   </features>
-  <cpu mode='custom' match='exact' check='full'>
-    <model fallback='forbid'>Cascadelake-Server</model>
-    <vendor>Intel</vendor>
-    <topology sockets='1' cores='5' threads='2'/>
-    <feature policy='require' name='ss'/>
-    <feature policy='require' name='vmx'/>
-    <feature policy='require' name='hypervisor'/>
-    <feature policy='require' name='tsc_adjust'/>
-    <feature policy='require' name='umip'/>
-    <feature policy='require' name='stibp'/>
-    <feature policy='require' name='arch-capabilities'/>
-    <feature policy='require' name='xsaves'/>
-    <feature policy='disable' name='pku'/>
-    <feature policy='disable' name='avx512vnni'/>
-    <feature policy='disable' name='mpx'/>
+  <cpu mode='host-passthrough' check='partial'>
+    <topology sockets='1' cores='4' threads='2'/>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -119,21 +117,21 @@ cat << EOF | tee -a ./tmp.xml
     </controller>
     <interface type='bridge'>
       <mac address='52:54:00:62:fe:f3'/>
-      <source network='kvm0' portid='b4eb824a-2937-440a-996c-47400570d741' bridge='kvm0'/>
-      <target dev='vnet1'/>
+      <source network='kvm0' portid='d06926cc-0329-47cc-9a4d-f288bc12f3e3' bridge='kvm0'/>
+      <target dev='vnet0'/>
       <model type='rtl8139'/>
       <alias name='net0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
     </interface>
     <serial type='pty'>
-      <source path='/dev/pts/2'/>
+      <source path='/dev/pts/0'/>
       <target type='isa-serial' port='0'>
         <model name='isa-serial'/>
       </target>
       <alias name='serial0'/>
     </serial>
-    <console type='pty' tty='/dev/pts/2'>
-      <source path='/dev/pts/2'/>
+    <console type='pty' tty='/dev/pts/0'>
+      <source path='/dev/pts/0'/>
       <target type='serial' port='0'/>
       <alias name='serial0'/>
     </console>
@@ -152,7 +150,7 @@ cat << EOF | tee -a ./tmp.xml
     <input type='keyboard' bus='ps2'>
       <alias name='input2'/>
     </input>
-    <graphics type='spice' port='5902' tlsPort='5903' autoport='yes' listen='0.0.0.0'>
+    <graphics type='spice' port='5900' tlsPort='5901' autoport='yes' listen='0.0.0.0'>
       <listen type='address' address='0.0.0.0'/>
     </graphics>
     <sound model='ich6'>
@@ -173,6 +171,7 @@ cat << EOF | tee -a ./tmp.xml
       <address type='usb' bus='0' port='3'/>
     </redirdev>
     <memballoon model='virtio'>
+      <stats period='5'/>
       <alias name='balloon0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x09' function='0x0'/>
     </memballoon>
