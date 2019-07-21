@@ -48,3 +48,5 @@ Set-Location 'C:\Program Files\Balloon'
 #Set-Item wsman:\localhost\client\trustedhosts -Value <hostname or ip>
 #launch pssession from computer to server core
 #Enter-PSSession -ComputerName <server core ip or hostname> -Credential <server core username>
+
+#wmic logicaldisk get size,freespace,caption
