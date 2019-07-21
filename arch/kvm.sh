@@ -9,9 +9,9 @@ modprobe -r kvm_intel
 modprobe kvm_intel nested=1
 cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
 options kvm-intel nested=1
-options kvm-intel enable_shadow_vmcs=1
-options kvm-intel enable_apicv=1
-options kvm-intel ept=1
+#options kvm-intel enable_shadow_vmcs=1
+#options kvm-intel enable_apicv=1
+#options kvm-intel ept=1
 EOF
 #################################################################
 
