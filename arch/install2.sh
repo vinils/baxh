@@ -86,7 +86,18 @@ pacman -S --noconfirm openssh
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 systemctl enable sshd.socket
 
+
+####################################################################################################
+# uptdate firmware
+
+sudo pacman -S fwupd
+fwupdmgr refresh
+fwupdmgr get-updates
+fwupdmgr update
+
+####################################################################################################
 #firstboot
+
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $pwd
 
 ####################################################################################################
@@ -97,4 +108,5 @@ onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh
 
 #custom way
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/lan.sh
+
 ####################################################################################################
