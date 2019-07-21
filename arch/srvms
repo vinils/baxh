@@ -1,6 +1,7 @@
 #!/bin/bash
 
-virsh vol-create-as default win2k16.qcow2 20GiB
+virsh vol-create-as default win2k16.qcow2 20GiB --format=qcow2
+#virsh vol-delete --pool default win2k16.qcow2
 
 cat << EOF | tee -a ./tmp.xml
 <domain type='kvm' id='25'>
@@ -183,6 +184,6 @@ cat << EOF | tee -a ./tmp.xml
 </domain>
 EOF
 
-virsh create tmp.xml
+virsh define tmp.xml
 
 rm ./tmp.xml
