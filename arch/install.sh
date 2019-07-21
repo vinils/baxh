@@ -82,6 +82,7 @@ linuxFSPartitionNumber="3"
 #https://wiki.archlinux.org/index.php/Installation_guide_(Portugu%C3%AAs)
 
 ################## FDISK #################
+#improve - https://superuser.com/questions/332252/how-to-create-and-format-a-partition-using-a-bash-script
 ttt1=+"$uefiSpace"M
 ttt2=+"$swapSpace"G
 fdisk /dev/"$device" <<EEOF
