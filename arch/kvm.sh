@@ -175,31 +175,33 @@ virsh pool-autostart win2k19
 
 
 #################################################################
+####  wARWING - ENABLING IT IS FREEZING MY WINDOWS SERVER NESTED GUEST WHEN HOST-MODEL (COPY HOST CPU) #####
 ##Hugepages
-#grpKvmId="78"
-#groupmod -g $grpKvmId kvm
-#usermod -u $grpKvmId kvm
 
-#echo "hugetlbfs /dev/hugepages hugetlbfs mode=1770,gid=$grpKvmId 0 0" | tee -a /etc/fstab
-#umount /dev/hugepages
-#mount /dev/hugepages
-###check
-## sudo mount | grep huge
-## ls -FalG /dev/ | grep huge
+grpKvmId="78"
+groupmod -g $grpKvmId kvm
+usermod -u $grpKvmId kvm
 
-#echo 9000 | tee /proc/sys/vm/nr_hugepages
-#echo "vm.nr_hugepages = 9000" | tee -a /etc/sysctl.d/40-hugepages.conf
-###check
-##grep HugePages_Total /proc/meminfo
-##cat /proc/meminfo
-##output >> HugePages_Total:   15360
-##output >> HugePages_Free:    15360
+echo "hugetlbfs /dev/hugepages hugetlbfs mode=1770,gid=$grpKvmId 0 0" | tee -a /etc/fstab
+umount /dev/hugepages
+mount /dev/hugepages
+##check
+# sudo mount | grep huge
+# ls -FalG /dev/ | grep huge
 
-#echo "hugetlbfs_mount = \"/dev/hugepages\"" | tee -a /etc/libvirt/qemu.conf
-###veriy IOMMU
-##sudo dmesg | grep -e DMAR -e IOMMU
-###output >>  [ 0.000000] DMAR: IOMMU enabled.
-#################################################################
+echo 9000 | tee /proc/sys/vm/nr_hugepages
+echo "vm.nr_hugepages = 9000" | tee -a /etc/sysctl.d/40-hugepages.conf
+##check
+#grep HugePages_Total /proc/meminfo
+#cat /proc/meminfo
+#output >> HugePages_Total:   15360
+#output >> HugePages_Free:    15360
+
+echo "hugetlbfs_mount = \"/dev/hugepages\"" | tee -a /etc/libvirt/qemu.conf
+##veriy IOMMU
+#sudo dmesg | grep -e DMAR -e IOMMU
+##output >>  [ 0.000000] DMAR: IOMMU enabled.
+################################################################
 
 
 #################################################################
