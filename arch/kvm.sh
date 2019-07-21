@@ -153,6 +153,24 @@ EOF
 virsh pool-define /etc/libvirt/volume/kvmDrivers.vol
 virsh pool-build kvmDrivers
 virsh pool-autostart kvmDrivers
+
+cat << EOF | tee -a /etc/libvirt/volume/win2k19.vol
+<pool type="dir">
+  <name>win2k19</name>
+  <target>
+  <path>/mnt/dados/SOFTWARES/WORK/MS Windows/2019 Server/</path>
+  <permissions>
+    <mode>0770</mode>
+    <owner>78</owner>
+    <group>78</group>
+  </permissions>
+  </target>
+</pool>
+EOF
+
+virsh pool-define /etc/libvirt/volume/win2k19.vol
+virsh pool-build win2k19
+virsh pool-autostart win2k19
 #################################################################
 
 
