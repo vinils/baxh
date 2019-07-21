@@ -1,0 +1,50 @@
+#powershell
+
+mkdir c:\drivers
+
+# copy drivers from media to local directory
+Copy-Item E:\vioscsi\2k16\ -Destination C:\drivers\vioscsi\2k16 -Recurse
+Copy-Item E:\NetKVM\2k16\ -Destination C:\drivers\NetKVM\2k16 -Recurse
+Copy-Item E:\Balloon\2k16\ -Destination C:\drivers\Balloon\2k16 -Recurse
+Copy-Item E:\vioserial\2k16\ -Destination C:\drivers\vioserial\2k16 -Recurse
+Copy-Item E:\guest-agent\ -Destination C:\drivers\guest-agent -Recurse
+
+# go to local directory with drivers
+Set-Location C:\drivers
+
+# install drivers
+pnputil -i -a C:\Drivers\NetKVM\2k16\amd64\*.inf
+pnputil -i -a C:\Drivers\Balloon\2k16\amd64\*.inf
+pnputil -i -a C:\Drivers\vioserial\2k16\amd64\*.inf
+
+# set up guest agent
+Set-Location C:\drivers\guest-agent
+.\qemu-ga-x86_64.msi
+
+Copy-Item C:\drivers\Balloon\2k16\amd64 -Destination 'C:\Program Files\Balloon' -Recurse
+
+Set-Location 'C:\Program Files\Balloon'
+./blnsvr.exe -i
+
+
+
+
+###https://docs.microsoft.com/pt-br/powershell/scripting/learn/remoting/running-remote-commands?view=powershell-6
+###Enable remote powershell sessions
+#on the win2k16 core server
+## view current list of trusted hosts
+#Get-Item wsman:\localhost\client\trustedhosts
+#
+## add remote computer that will be connecting to core server
+#Set-Item wsman:\localhost\client\trustedhosts -Value <hostname or ip>
+#on the computer wanting to connect to the win2k16 core server
+## enable psremoting if not in a domain
+#Enable-PSRemoting
+#
+## view current list of trusted hosts
+#Get-Item wsman:\localhost\client\trustedhosts
+#
+## add remote core server that you want to connect to
+#Set-Item wsman:\localhost\client\trustedhosts -Value <hostname or ip>
+#launch pssession from computer to server core
+#Enter-PSSession -ComputerName <server core ip or hostname> -Credential <server core username>
