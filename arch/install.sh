@@ -149,5 +149,6 @@ umount /dev/"$device""$linuxFSPartitionNumber"
 reboot
 
 ##check
+#systemctl --failed
 #journalctl -ex
 #dmesg | grep iwlwifi
