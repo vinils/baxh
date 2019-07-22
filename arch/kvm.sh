@@ -191,6 +191,8 @@ virsh pool-autostart win2k19
 ###Hugepages
 ##https://unix.stackexchange.com/questions/163495/libvirt-error-when-enabling-hugepages-for-guest
 ##https://help.ubuntu.com/community/KVM%20-%20Using%20Hugepages
+##https://forums.linuxmint.com/viewtopic.php?t=212692&start=80
+##http://doc.dpdk.org/spp/spp_vf/gsg/setup.html
 #
 #grpKvmId="78"
 #groupmod -g $grpKvmId kvm
