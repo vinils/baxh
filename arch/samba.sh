@@ -54,3 +54,6 @@ firewall-cmd --zone=public --permanent --add-port=445/tcp
 firewall-cmd --set-log-denied=all
 firewall-cmd --set-log-denied=off
 #################################################################
+
+#check
+#smbclient -L <machine0name> -U <user>
