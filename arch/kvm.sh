@@ -1,5 +1,7 @@
 #!/bin/bash
+##helpfull links
 #https://kyau.net/wiki/ArchLinux:KVM
+#https://heiko-sieger.info/running-windows-10-on-linux-using-kvm-with-vga-passthrough/
 
 myusr=myuser
 
