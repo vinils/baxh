@@ -28,6 +28,7 @@ Set-Location 'C:\Program Files\Balloon'
 
 ##check
 #Get-eventlog system | Where entrytype -eq Error | format-list *
+#\Windows\System32\winevt\Logs
 
 
 ###https://docs.microsoft.com/pt-br/powershell/scripting/learn/remoting/running-remote-commands?view=powershell-6
