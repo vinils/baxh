@@ -26,7 +26,8 @@ Copy-Item C:\drivers\Balloon\2k16\amd64 -Destination 'C:\Program Files\Balloon' 
 Set-Location 'C:\Program Files\Balloon'
 ./blnsvr.exe -i
 
-
+##check
+#Get-eventlog system | Where entrytype -eq Error | format-list *
 
 
 ###https://docs.microsoft.com/pt-br/powershell/scripting/learn/remoting/running-remote-commands?view=powershell-6
