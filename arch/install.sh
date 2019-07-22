@@ -150,5 +150,6 @@ reboot
 
 ##check
 #systemctl --failed
+#journalctl -p 3 -xb
 #journalctl -ex
 #dmesg | grep iwlwifi
