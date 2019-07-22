@@ -106,6 +106,8 @@ ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 systemctl enable --now systemd-networkd
 systemctl enable --now systemd-resolved
 
+##check
+#lsmod | grep iwlwifi
 modprobe iwlwifi
 #could be other (iw, wireless_tools, etc)
 pacman -S --noconfirm wpa_supplicant
