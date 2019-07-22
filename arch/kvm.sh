@@ -19,6 +19,7 @@ modprobe kvm_intel nested=1
 #WARNING - options kvm-intel preemption_timer=N trying to fix freeze bug when neted (host-model)
 # kvm.lapic_timer_advance_ns is 0 - https://bugs.launchpad.net/qemu/+bug/1831225
 # http://openbsd-archive.7691.n7.nabble.com/Performance-issues-as-KVM-guest-td334612.html
+#cat /sys/module/kvm_intel/parameters/preemption_timer
 cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
 options kvm-intel nested=1
 options kvm-intel preemption_timer=N
