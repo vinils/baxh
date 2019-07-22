@@ -9,11 +9,16 @@ myusr=myuser
 #enable VTd
 modprobe -r kvm_intel
 modprobe kvm_intel nested=1
-cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
-options kvm-intel nested=1
+#cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
+#options kvm-intel nested=1
 #options kvm-intel enable_shadow_vmcs=1
 #options kvm-intel enable_apicv=1
 #options kvm-intel ept=1
+#EOF
+#WARNING - options kvm-intel preemption_timer=N trying to fix freeze bug when neted (host-model)
+cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
+options kvm-intel nested=1
+options kvm-intel preemption_timer=N
 EOF
 #################################################################
 
@@ -176,33 +181,32 @@ virsh pool-autostart win2k19
 #################################################################
 
 
-#################################################################
-####  wARWING - ENABLING IT IS FREEZING MY WINDOWS SERVER NESTED GUEST WHEN HOST-MODEL (COPY HOST CPU) #####
+##################################################################
 ##Hugepages
-
-grpKvmId="78"
-groupmod -g $grpKvmId kvm
-usermod -u $grpKvmId kvm
-
-echo "hugetlbfs /dev/hugepages hugetlbfs mode=1770,gid=$grpKvmId 0 0" | tee -a /etc/fstab
-umount /dev/hugepages
-mount /dev/hugepages
-##check
-# sudo mount | grep huge
-# ls -FalG /dev/ | grep huge
-
-echo 9000 | tee /proc/sys/vm/nr_hugepages
-echo "vm.nr_hugepages = 9000" | tee -a /etc/sysctl.d/40-hugepages.conf
-##check
-#grep HugePages_Total /proc/meminfo
-#cat /proc/meminfo
-#output >> HugePages_Total:   15360
-#output >> HugePages_Free:    15360
-
-echo "hugetlbfs_mount = \"/dev/hugepages\"" | tee -a /etc/libvirt/qemu.conf
-##veriy IOMMU
-#sudo dmesg | grep -e DMAR -e IOMMU
-##output >>  [ 0.000000] DMAR: IOMMU enabled.
+#
+#grpKvmId="78"
+#groupmod -g $grpKvmId kvm
+#usermod -u $grpKvmId kvm
+#
+#echo "hugetlbfs /dev/hugepages hugetlbfs mode=1770,gid=$grpKvmId 0 0" | tee -a /etc/fstab
+#umount /dev/hugepages
+#mount /dev/hugepages
+###check
+## sudo mount | grep huge
+## ls -FalG /dev/ | grep huge
+#
+#echo 9000 | tee /proc/sys/vm/nr_hugepages
+#echo "vm.nr_hugepages = 9000" | tee -a /etc/sysctl.d/40-hugepages.conf
+###check
+##grep HugePages_Total /proc/meminfo
+##cat /proc/meminfo
+##output >> HugePages_Total:   15360
+##output >> HugePages_Free:    15360
+#
+#echo "hugetlbfs_mount = \"/dev/hugepages\"" | tee -a /etc/libvirt/qemu.conf
+###veriy IOMMU
+##sudo dmesg | grep -e DMAR -e IOMMU
+###output >>  [ 0.000000] DMAR: IOMMU enabled.
 ################################################################
 
 
