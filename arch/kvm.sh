@@ -5,6 +5,8 @@
 
 myusr=myuser
 
+pacman -S --noconfirm linux-headers
+
 #################################################################
 #enable VTd
 modprobe -r kvm_intel
