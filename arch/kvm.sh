@@ -15,7 +15,9 @@ modprobe kvm_intel nested=1
 #options kvm-intel enable_apicv=1
 #options kvm-intel ept=1
 #EOF
+
 #WARNING - options kvm-intel preemption_timer=N trying to fix freeze bug when neted (host-model)
+# kvm.lapic_timer_advance_ns is 0 - https://bugs.launchpad.net/qemu/+bug/1831225
 cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
 options kvm-intel nested=1
 options kvm-intel preemption_timer=N
