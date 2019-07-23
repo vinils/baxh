@@ -95,6 +95,9 @@ fwupdmgr refresh
 fwupdmgr get-updates
 fwupdmgr update
 
+#pcis
+update-pciids
+
 ####################################################################################################
 #firstboot
 
