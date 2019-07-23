@@ -78,7 +78,7 @@ cat << EOF | tee -a ./tmp.xml
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
-      <source file='/mnt/dados/SOFTWARES/WORK/KVM/virtio-win-0.1.171.iso'/>
+      <source file='/mnt/dados/SOFTWARES/WORK/KVM/virtio-win-0.1.141.iso'/>
       <backingStore/>
       <target dev='sdb' bus='sata'/>
       <readonly/>
