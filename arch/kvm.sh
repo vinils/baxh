@@ -220,6 +220,16 @@ virsh pool-autostart win2k19
 ###output >>  [ 0.000000] DMAR: IOMMU enabled.
 ################################################################
 
+################################################################
+#hugepages helpers
+#git clone https://aur.archlinux.org/libhugetlbfs.git
+#cd libhugetlbfs
+#makepkg -s --noconfirm
+#sudo pacman -U --noconfirm ./*.pkg.tar.xz
+#cd ..
+
+#hugeadm --explain
+################################################################
 
 #################################################################
 #Enable SPICE over TLS will allow SPICE to be exposed externally.
