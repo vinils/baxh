@@ -19,7 +19,7 @@ pnputil -i -a C:\Drivers\vioserial\2k16\amd64\*.inf
 
 # set up guest agent
 Set-Location C:\drivers\guest-agent
-.\qemu-ga-x86_64.msi
+.\qemu-ga-x86.msi
 
 Copy-Item C:\drivers\Balloon\2k16\amd64 -Destination 'C:\Program Files\Balloon' -Recurse
 
