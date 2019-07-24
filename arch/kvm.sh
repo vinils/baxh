@@ -3,8 +3,6 @@
 #https://kyau.net/wiki/ArchLinux:KVM
 #https://heiko-sieger.info/running-windows-10-on-linux-using-kvm-with-vga-passthrough/
 
-myusr=$(whoami)
-
 pacman -S --noconfirm linux-headers
 
 #################################################################
@@ -50,7 +48,7 @@ systemctl enable --now libvirtd
 
 #################################################################
 #allow remote connection from users in libvirt group
-usermod -a -G libvirt $myusr
+usermod -a -G libvirt $(whoami)
 usermod -a -G libvirt root
 #newgrp libvirt
 pacman -S --noconfirm polkit
@@ -100,7 +98,7 @@ virsh net-undefine default
 useradd -g kvm -s /usr/bin/nologin kvm
 echo "user = \"root\"" | tee -a /etc/libvirt/qemu.conf
 echo "group = \"root\"" | tee -a /etc/libvirt/qemu.conf
-usermod -a -G kvm $myusr
+usermod -a -G kvm $(whoami)
 usermod -a -G kvm root
 ##check
 #virsh list --all
