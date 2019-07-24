@@ -7,12 +7,13 @@ myusr=$(whoami)
 
 pacman -S --noconfirm linux-headers
 
-#modprobe kvm_intel nested=1
-#cat /sys/module/kvm_intel/parameters/nested
 #################################################################
 #enable VTd
 modprobe -r kvm_intel
 modprobe kvm_intel nested=1
+##check
+##cat /sys/module/kvm_intel/parameters/nested
+
 #cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
 #options kvm-intel nested=1
 #options kvm-intel enable_shadow_vmcs=1
