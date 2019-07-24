@@ -7,6 +7,8 @@ myusr=$(whoami)
 
 pacman -S --noconfirm linux-headers
 
+#modprobe kvm_intel nested=1
+#cat /sys/module/kvm_intel/parameters/nested
 #################################################################
 #enable VTd
 modprobe -r kvm_intel
