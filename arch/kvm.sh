@@ -26,6 +26,7 @@ cat << EOF | tee -a /etc/modprobe.d/kvm_intel.conf
 options kvm-intel nested=1
 options kvm-intel preemption_timer=N
 options kvm ignore_msrs=1
+options kvm-intel enable_apicv=N
 EOF
 #################################################################
 
