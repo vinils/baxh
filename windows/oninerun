@@ -1,0 +1,3 @@
+set url=%1
+set path=%1
+echo "Invoke-WebRequest %url% -OutFile $dlPath"
