@@ -1,3 +1,4 @@
 set url=%1
-set path=%1
+set path=$HOME
+set path=path+%2
 echo "Invoke-WebRequest %url% -OutFile %path%"
