@@ -1,4 +1,4 @@
 set url=%1
-set path=$HOME
-set path=$path+%2
-echo "Invoke-WebRequest %url% -OutFile %path%"
+set path=%HOMEPATH%
+set path=%path%+%2
+powershell.exe -command "& Invoke-WebRequest %url% -OutFile %path%"
