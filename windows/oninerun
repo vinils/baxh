@@ -1,4 +1,14 @@
+@echo off
+
 set url=%1
-set path=%HOMEPATH%
-set path=%path%+%2
-powershell.exe -command "& Invoke-WebRequest %url% -OutFile %path%"
+set file=%random%%random%.bat
+set path=%HOMEDRIVE%%HOMEPATH%\onlinerun
+
+IF NOT EXIST %path% (
+mkdir %path%
+)
+
+%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -command "Invoke-WebRequest %url% -OutFile %path%\%file%"
+%path%\%file% %2 %3 %4 %5 %6 %7 %8 %9 %10 %11
+
+del %path%\%file%
