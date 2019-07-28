@@ -38,5 +38,7 @@ pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\Driver
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\INF(v10.1.1.44_Public)\SetupChipset.exe" -s -norestart
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Chipset_Win10_10.1.1.44\SetupChipset.exe" -s -norestart
 
+shutdown /r /f
+
 ::notworking
 ::".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\AMD-Catalyst-15.7.1-Win10-64bit\Bin64\ATISetup.exe" -Install -output screen
