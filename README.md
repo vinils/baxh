@@ -14,3 +14,5 @@ onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/samba.sh $PWD
 - kvm<br>
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/kvm.sh
+- W2k19 Drivers<br>
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Drivers.bat
