@@ -1,3 +1,5 @@
+::Drivers
+
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\ASMedia_SATA3(v3.2.1)\Driver\scsi\i386\*.inf"
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\ASMedia_SATA3(v3.2.1)\Driver\scsi\amd64\*.inf"
 
