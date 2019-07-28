@@ -28,10 +28,10 @@ pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_LAN(v23.5.2)\PRO
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Realtek_Audio(v8051_FF10)\WIN64\*.inf"
 
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\SetupChipset.exe" -s -norestart
-#pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\DriverFiles\production\W2K12R2-x64\*.inf"
+::pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\DriverFiles\production\W2K12R2-x64\*.inf"
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\DriverFiles\production\Windows10-x64\*.inf"
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\DriverFiles\production\W2K16-x64\*.inf"
-#pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\DriverFiles\production\Windows10-x86\*.inf"
+::pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\DriverFiles\production\Windows10-x86\*.inf"
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\INF(v10.1.1.44_Public)\SetupChipset.exe" -s -norestart
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Chipset_Win10_10.1.1.44\SetupChipset.exe" -s -norestart
 
