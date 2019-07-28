@@ -13,7 +13,6 @@ pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\ASMedia_SATA3(v3.2.1)\
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Floppy(v15.7.1.1015)\f6flpy-x86\*.inf"
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Floppy(v15.7.1.1015)\f6flpy-x64\*.inf"
 
-".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_Bluetooth(v19.60.0.3g)\INF_INSTALL\Win10\x64\silent_install.cmd"
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_Bluetooth(v19.60.0.3g)\Win10\Intel Bluetooth.msi" /passive /norestart
 
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_LAN(v23.5.2)\PRO40GB\Winx64\NDIS65\*.inf"
