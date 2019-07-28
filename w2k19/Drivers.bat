@@ -25,7 +25,8 @@ pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_LAN(v23.5.2)\PRO
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_LAN(v23.5.2)\PROXGB\Winx64\NDIS65\*.inf"
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_LAN(v23.5.2)\PROXGB\Winx64\NDIS68\*.inf"
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_LAN(v23.5.2)\APPS\PROSETDX\Winx64\DxSetup.exe" /quiet /passive
-".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_WiFi(v19.60.00)\IntelWifi_19_60_00.exe" /SILENT
+::notworking
+::".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Intel_WiFi(v19.60.00)\IntelWifi_19_60_00.exe" /SILENT
 
 pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Realtek_Audio(v8051_FF10)\WIN64\*.inf"
 
@@ -37,4 +38,5 @@ pnputil -i -a ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\chipset-10.1.17\Driver
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\INF(v10.1.1.44_Public)\SetupChipset.exe" -s -norestart
 ".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\Chipset_Win10_10.1.1.44\SetupChipset.exe" -s -norestart
 
-".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\AMD-Catalyst-15.7.1-Win10-64bit\Bin64\ATISetup.exe" -Install -output screen
+::notworking
+::".\SOFTWARES\SETUP\X299\2016 server\DRIVERS\AMD-Catalyst-15.7.1-Win10-64bit\Bin64\ATISetup.exe" -Install -output screen
