@@ -61,3 +61,4 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Servic
 
 #Try it Out!
 #docker container run -d -p 8080:80 sixeyed/whoami-dotnet:nanoserver-1809  
+#iwr -useb -method Head http://localhost:8080
