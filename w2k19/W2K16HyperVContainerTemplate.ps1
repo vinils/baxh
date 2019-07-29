@@ -6,7 +6,7 @@ Start-VM -Name $VMName
 
 Wait-VM -Name $VMName -For Heartbeat
 
-echo "Set VM password"
+echo "Waiting you to finnish the installation adn set the VM password"
 echo ""
 pause
 
@@ -16,10 +16,9 @@ pause
 $Credential = $(Get-Credential)
 Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $cred -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Hyper-V }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
 #######
 # remote desktop
