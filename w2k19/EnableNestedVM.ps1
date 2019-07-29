@@ -29,9 +29,9 @@ Set-VMMemory $Name -DynamicMemoryEnabled $bool
 Get-VMNetworkAdapter -VMname $Name | Set-VMNetworkAdapter -MacAddressSpoofing $OnOff
 #(Get-VMNetworkAdapter -VMName $Name).MacAddressSpoofing
 
-Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 
 If($Enable) {
   Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature Hyper-V }
+  Restart-VM $Name -Force
 }
