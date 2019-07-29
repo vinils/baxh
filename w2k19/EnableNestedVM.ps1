@@ -1,14 +1,18 @@
 [CmdletBinding()]
 param(
         $Name,
-        $enable,
+        $Enable,
         [System.Management.Automation.PSCredential]
         $Credential = $(Get-Credential)
     )
 
+echo $Name
+echo $Enable
+echo $Credential
+
 #Get-VMProcessor -VMName $Name | fl *
 
-If($enable) {
+If($Enable) {
   $bool = $true
   $OnOff = 'On'
 } Else {
@@ -25,6 +29,6 @@ Set-VMMemory $Name -DynamicMemoryEnabled $bool
 Get-VMNetworkAdapter -VMname $Name | Set-VMNetworkAdapter -MacAddressSpoofing $OnOff
 #(Get-VMNetworkAdapter -VMName $Name).MacAddressSpoofing
 
-Wait-VMPowershell -Name $Name -Credential $Credential
+.\Wait-VMPowershell.ps1 -Name $Name -Credential $Credential
 
 Invoke-Command -VMName $Name -ScriptBlock { Get-Service }
