@@ -11,10 +11,13 @@ param(
 If($Enable) {
   $bool = $true
   $OnOff = 'On'
+  Stop-VM $Name -Force
 } Else {
   $bool = $false
   $OnOff = 'Off'
 }
+
+
 
 Set-VMProcessor -VMName $Name -ExposeVirtualizationExtensions $bool
 #(Get-VMProcessor -VMName $Name).ExposeVirtualizationExtensions
@@ -28,4 +31,6 @@ Get-VMNetworkAdapter -VMname $Name | Set-VMNetworkAdapter -MacAddressSpoofing $O
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature Hyper-V }
+if($Enabled) {
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature Hyper-V }
+}
