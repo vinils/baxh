@@ -46,7 +46,9 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Servic
 
 ##check
 #Get-Package -Name Docker -ProviderName DockerMsftProvider
+#output -> docker                         19.03.1          DockerDefault                    DockerMsftProvider
 #docker --version
+#output Docker version 19.03.1, build f660560464
 
 ##UPGRADE
 #Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force
