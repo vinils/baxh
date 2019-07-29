@@ -32,6 +32,6 @@ Get-VMNetworkAdapter -VMname $Name | Set-VMNetworkAdapter -MacAddressSpoofing $O
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 
-if($Enabled) {
+If($Enable) {
   Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature Hyper-V }
 }
