@@ -1,5 +1,9 @@
 netdom renamecomputer %COMPUTERNAME% /newname:SRV1
 
+::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetWork.bat
+::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetworkAfterReboot.ps1
+::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/EnableRemoteDesktop.ps1
+
 ###########
 # Firewall
 
@@ -13,10 +17,6 @@ netdom renamecomputer %COMPUTERNAME% /newname:SRV1
 netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=yes
 netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir=in new enable=Yes
 ########
-
-::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetWork.bat
-::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetworkAfterReboot.ps1
-::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/EnableRemoteDesktop.ps1
 
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Drivers.bat
 
