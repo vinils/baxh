@@ -14,24 +14,35 @@ pause
 #Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -name Shell -Value 'PowerShell.exe -noExit'
 
 $Credential = $(Get-Credential)
-Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $cred -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $VMName }
+Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $cred -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Hyper-V }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
 #######
 # remote desktop
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\‘ -Name “fDenyTSConnections” -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\‘ -Name “UserAuthentication” -Value 0 }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup “Remote Desktop” }
 #######
 
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Find-PackageProvider DockerMsftProvider | Install-PackageProvider }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Force }
+#in case "Cannot verify the file SHA256. Deleting the file" - https://github.com/MicrosoftDocs/Virtualization-Documentation/issues/919
+##cd C:\Users\Administrator\AppData\Local\Temp\1\DockerMsftProvider
+#cd C:\Users\Administrator\AppData\Local\Temp\2\DockerMsftProvider
+#Invoke-WebRequest -UseBasicParsing -OutFile docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip
+#Start-BitsTransfer -Source https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip -Destination Docker-19-03-1.zip
+##Get-FileHash -Path Docker-19-03-1.zip -Algorithm SHA256
+#Install-Package -Name docker -ProviderName DockerMsftProvider -Verbose
+
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
 
 ##check
@@ -50,4 +61,4 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Servic
 #docker image pull microsoft/dotnet:2.1-aspnetcore-runtime-nanoserver-1809  
 
 #Try it Out!
-docker container run -d -p 8080:80 sixeyed/whoami-dotnet:nanoserver-1809  
+#docker container run -d -p 8080:80 sixeyed/whoami-dotnet:nanoserver-1809  
