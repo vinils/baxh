@@ -12,6 +12,7 @@ If($Enable) {
   $bool = $true
   $OnOff = 'On'
   Stop-VM $Name -Force
+  while ((get-vm -name $Name).state -ne 'Off') { start-sleep -s 5 }
 } Else {
   $bool = $false
   $OnOff = 'Off'
