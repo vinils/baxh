@@ -4,6 +4,10 @@ netdom renamecomputer %COMPUTERNAME% /newname:SRV1
 ::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetworkAfterReboot.ps1
 ::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/EnableRemoteDesktop.ps1
 
+powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/windows/oninerun -OutFile C:\WINDOWS\System32\onlinerun.bat"
+powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Wait-VMPowershell.ps1 -OutFile C:\WINDOWS\System32\Wait-VMPowershell.ps1"
+powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/EnableNestedVM.ps1 -OutFile C:\WINDOWS\System32\EnableNestedVM.ps1"
+
 ###########################
 # Firewall
 
