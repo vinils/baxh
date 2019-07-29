@@ -14,7 +14,6 @@ If ((Get-VM -VMName $Name).State -eq "Off")
 
 Wait-VM -Name $Name -For Heartbeat
 #Start-Sleep -Seconds 20
-
 $startTime = Get-Date
 do 
 {
