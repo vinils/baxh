@@ -27,4 +27,4 @@ Get-VMNetworkAdapter -VMname $Name | Set-VMNetworkAdapter -MacAddressSpoofing $O
 
 .\Wait-VMPowershell.ps1 -Name $Name -Credential $Credential
 
-Invoke-Command -VMName $Name -ScriptBlock { Get-Service }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-Service }
