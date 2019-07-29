@@ -1,7 +1,7 @@
 ###########
 #NESTED 
 
-#Get-VMProcessor -VMName VMTT | fl *
+#Get-VMProcessor -VMName $args[0] | fl *
 
 If($args[1]) {
   $bool = $true
@@ -19,3 +19,7 @@ Set-VMMemory $args[0] -DynamicMemoryEnabled $bool
 #Enable mac address spoofing
 Get-VMNetworkAdapter -VMname $args[0] | Set-VMNetworkAdapter -MacAddressSpoofing $OnOff
 #(Get-VMNetworkAdapter -VMName $args[0]).MacAddressSpoofing
+
+Wait-VMPowershell -Name $args[0] -Credential
+
+#Invoke-Command -VMName $args[0] -ScriptBlock { Get-Service }
