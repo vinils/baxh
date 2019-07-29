@@ -4,7 +4,7 @@ netdom renamecomputer %COMPUTERNAME% /newname:SRV1
 ::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetworkAfterReboot.ps1
 ::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/EnableRemoteDesktop.ps1
 
-###########
+###########################
 # Firewall
 
 #netsh advfirewall set allprofiles state off
@@ -18,6 +18,16 @@ netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=
 netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir=in new enable=Yes
 ########
 
+###########################
+# Hyper-v Switch
+#Get-NetAdapter  
+New-VMSwitch -name PrivateSwitch -SwitchType Private  
+New-VMSwitch -name InternalSwitch -SwitchType Internal  
+New-VMSwitch -name ExternalSwitch  -NetAdapterName "Ethernet 2" -AllowManagementOS $true
+
+
+###########################
+# Drivers
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Drivers.bat
 
 shutdown /r /f
