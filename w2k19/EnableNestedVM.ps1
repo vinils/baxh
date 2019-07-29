@@ -25,6 +25,6 @@ Set-VMMemory $Name -DynamicMemoryEnabled $bool
 Get-VMNetworkAdapter -VMname $Name | Set-VMNetworkAdapter -MacAddressSpoofing $OnOff
 #(Get-VMNetworkAdapter -VMName $Name).MacAddressSpoofing
 
-.\Wait-VMPowershell.ps1 -Name $Name -Credential $Credential
+Wait-VMPowershell -Name $Name -Credential $Credential
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-Service }
