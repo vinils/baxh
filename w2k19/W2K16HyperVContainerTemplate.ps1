@@ -1,10 +1,10 @@
 $Name = 'W2K16HyperVContainerTemplate'
 
-New-VM -Name $VMName -MemoryStartupBytes 10GB -NewVHDPath 'C:\Users\Public\Documents\Hyper-V\Virtual Hard Disks\$VMName.vhdx' -NewVHDSizeBytes 100GB -SwitchName ExternalSwitch
-Set-VMDvdDrive -VMName $VMName -Path 'd:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVERHYPERCORE_OEM_X64FRE_EN-US.ISO'
-Start-VM -Name $VMName
+New-VM -Name $Name -MemoryStartupBytes 10GB -NewVHDPath 'C:\Users\Public\Documents\Hyper-V\Virtual Hard Disks\$Name.vhdx' -NewVHDSizeBytes 100GB -SwitchName ExternalSwitch
+Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVERHYPERCORE_OEM_X64FRE_EN-US.ISO'
+Start-VM -Name $Name
 
-Wait-VM -Name $VMName -For Heartbeat
+Wait-VM -Name $Name -For Heartbeat
 
 echo "Waiting you to finnish the installation adn set the VM password"
 echo ""
