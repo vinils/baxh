@@ -1,7 +1,7 @@
 @echo off
 
 set url=%1
-set file=%random%%random%.bat
+set file=%random%%random%.%url:~-3%
 set filepath=%HOMEDRIVE%%HOMEPATH%\onlinerun
 
 IF NOT EXIST %filepath% ( mkdir %filepath% )
