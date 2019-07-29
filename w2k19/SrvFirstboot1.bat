@@ -25,11 +25,17 @@ netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir
 
 ###########################
 # Hyper-v Switch
-#Get-NetAdapter  
+#Get-NetAdapter 
+
+### NAT
+##$swichName = "NAT"
+##New-VMSwitch -SwitchName $swichName -SwitchType Internal
+##New-NetIPAddress -IPAddress 172.19.60.97 -PrefixLength 28 -InterfaceIndex (Get-NetAdapter -Name $swichName).ifIndex
+#New-NetNat -Name "NAT" -InternalIPInterfaceAddressPrefix 28
+ 
 New-VMSwitch -name PrivateSwitch -SwitchType Private  
 New-VMSwitch -name InternalSwitch -SwitchType Internal  
 New-VMSwitch -name ExternalSwitch  -NetAdapterName "Ethernet 2" -AllowManagementOS $true
-
 
 ###########################
 # Drivers
