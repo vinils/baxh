@@ -1,13 +1,14 @@
 [CmdletBinding()]
 param(
         $Name,
+        $enable,
         [System.Management.Automation.PSCredential]
         $Credential = $(Get-Credential)
     )
 
 #Get-VMProcessor -VMName $Name | fl *
 
-If($args[1]) {
+If($enable) {
   $bool = $true
   $OnOff = 'On'
 } Else {
