@@ -6,10 +6,6 @@ param(
         $Credential = $(Get-Credential)
     )
 
-echo $Name
-echo $Enable
-echo $Credential
-
 #Get-VMProcessor -VMName $Name | fl *
 
 If($Enable) {
