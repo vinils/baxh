@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
         $Name,
-        $Enable,
+        $Enable = $false,
         [System.Management.Automation.PSCredential]
         $Credential = $(Get-Credential)
     )
