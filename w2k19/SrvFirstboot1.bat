@@ -21,6 +21,25 @@ powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/v
 
 netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=yes
 netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir=in new enable=Yes
+#netsh advfirewall set allprofiles state off
+#netsh advfirewall firewall set rule group="Windows Management Instrumentation (WMI)" new enable=yes 
+#Netsh advfirewall firewall set rule group=”Remote Volume Management” new enable=yes
+#Netsh advfirewall firewall set rule group=”Event Viewer” new enable=yes
+#netsh advfirewall firewall set rule group="Remote Administration" new enable=yes
+#netsh advfirewall firewall set rule group="Performance Logs and Alerts" new enable=yes 
+#netsh advfirewall firewall set rule group="Remote Desktop" new enable=yes
+
+#Enable-NetFirewallRule -DisplayName "Windows Management Instrumentation (DCOM-In)"
+#Enable-NetFirewallRule -DisplayName "Remote Event Log Management"
+#Enable-NetFirewallRule -DisplayName "Remote Service Management"
+#Enable-NetFirewallRule -DisplayName "Remote Volume Management"
+#Enable-NetFirewallRule -DisplayName "Remote Scheduled Tasks Management"
+#--2016
+#Enable-NetFirewallRule -DisplayName "Windows Firewall Remote Management"
+#--2019
+#Enable-NetFirewallRule -DisplayName "Windows Defender Firewall Remote Management"
+
+
 ########
 
 ###########################
