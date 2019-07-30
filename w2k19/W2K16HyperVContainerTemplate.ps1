@@ -47,9 +47,6 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Modu
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 #######
-Write-Host "Renaming computer name"
-Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
-#######
 #(Install-WindowsFeature Containers).RestartNeeded
 Write-Host "Restarting VM"
 Restart-VM $Name -Force
