@@ -1,8 +1,19 @@
 netdom renamecomputer %COMPUTERNAME% /newname:SRV1
 
+###########################
+# Wifi
+
+#Get-WindowsFeature  “Wireless LAN Service”
+#Install-WindowsFeature -Name Wireless-Networking
+#net start WlanSvc
+
+###########################
+
 ::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetWork.bat
 ::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/DriversNetworkAfterReboot.ps1
 ::onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/EnableRemoteDesktop.ps1
+
+###########################
 
 powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/windows/onlinerun.bat -OutFile C:\WINDOWS\System32\onlinerun.bat"
 powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/windows/onlinerun.ps1 -OutFile C:\WINDOWS\System32\onlinerun.ps1"
