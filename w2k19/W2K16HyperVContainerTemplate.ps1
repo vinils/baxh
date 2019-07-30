@@ -1,4 +1,4 @@
-$Name = 'W2K16HyperVContainerTemplate'
+$Name = 'SRVMSCONTTmp'
 
 New-VM -Name $Name -MemoryStartupBytes 10GB -NewVHDPath 'C:\Users\Public\Documents\Hyper-V\Virtual Hard Disks\$Name.vhdx' -NewVHDSizeBytes 100GB -SwitchName ExternalSwitch
 Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVERHYPERCORE_OEM_X64FRE_EN-US.ISO'
@@ -32,17 +32,17 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Find-PackageProvider DockerMsftProvider | Install-PackageProvider }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Force }
-#in case "Cannot verify the file SHA256. Deleting the file" - https://github.com/MicrosoftDocs/Virtualization-Documentation/issues/919
-##cd C:\Users\Administrator\AppData\Local\Temp\1\DockerMsftProvider
-#cd C:\Users\Administrator\AppData\Local\Temp\2\DockerMsftProvider
-#Invoke-WebRequest -UseBasicParsing -OutFile docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip
-#Start-BitsTransfer -Source https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip -Destination Docker-19-03-1.zip
-##Get-FileHash -Path Docker-19-03-1.zip -Algorithm SHA256
-#Install-Package -Name docker -ProviderName DockerMsftProvider -Verbose
+##Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Force }
+##in case "Cannot verify the file SHA256. Deleting the file" - https://github.com/MicrosoftDocs/Virtualization-Documentation/issues/919
+###cd C:\Users\Administrator\AppData\Local\Temp\1\DockerMsftProvider
+##cd C:\Users\Administrator\AppData\Local\Temp\2\DockerMsftProvider
+##Invoke-WebRequest -UseBasicParsing -OutFile docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip
+##Start-BitsTransfer -Source https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip -Destination Docker-19-03-1.zip
+###Get-FileHash -Path Docker-19-03-1.zip -Algorithm SHA256
+##Install-Package -Name docker -ProviderName DockerMsftProvider -Verbose
 
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
 
 ##check
 #Get-Package -Name Docker -ProviderName DockerMsftProvider
@@ -54,13 +54,39 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Servic
 #Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force
 #Start-Service Docker
 
-#Pull the Windows Base Images
-#docker pull microsoft/dotnet-samples:dotnetapp-nanoserver-1809
-#docker run microsoft/dotnet-samples:dotnetapp-nanoserver-1809
-#[Optional] Pull the .NET Core Images
-#docker image pull microsoft/dotnet:2.1-sdk-nanoserver-1809
-#docker image pull microsoft/dotnet:2.1-aspnetcore-runtime-nanoserver-1809  
+###Try it Out!
+##docker run -it hello-world:nanoserver-sac2016
+##docker run --name nanoiis -d -it -p 8081:80 nanoserver/iis
+##iwr -useb -method Head http://<ip>:8081
 
-#Try it Out!
-#docker container run -d -p 8080:80 sixeyed/whoami-dotnet:nanoserver-1809  
-#iwr -useb -method Head http://localhost:8080
+##.NET Core Docker Samples
+##https://github.com/dotnet/dotnet-docker-samples/blob/master/README.DockerHub.md
+##docker run microsoft/dotnet-samples:dotnetapp
+
+##images - https://hub.docker.com/search?q=nanoserver%20sac2016&type=image
+
+##https://hub.docker.com/r/nanoserver/iis
+##https://docs.microsoft.com/pt-br/windows-server/get-started/iis-on-nano-server
+##docker pull nanoserver/iis
+
+##https://hub.docker.com/_/microsoft-windows-servercore-iis
+##docker pull mcr.microsoft.com/windows/servercore/iis:windowsservercore-ltsc2016
+
+##https://hub.docker.com/_/microsoft-dotnet-framework-aspnet
+##docker pull mcr.microsoft.com/dotnet/framework/aspnet:4.8
+
+##https://hub.docker.com/r/microsoft/aspnetcore/
+##FROM microsoft/aspnetcore
+##WORKDIR /app
+##COPY . .
+##ENTRYPOINT ["dotnet", "myapp.dll"]
+##docker build -t myapp .
+##docker run -d -p 8000:80 myapp
+
+
+## working with docker
+##https://www.red-gate.com/simple-talk/sysadmin/containerization/working-windows-containers-docker-save-data/
+
+## dealing with version compatibility
+##https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/version-compatibility
+
