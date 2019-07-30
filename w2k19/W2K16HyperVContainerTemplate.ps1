@@ -36,29 +36,29 @@ Write-Host "Restarting VM"
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 #######
-Write-Host "Removing Windows defender"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
-Write-Host "Installing windows container feature"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
-Write-Host "Installing nuget (required for PSWindowsUpdate)"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
-Write-Host "Installing windows update"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
-#######
-#(Install-WindowsFeature Containers).RestartNeeded
-Write-Host "Restarting VM"
-Restart-VM $Name -Force
-Wait-VMPowershell -Name $Name -Credential $Credential
-#######
-Write-Host "Installing docker"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
-#problem - Cannot verify the file SHA256. Deleting the file
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-WebRequest -UseBasicParsing -OutFile C:\Users\ADMINI~1\AppData\Local\Temp\1\DockerMsftProvider\docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip }
-#some kind of bug that cant use -Force arg
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider }
+#Write-Host "Removing Windows defender"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
+#Write-Host "Installing windows container feature"
+##Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
+#Write-Host "Installing nuget (required for PSWindowsUpdate)"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
+#Write-Host "Installing windows update"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
+########
+##(Install-WindowsFeature Containers).RestartNeeded
+#Write-Host "Restarting VM"
+#Restart-VM $Name -Force
+#Wait-VMPowershell -Name $Name -Credential $Credential
+########
+#Write-Host "Installing docker"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
+##Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
+##problem - Cannot verify the file SHA256. Deleting the file
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-WebRequest -UseBasicParsing -OutFile C:\Users\ADMINI~1\AppData\Local\Temp\1\DockerMsftProvider\docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip }
+##some kind of bug that cant use -Force arg
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider }
 
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
 
