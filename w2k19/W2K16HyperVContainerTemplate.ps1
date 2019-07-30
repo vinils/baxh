@@ -31,7 +31,7 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFi
 Write-Host "Removing Windows defender"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
 Write-Host "Installing windows container feature"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature Containers }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
 Write-Host "Installing nuget (required for PSWindowsUpdate)"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 Write-Host "Installing windows update"
