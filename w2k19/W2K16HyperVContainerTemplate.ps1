@@ -29,7 +29,7 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsU
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 #######
 Write-Host "Renaming computer name"
-Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
+Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 #######
 Write-Host "Restarting VM"
 Restart-VM $Name -Force
