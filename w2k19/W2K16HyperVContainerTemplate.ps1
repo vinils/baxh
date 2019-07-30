@@ -31,7 +31,7 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFi
 Write-Host "Removing Windows defender"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
 Write-Host "Installing windows container feature"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsFeature -Name Containers }
 Write-Host "Installing nuget (required for PSWindowsUpdate)"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 Write-Host "Installing windows update"
@@ -47,17 +47,18 @@ Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 #######
 Write-Host "Installing docker"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Find-PackageProvider DockerMsftProvider | Install-PackageProvider }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Find-PackageProvider DockerMsftProvider | Install-PackageProvider }
 ##Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Force }
 ##in case "Cannot verify the file SHA256. Deleting the file" - https://github.com/MicrosoftDocs/Virtualization-Documentation/issues/919
 ###cd C:\Users\Administrator\AppData\Local\Temp\1\DockerMsftProvider
 ##cd C:\Users\Administrator\AppData\Local\Temp\2\DockerMsftProvider
-##Invoke-WebRequest -UseBasicParsing -OutFile docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-WebRequest -UseBasicParsing -OutFile C:\Users\Administrator\AppData\Local\Temp\2\DockerMsftProvider\docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip }
 ##Start-BitsTransfer -Source https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip -Destination Docker-19-03-1.zip
 ###Get-FileHash -Path Docker-19-03-1.zip -Algorithm SHA256
-##Install-Package -Name docker -ProviderName DockerMsftProvider -Verbose
+#Install-Package -Name docker -ProviderName DockerMsftProvider -Verbose
+#Install-Package -Name docker -ProviderName DockerMsftProvider -Force
 
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
 
