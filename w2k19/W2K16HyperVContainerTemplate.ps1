@@ -4,6 +4,7 @@ New-VM -Name $Name -MemoryStartupBytes 10GB -NewVHDPath "E:\Hyper-V\Virtual Hard
 Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVERHYPERCORE_OEM_X64FRE_EN-US.ISO'
 Start-VM -Name $Name
 
+Write-Host "Waiting you to install windows"
 Wait-VM -Name $Name -For Heartbeat
 
 Write-Host "Waiting you to set the VM password"
