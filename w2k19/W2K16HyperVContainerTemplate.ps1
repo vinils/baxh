@@ -6,8 +6,8 @@ Start-VM -Name $Name
 
 Wait-VM -Name $Name -For Heartbeat
 
-echo "Waiting you to finnish the installation adn set the VM password"
-echo ""
+Write-Host "Waiting you to set the VM password"
+Write-Host ""
 pause
 
 ##Set Powershell default
