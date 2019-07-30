@@ -28,6 +28,13 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProp
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\' -Name “UserAuthentication” -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup "Remote Desktop" }
 #######
+Write-Host "Renaming computer name"
+Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
+#######
+Write-Host "Restarting VM"
+Restart-VM $Name -Force
+Wait-VMPowershell -Name $Name -Credential $Credential
+#######
 Write-Host "Removing Windows defender"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
 Write-Host "Installing windows container feature"
@@ -38,9 +45,6 @@ Write-Host "Installing windows update"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
-#######
-Write-Host "Renaming computer name"
-Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 #######
 Write-Host "Restarting VM"
 Restart-VM $Name -Force
