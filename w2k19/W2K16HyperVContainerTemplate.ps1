@@ -47,12 +47,12 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Pack
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
-#######
-#(Install-WindowsFeature Containers).RestartNeeded
-Write-Host "Restarting VM"
-Restart-VM $Name -Force
-Wait-VMPowershell -Name $Name -Credential $Credential
 ########
+##(Install-WindowsFeature Containers).RestartNeeded
+#Write-Host "Restarting VM"
+#Restart-VM $Name -Force
+#Wait-VMPowershell -Name $Name -Credential $Credential
+#########
 #Write-Host "Installing docker"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 ##Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
