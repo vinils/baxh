@@ -14,7 +14,7 @@ pause
 #Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -name Shell -Value 'PowerShell.exe -noExit'
 
 $Credential = $(Get-Credential)
-Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $cred -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
+Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
