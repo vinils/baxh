@@ -48,7 +48,7 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 #######
 Write-Host "Installing docker"
 #Install-Module -Name DockerMsftProvider -REpository PSGallery -Force
-#Install-Package -Name docker -ProviderName Docker -ProviderName DockerMsftProvider
+#Install-Package -Name docker -ProviderName DockerMsftProvider
 
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 ##Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
