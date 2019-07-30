@@ -26,6 +26,8 @@ Write-Host "Renaming computer name"
 Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
 Write-Host "Removing Windows defender"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Uninstall-WindowsFeature Windows-Defender }
+Write-Host "Installing nuget (required for PSWindowsUpdate)"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 Write-Host "Installing windows update"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
@@ -39,7 +41,6 @@ Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 
 Write-Host "Installing docker"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Find-PackageProvider DockerMsftProvider | Install-PackageProvider }
 ##Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
