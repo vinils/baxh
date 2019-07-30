@@ -90,6 +90,7 @@ Write-Host "Installing docker"
 ##.NET Core Docker Samples
 ##https://github.com/dotnet/dotnet-docker-samples/blob/master/README.DockerHub.md
 ##docker run microsoft/dotnet-samples:dotnetapp
+##docker run microsoft/dotnet-samples:dotnetapp-nanoserver
 
 ##images - https://hub.docker.com/search?q=nanoserver%20sac2016&type=image
 
