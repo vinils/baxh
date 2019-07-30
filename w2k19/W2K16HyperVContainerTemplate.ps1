@@ -45,6 +45,11 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Modu
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 #######
+#(Install-WindowsFeature Containers).RestartNeeded
+Write-Host "Restarting VM"
+Restart-VM $Name -Force
+Wait-VMPowershell -Name $Name -Credential $Credential
+#######
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 ##bug not working with force
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
@@ -52,11 +57,6 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Pack
 ##bug not valid SHA1
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-WebRequest -UseBasicParsing -OutFile C:\Users\ADMINI~1\AppData\Local\Temp\1\DockerMsftProvider\docker-19-03-1.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider }
-#######
-#(Install-WindowsFeature Containers).RestartNeeded
-Write-Host "Restarting VM"
-Restart-VM $Name -Force
-Wait-VMPowershell -Name $Name -Credential $Credential
 #######
 #Write-Host "Installing docker"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
