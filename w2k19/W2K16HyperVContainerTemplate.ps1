@@ -15,8 +15,6 @@ pause
 #Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -name Shell -Value 'PowerShell.exe -noExit'
 
 $Credential = $(Get-Credential)
-Write-Host "Renaming computer name"
-Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
 
 #######
 Write-Host "Removing Windows defender"
@@ -30,19 +28,18 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Modu
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 #######
-
+Write-Host "Renaming computer name"
+Invoke-Command -VMName W2K16HyperVContainerTemplate -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname SRVMSCONTTmp }
+#######
 Write-Host "Restarting VM"
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
-
 #######
-# remote desktop
 Write-Host "Enabling remote desktop"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\‘ -Name “fDenyTSConnections” -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\‘ -Name “UserAuthentication” -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup “Remote Desktop” }
 #######
-
 Write-Host "Installing docker"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Find-PackageProvider DockerMsftProvider | Install-PackageProvider }
