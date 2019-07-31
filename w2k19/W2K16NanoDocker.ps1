@@ -51,18 +51,24 @@ Start-VM $Name
 
 Wait-VMPowershell -Name $Name -Credential $Credential
 
-#https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
-#Scan for Available Updates
-Write-Host "Scanning for Available Updates"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
-##Install Windows Updates
-Write-Host "Installing Windows Updates"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ApplyApplicableUpdates }
+$runagain = $true
+$error.Clear()
+For ($i=0; $i -le 10 && $runagain; $i++) {
+  #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
+  #Scan for Available Updates
+  Write-Host "Scanning for Available Updates"
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
+  ##Install Windows Updates
+  Write-Host "Installing Windows Updates"
+  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ApplyApplicableUpdates }
 
-Write-Host "Restarting VM"
-Restart-VM $Name -Force
-Wait-VMPowershell -Name $Name -Credential $Credential
+  Write-Host "Restarting VM"
+  Restart-VM $Name -Force
+  Wait-VMPowershell -Name $Name -Credential $Credential
+  
+  $if ($error.Count -le 0) { $runagain = $false }
+}
 
 Write-Host "Installing Nuget (required for DockerMsfProvider)"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
