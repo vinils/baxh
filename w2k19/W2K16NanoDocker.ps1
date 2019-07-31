@@ -12,7 +12,7 @@ copy "$($driveLetter)\NanoServer\*.*" c:\NanoServer\
 
 $inputpwd = Read-Host -Prompt 'Password:'
 $pwd = ConvertTo-SecureString -String $inputpwd -AsPlainText -Force
-$Credential = New-Object System.Management.Automation.PSCredential (“Administrator”, $pwd)
+$Credential = New-Object System.Management.Automation.PSCredential ("Administrator", $pwd)
 
 New-NanoServerImage -DeploymentType Guest `
  -ComputerName $Name `
