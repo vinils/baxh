@@ -1,7 +1,7 @@
 
 #https://docs.microsoft.com/pt-br/windows-server/get-started/deploy-nano-server
 
-$Name = "W16Docker"
+$Name = "W16Docker2"
 $isoPath = 'D:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVER_EVAL_X64FRE_EN-US.ISO'
 
 #Dismount-DiskImage -ImagePath $isoPath
@@ -67,10 +67,10 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 Write-Host "Installing Nuget (required for DockerMsfProvider)"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 Write-Host "Installing Docker"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
 
 Write-Host "Restarting VM"
 Restart-VM $Name -Force
