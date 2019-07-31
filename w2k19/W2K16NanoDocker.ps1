@@ -37,6 +37,7 @@ New-NanoServerImage -DeploymentType Guest `
 # -Compute `
 ##dns server
 # -Package Microsoft-NanoServer-DNS-Package `
+#
 
 Write-Host "Creating VM"
 New-VM `
