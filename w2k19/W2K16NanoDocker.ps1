@@ -52,6 +52,7 @@ Start-VM $Name
 Wait-VMPowershell -Name $Name -Credential $Credential
 
 do {
+
   #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
   #Scan for Available Updates
   Write-Host "Scanning for Available Updates"
