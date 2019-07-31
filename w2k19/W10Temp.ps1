@@ -44,7 +44,7 @@ $Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Pin-App "Ma
 Write-Host "Renaming computer name"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 Write-Host "password unset"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ADUser MyUser -PasswordNotRequired $true }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
 
