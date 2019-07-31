@@ -12,10 +12,10 @@ pause
 
 $Credential = $(Get-Credential)
 
-#enable execution of PowerShell scripts
 Write-Host "enable execution of PowerShell scripts"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { set-executionpolicy remotesigned }
-#disable windows defender
+
+Write-Host "disable windows defender"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Stop-Service WinDefend }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-Service WinDefend -StartupType Disabled }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -Value 1 -Type DWord -Force }
@@ -83,9 +83,10 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProp
 
 Write-Host "Renaming computer name"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
-Write-Host "password unset"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
+
+Write-Host "password unset"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
 
 Restart-VM $Name -Force
