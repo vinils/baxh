@@ -66,7 +66,7 @@ do {
   Restart-VM $Name -Force
   Wait-VMPowershell -Name $Name -Credential $Credential
   
-} while ($(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Invoke-WebRequest /? } catch { return $false } }) -eq $false)
+} while ($(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Invoke-WebRequest -? } catch { return $false } }) -eq $false)
 
 Write-Host "Installing Nuget (required for DockerMsfProvider)"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
