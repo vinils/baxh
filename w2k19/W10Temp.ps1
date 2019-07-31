@@ -36,6 +36,11 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Modu
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 
+$Write-Host "Unpin"
+$Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Pin-App "Store" -unpin }
+$Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Pin-App "Microsoft Edge" -unpin }
+$Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Pin-App "Mail" -unpin }
+
 Write-Host "Renaming computer name"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 Write-Host "password unset"
