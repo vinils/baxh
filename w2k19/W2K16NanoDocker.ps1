@@ -51,6 +51,9 @@ Start-VM $Name
 
 Wait-VMPowershell -Name $Name -Credential $Credential
 
+Write-Host "Installing Nuget (required for DockerMsfProvider)"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
+
 do {
 
   #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
@@ -71,8 +74,6 @@ do {
 
 } while ($hasInvokeWebRequest -eq $false)
 
-Write-Host "Installing Nuget (required for DockerMsfProvider)"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 Write-Host "Installing Docker"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
