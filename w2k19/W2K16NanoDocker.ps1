@@ -15,6 +15,7 @@ $inputpwd = Read-Host -Prompt 'Password:'
 $pwd = ConvertTo-SecureString -String $inputpwd -AsPlainText -Force
 $Credential = New-Object System.Management.Automation.PSCredential ("Administrator", $pwd)
 
+Write-Host "New Nando"
 New-NanoServerImage -DeploymentType Guest `
  -ComputerName $Name `
  -AdministratorPassword $pwd `
@@ -35,6 +36,7 @@ New-NanoServerImage -DeploymentType Guest `
 ##dns server
 # -Package Microsoft-NanoServer-DNS-Package `
 
+Write-Host "Creating VM"
 New-VM `
  -Name $Name `
  -MemoryStartupBytes 10GB `
@@ -48,8 +50,10 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 
 #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
 #Scan for Available Updates
+Write-Host "Scanning for Available Updates"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
 ##Install Windows Updates
+Write-Host "Installing Windows Updates"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ApplyApplicableUpdates }
 
@@ -57,13 +61,14 @@ Write-Host "Restarting VM"
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 
+Write-Host "Installing Nuget (required for DockerMsfProvider)"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
+Write-Host "Installing Docker"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
 
-#(Install-WindowsFeature Containers).RestartNeeded
 Write-Host "Restarting VM"
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
@@ -72,8 +77,9 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 ##Use Docker
 #docker pull tonysneed/helloaspnet:nanoserver
 #docker images
-#docker run -d -p 80:5000 --name helloaspnet tonysneed/helloaspnet:nanoserver
+#docker run -d -p 8081:5000 --name helloaspnet tonysneed/helloaspnet:nanoserver
 #docker ps
 ##Browse to public DNS or IP of Windows nano server
-#http://xx.xxx.xxx.xx
+#iwr -useb -method Head http://<ip>:8081
+#http://<ip>:8081
 ##You should see: Hello World!
