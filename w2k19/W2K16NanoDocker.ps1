@@ -66,7 +66,7 @@ For ($i=0; $i -le 10 -and $runagain; $i++) {
   Restart-VM $Name -Force
   Wait-VMPowershell -Name $Name -Credential $Credential
   
-  $if ($error.Count -le 0) { $runagain = $false }
+  if ($error.Count -le 0) { $runagain = $false }
 }
 
 Write-Host "Installing Nuget (required for DockerMsfProvider)"
