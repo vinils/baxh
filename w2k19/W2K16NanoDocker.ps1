@@ -1,4 +1,3 @@
-
 #https://docs.microsoft.com/pt-br/windows-server/get-started/deploy-nano-server
 
 $Name = "W16Docker"
@@ -53,7 +52,7 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 
 $runagain = $true
 $error.Clear()
-For ($i=0; $i -le 10 && $runagain; $i++) {
+For ($i=0; $i -le 10 -and $runagain; $i++) {
   #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
   #Scan for Available Updates
   Write-Host "Scanning for Available Updates"
