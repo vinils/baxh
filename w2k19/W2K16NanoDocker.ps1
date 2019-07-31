@@ -8,8 +8,11 @@ $isoPath = 'D:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REF
 MOUNT-DISKIMAGE $isoPath
 $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
 Import-Module "$($driveLetter)\NanoServer\NanoServerImageGenerator" -Verbose
-mkdir c:\NanoServer\
-copy "$($driveLetter)\NanoServer\*.*" c:\NanoServer\
+
+if (!(Test-Path -Path "C:\NanoServer\")) {
+  mkdir c:\NanoServer\
+  copy "$($driveLetter)\NanoServer\*.*" c:\NanoServer\
+}
 
 $inputpwd = Read-Host -Prompt 'Password:'
 $pwd = ConvertTo-SecureString -String $inputpwd -AsPlainText -Force
