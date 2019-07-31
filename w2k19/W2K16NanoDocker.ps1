@@ -1,3 +1,4 @@
+
 #https://docs.microsoft.com/pt-br/windows-server/get-started/deploy-nano-server
 
 $Name = "W16Docker"
