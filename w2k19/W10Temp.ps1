@@ -70,6 +70,8 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco instal
 #Write-Host "removing microsoft chrome link from desktop"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\Public\Desktop\Google Chrome.lnk" }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Google Chrome.lnk" }
+Write-Host "install docker cli"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress docker }
 
 Write-Host "control painel small icons"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" }
