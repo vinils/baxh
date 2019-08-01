@@ -21,8 +21,7 @@ Write-Host "New Nando"
 New-NanoServerImage -DeploymentType Guest `
  -ComputerName $Name `
  -ServicingPackagePath 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3176936-x64\Windows10.0-KB3176936-x64.cab', `
- 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3192366-x64\Windows10.0-KB3192366-x64.cab', `
- 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\kb4507459-x64\Windows10.0-KB4507459-x64.cab' `
+ 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3192366-x64\Windows10.0-KB3192366-x64.cab' `
  -AdministratorPassword $pwd `
  -Edition DataCenter `
  -MediaPath "$($driveLetter)\" `
