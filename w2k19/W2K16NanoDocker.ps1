@@ -69,12 +69,9 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Servic
 
 For ($i=1; $i -le 3; $i++) {
   #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
-  #Scan for Available Updates
   Write-Host "Scanning for Available Updates"
   Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
-  ##Install Windows Updates
   Write-Host "Installing Windows Updates"
-  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
   Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
 
   Write-Host "Restarting VM"
