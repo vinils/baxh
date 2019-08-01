@@ -1,6 +1,6 @@
 #https://docs.microsoft.com/pt-br/windows-server/get-started/deploy-nano-server
 
-$Name = "W16Docker"
+$Name = "W16Docker5"
 $isoPath = 'D:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVER_EVAL_X64FRE_EN-US.ISO'
 
 #Dismount-DiskImage -ImagePath $isoPath
@@ -21,7 +21,8 @@ Write-Host "New Nando"
 New-NanoServerImage -DeploymentType Guest `
  -ComputerName $Name `
  -ServicingPackagePath 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3176936-x64\Windows10.0-KB3176936-x64.cab', `
- 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3192366-x64\Windows10.0-KB3192366-x64.cab' `
+ 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3192366-x64\Windows10.0-KB3192366-x64.cab', `
+ 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\kb4507459-x64\Windows10.0-KB4507459-x64.cab' `
  -AdministratorPassword $pwd `
  -Edition DataCenter `
  -MediaPath "$($driveLetter)\" `
@@ -56,36 +57,43 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 Write-Host "Installing Nuget (required for DockerMsfProvider)"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 
-do {
+#do {
+#
+#  #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
+#  #Scan for Available Updates
+#  Write-Host "Scanning for Available Updates"
+#  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
+#  ##Install Windows Updates
+#  Write-Host "Installing Windows Updates"
+#  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
+#  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
+#
+#  Write-Host "Restarting VM"
+#  Restart-VM $Name -Force
+#  Wait-VMPowershell -Name $Name -Credential $Credential
+#  
+#  #$numberofupdates = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $($(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}) | measure).Count }
+#  $hasInvokeWebRequest = $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Invoke-WebRequest -? } catch { return $false } })
+#
+#} while ($hasInvokeWebRequest -eq $false)
 
-  #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
-  #Scan for Available Updates
-  Write-Host "Scanning for Available Updates"
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
-  ##Install Windows Updates
-  Write-Host "Installing Windows Updates"
-  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
+#Write-Host "Restarting VM"
+#Restart-VM $Name -Force
+#Wait-VMPowershell -Name $Name -Credential $Credential
 
-  Write-Host "Restarting VM"
-  Restart-VM $Name -Force
-  Wait-VMPowershell -Name $Name -Credential $Credential
-  
-  #$numberofupdates = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $($(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}) | measure).Count }
-  $hasInvokeWebRequest = $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Invoke-WebRequest -? } catch { return $false } })
+#$docker=$false
+#$count=0
+#do {
 
-} while ($hasInvokeWebRequest -eq $false)
+  Write-Host "Installing Docker"
+  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
+  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
+  $docker = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Start-Service docker } catch { return $false } }
+  $count=$count+1
 
-Write-Host "Installing Docker"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
-
-Write-Host "Restarting VM"
-Restart-VM $Name -Force
-Wait-VMPowershell -Name $Name -Credential $Credential
+#} while ($docker -eq $false -or $count -le 3)
 
 #Enter-PSSession -VMName $name
 ##Use Docker
