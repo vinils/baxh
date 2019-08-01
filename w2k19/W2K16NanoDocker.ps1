@@ -2,11 +2,14 @@
 
 $Name = "W16Docker5"
 $isoPath = 'D:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVER_EVAL_X64FRE_EN-US.ISO'
-
-#Dismount-DiskImage -ImagePath $isoPath
-MOUNT-DISKIMAGE $isoPath
 $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
-Import-Module "$($driveLetter)\NanoServer\NanoServerImageGenerator" -Verbose
+
+if($driveLetter -eq ":") {
+  #Dismount-DiskImage -ImagePath $isoPath
+  MOUNT-DISKIMAGE $isoPath
+  $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
+  Import-Module "$($driveLetter)\NanoServer\NanoServerImageGenerator" -Verbose
+}
 
 if (!(Test-Path -Path "C:\NanoServer\")) {
   mkdir c:\NanoServer\
