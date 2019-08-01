@@ -59,43 +59,28 @@ Wait-VMPowershell -Name $Name -Credential $Credential
 Write-Host "Installing Nuget (required for DockerMsfProvider)"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
 
-#do {
-#
-#  #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
-#  #Scan for Available Updates
-#  Write-Host "Scanning for Available Updates"
-#  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
-#  ##Install Windows Updates
-#  Write-Host "Installing Windows Updates"
-#  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
-#  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
-#
-#  Write-Host "Restarting VM"
-#  Restart-VM $Name -Force
-#  Wait-VMPowershell -Name $Name -Credential $Credential
-#  
-#  #$numberofupdates = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $($(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}) | measure).Count }
-#  $hasInvokeWebRequest = $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Invoke-WebRequest -? } catch { return $false } })
-#
-#} while ($hasInvokeWebRequest -eq $false)
+Write-Host "Installing Docker"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
+$docker = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Start-Service docker } catch { return $false } }
+$count=$count+1
 
-#Write-Host "Restarting VM"
-#Restart-VM $Name -Force
-#Wait-VMPowershell -Name $Name -Credential $Credential
+For ($i=1; $i -le 3; $i++) {
+  #https://docs.microsoft.com/pt-br/windows-server/get-started/manage-nano-server
+  #Scan for Available Updates
+  Write-Host "Scanning for Available Updates"
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession | Invoke-CimMethod -MethodName ScanForUpdates -Arguments @{SearchCriteria="IsInstalled=0";OnlineScan=$true}).Updates }
+  ##Install Windows Updates
+  Write-Host "Installing Windows Updates"
+  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-CimMethod -InputObject $(New-CimInstance -Namespace root/Microsoft/Windows/WindowsUpdate -ClassName MSFT_WUOperationsSession) -MethodName ApplyApplicableUpdates }
 
-#$docker=$false
-#$count=0
-#do {
-
-  Write-Host "Installing Docker"
-  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name DockerMsftProvider -Repository PSGallery -Force }
-  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Verbose }
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
-  $docker = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { try { Start-Service docker } catch { return $false } }
-  $count=$count+1
-
-#} while ($docker -eq $false -or $count -le 3)
+  Write-Host "Restarting VM"
+  Restart-VM $Name -Force
+  Wait-VMPowershell -Name $Name -Credential $Credential
+}
 
 #Enter-PSSession -VMName $name
 ##Use Docker
