@@ -8,8 +8,9 @@ if($driveLetter -eq ":") {
   #Dismount-DiskImage -ImagePath $isoPath
   MOUNT-DISKIMAGE $isoPath
   $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
-  Import-Module "$($driveLetter)\NanoServer\NanoServerImageGenerator" -Verbose
 }
+
+Import-Module "$($driveLetter)\NanoServer\NanoServerImageGenerator" -Verbose
 
 if (!(Test-Path -Path "C:\NanoServer\")) {
   mkdir c:\NanoServer\
