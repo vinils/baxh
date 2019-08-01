@@ -1,6 +1,6 @@
 #https://docs.microsoft.com/pt-br/windows-server/get-started/deploy-nano-server
 
-$Name = "W16Docker"
+$Name = "W16Docker3"
 $isoPath = 'D:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVER_EVAL_X64FRE_EN-US.ISO'
 
 #Dismount-DiskImage -ImagePath $isoPath
@@ -20,6 +20,8 @@ $Credential = New-Object System.Management.Automation.PSCredential ("Administrat
 Write-Host "New Nando"
 New-NanoServerImage -DeploymentType Guest `
  -ComputerName $Name `
+ -ServicingPackagePath 'D:\SOFTWARES\WORK\MS Windows\2016 Server\KB3176936-x64\Windows10.0-KB3176936-x64.cab', `
+ 'D:\SOFTWARES\WORK\MS Windows\2016 Server\KB3192366-x64\Windows10.0-KB3192366-x64.cab' `
  -AdministratorPassword $pwd `
  -Edition DataCenter `
  -MediaPath "$($driveLetter)\" `
