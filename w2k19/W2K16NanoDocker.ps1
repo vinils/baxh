@@ -19,13 +19,15 @@ $Credential = New-Object System.Management.Automation.PSCredential ("Administrat
 
 Write-Host "New Nando"
 New-NanoServerImage -DeploymentType Guest `
- -ComputerName $Name `
- -AdministratorPassword $pwd `
- -Edition DataCenter `
- -MediaPath "$($driveLetter)\" `
- -BasePath c:\NanoServer\ `
  -TargetPath "E:\Hyper-V\Virtual hard disks\$Name.vhdx" `
  -MaxSize 100GB `
+ -Edition DataCenter `
+ -ComputerName $Name `
+ -AdministratorPassword $pwd `
+ -MediaPath "$($driveLetter)\" `
+ -BasePath c:\NanoServer\ `
+ -ServicingPackagePath 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3176936-x64\Windows10.0-KB3176936-x64.cab', `
+ 'D:\SOFTWARES\WORK\MS Windows\2016 Server\NanoServerKBs\KB3192366-x64\Windows10.0-KB3192366-x64.cab' `
  -Containers
 
 ##Remote Management
