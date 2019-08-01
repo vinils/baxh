@@ -1,6 +1,6 @@
 #https://docs.microsoft.com/pt-br/windows-server/get-started/deploy-nano-server
 
-$Name = "W16Docker3"
+$Name = "W16Docker4"
 $isoPath = 'D:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVER_EVAL_X64FRE_EN-US.ISO'
 
 #Dismount-DiskImage -ImagePath $isoPath
