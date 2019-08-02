@@ -1,5 +1,11 @@
 $Name = 'W10Temp'
-New-VM -Name $Name -MemoryStartupBytes 10GB -NewVHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" -NewVHDSizeBytes 100GB -SwitchName ExternalSwitch
+
+New-VM -Name $Name -MemoryStartupBytes 10GB `
+ -Generation 2 `
+ -NewVHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" `
+ -NewVHDSizeBytes 100GB `
+ -SwitchName ExternalSwitch
+ 
 Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\10\Win10_1903_V1_EnglishInternational_x64.iso'
 Start-VM -Name $Name
 
