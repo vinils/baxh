@@ -36,7 +36,7 @@ if [[ -z "$hostName" ]]; then
   exit 1
 fi
 
-curl https://raw.githubusercontent.com/vinils/baxh/master/onlinerun -o /bin/onlinerun
+curl https://raw.githubusercontent.com/vinils/baxh/master/linux/onlinerun -o /bin/onlinerun
 chmod +xr /bin/onlinerun
 
 cat << EOF | tee -a /etc/pacman.conf
