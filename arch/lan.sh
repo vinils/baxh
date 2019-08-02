@@ -1,9 +1,14 @@
 #!/bin/bash
 #https://www.reddit.com/r/linux/comments/30hk8e/creating_a_bridge_for_virtual_machines_using/
 
+systemctl stop dhcpcd
+
 ethGig=enp5s0
 ether2=eno1
 wifi=wlp4s0
+
+systemctl stop dhcpcd
+systemctl disable dhcpcd
 
 cat << EOF | tee /etc/systemd/network/management.network
 [Match]
