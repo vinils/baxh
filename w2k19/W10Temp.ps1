@@ -71,7 +71,7 @@ do {
     Restart-VM $Name -Force
     Wait-VMPowershell -Name $Name -Credential $Credential
   }
-} while($isRebootPending -or $updatesNumber -le 0)
+} while($isRebootPending -or $updatesNumber -gt 0)
 
 Write-Host "password unset"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
