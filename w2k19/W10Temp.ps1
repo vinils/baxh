@@ -76,6 +76,16 @@ do {
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
 
+$isoPath = 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail.img'
+$driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
+if($driveLetter -eq ":") {
+  #Dismount-DiskImage -ImagePath $isoPath
+  MOUNT-DISKIMAGE $isoPath
+  $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
+}
+
+"$($driveLetter)\Setup.exe"
+
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
 Write-Host "unpin microsoft edge"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq "Microsoft Edge"}).Verbs() | ?{$_.Name.replace('&','') -match 'Unpin from taskbar'} | %{$_.DoIt(); $exec = $true} }
@@ -111,3 +121,9 @@ Write-Host "pin chrome"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq "Google Chrome"}).Verbs() | ?{$_.Name.replace('&','') -match 'To "Start" Pin|Pin to Start'} | %{$_.DoIt()} }
 Write-Host "Installing Git"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress git }
+
+#Enable-ComputerRestore -Drive "C:\" -Confirm
+#Checkpoint-Computer -Description "W10PlusOffice" -RestorePointType 16
+#$restorePoint = (Get-ComputerRestorePoint | Where {$_.Description -eq "Win10OfficeFirstRecovery"}).SequenceNumber
+#Restore-Computer -RestorePoint $restorePoint -Confirm
+#Get-ComputerRestorePoint -LastStatus
