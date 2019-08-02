@@ -98,7 +98,7 @@ update-pciids
 ####################################################################################################
 #firstboot
 
-#onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $pwd
+onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $pwd
 
 ####################################################################################################
 #LAN
