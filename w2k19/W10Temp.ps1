@@ -123,7 +123,7 @@ Write-Host "Installing Git"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress git }
 
 #Enable-ComputerRestore -Drive "C:\" -Confirm
-#Checkpoint-Computer -Description "W10PlusOffice" -RestorePointType 16
+#Checkpoint-Computer -Description "W10PlusOffice"
 #$restorePoint = (Get-ComputerRestorePoint | Where {$_.Description -eq "Win10OfficeFirstRecovery"}).SequenceNumber
 #Restore-Computer -RestorePoint $restorePoint -Confirm
 #Get-ComputerRestorePoint -LastStatus
