@@ -49,9 +49,6 @@ curl "https://www.archlinux.org/mirrorlist/?country=BR&protocol=http&protocol=ht
 sed -i 's/#S/S/g' $mirrlistFile
 pacman -Syy
 
-#replace to 64 bits versions
-pacman -S --noconfirm multilib-devel fakeroot git jshon wget make pkg-config autoconf automake patch
-
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc --utc
 
@@ -101,7 +98,7 @@ update-pciids
 ####################################################################################################
 #firstboot
 
-onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $pwd
+#onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh $pwd
 
 ####################################################################################################
 #LAN
@@ -110,6 +107,6 @@ onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/firstboot.sh
 #systemctl enable dhcpcd.service
 
 #custom way
-onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/lan.sh
+#onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/lan.sh
 
 ####################################################################################################
