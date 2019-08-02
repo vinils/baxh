@@ -52,8 +52,6 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-Windo
 Write-Host "Renaming computer name"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
-
 Write-Host "password unset"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
 
@@ -75,6 +73,8 @@ do {
     Wait-VMPowershell -Name $Name -Credential $Credential
   }
 } while($IsRebootPending)
+
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
 Write-Host "unpin microsoft edge"
