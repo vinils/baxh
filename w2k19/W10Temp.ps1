@@ -79,18 +79,9 @@ $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (n
               
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
 
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock {
-  $isoPath = 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail.img'
-  $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
-
-  if($driveLetter -eq ":") {
-    #Dismount-DiskImage -ImagePath $isoPath
-    MOUNT-DISKIMAGE $isoPath
-    $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
-  }
-
-  "$($driveLetter)\Office\Setup64.exe /Configure /q"
-}
+$officeDrive = Set-VMDvdDrive -VMName $Name -Path 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail - Copy.iso'
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { "D:\Office\Setup64.exe /Configure /q" }
+#Remove-VMDvdDrive -VMDvdDrive $officeDrive
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
 Write-Host "unpin microsoft edge"
