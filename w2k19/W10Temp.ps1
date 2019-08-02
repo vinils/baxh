@@ -39,6 +39,12 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProp
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name LimitBlankPasswordUse -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup "Remote Desktop" }
 
+#Write-Host "Installing Net framework 3.5"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Add-WindowsCapability –Online -Name NetFx3~~~~ –Source D:\sources\sxs }
+
+Write-Host "Install Windows subsistem for linux"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux }
+
 Write-Host "Updating windows"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
@@ -48,6 +54,18 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Wind
 #removing mail app
 #Write-Host "Removing mail app"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { get-appxpackage *microsoft.windowscommunicationsapps* | remove-appxpackage }
+
+Write-Host "Renaming computer name"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
+
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
+
+Write-Host "password unset"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
+
+Write-Host "Restarting VM"
+Restart-VM $Name -Force
+Wait-VMPowershell -Name $Name -Credential $Credential
 
 Write-Host "removing microsoft edge link from desktop"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
@@ -63,15 +81,8 @@ Write-Host "install NotepePlusPlus"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress NotepadPlusPlus }
 Write-Host "install 7zip"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress 7zip }
-#Write-Host "install GoogleChrome"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress GoogleChrome }
-#Write-Host "pin chrome"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq "Google Chrome"}).Verbs() | ?{$_.Name.replace('&','') -match 'To "Start" Pin|Pin to Start'} | %{$_.DoIt()} }
-#Write-Host "removing microsoft chrome link from desktop"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\Public\Desktop\Google Chrome.lnk" }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Google Chrome.lnk" }
 Write-Host "install docker cli"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress docker }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress docker-cli }
 
 Write-Host "control painel small icons"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" }
@@ -83,13 +94,12 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProp
 Write-Output "Showing known file extensions..."
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0 }
 
-
-Write-Host "Renaming computer name"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
-
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
-
-Write-Host "password unset"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
-
-Restart-VM $Name -Force
+Write-Host "Installing Google Chrome"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress googlechrome }
+Write-Host "removing microsoft chrome link from desktop"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\Public\Desktop\Google Chrome.lnk" }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Google Chrome.lnk" }
+Write-Host "pin chrome"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq "Google Chrome"}).Verbs() | ?{$_.Name.replace('&','') -match 'To "Start" Pin|Pin to Start'} | %{$_.DoIt()} }
+Write-Host "Installing Git"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress git }
