@@ -45,12 +45,6 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFi
 Write-Host "Install Windows subsistem for linux"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux }
 
-Write-Host "Updating windows"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
-
 #removing mail app
 #Write-Host "Removing mail app"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { get-appxpackage *microsoft.windowscommunicationsapps* | remove-appxpackage }
@@ -63,11 +57,25 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
 Write-Host "password unset"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
 
-Write-Host "Restarting VM"
-Restart-VM $Name -Force
-Wait-VMPowershell -Name $Name -Credential $Credential
+Write-Host "Installing update tools"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name PendingReboot }
 
-Write-Host "removing microsoft edge link from desktop"
+do {
+  Write-Host "Updating windows"
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
+
+  $IsRebootPending = (Test-PendingReboot).IsRebootPending
+  
+  if($IsRebootPending) {
+    Write-Host "Restarting VM"
+    Restart-VM $Name -Force
+    Wait-VMPowershell -Name $Name -Credential $Credential
+  }
+} while($IsRebootPending)
+
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
 Write-Host "unpin microsoft edge"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ?{$_.Name -eq "Microsoft Edge"}).Verbs() | ?{$_.Name.replace('&','') -match 'Unpin from taskbar'} | %{$_.DoIt(); $exec = $true} }
