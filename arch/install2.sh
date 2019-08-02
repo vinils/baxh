@@ -103,8 +103,8 @@ update-pciids
 ####################################################################################################
 #LAN
 
-##light way
-#systemctl enable dhcpcd.service
+#light way
+systemctl enable dhcpcd
 
 #custom way
 #onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/lan.sh
