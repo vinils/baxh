@@ -6,11 +6,13 @@ Start-VM -Name $Name
 Write-Host "Waiting you to install windows"
 Wait-VM -Name $Name -For Heartbeat
 
-Write-Host "Waiting you to set the VM password"
+Write-Host "Waiting you to set the VM password for user MyUser"
 Write-Host ""
 pause
 
-$Credential = $(Get-Credential)
+$inputpwd = Read-Host -Prompt 'Password:'
+$pwd = ConvertTo-SecureString -String $inputpwd -AsPlainText -Force
+$Credential = New-Object System.Management.Automation.PSCredential ("MyUser", $pwd)
 
 Write-Host "enable execution of PowerShell scripts"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { set-executionpolicy remotesigned }
@@ -43,48 +45,52 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFi
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Add-WindowsCapability –Online -Name NetFx3~~~~ –Source D:\sources\sxs }
 
 Write-Host "Install Windows subsistem for linux"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName -NoRestart Microsoft-Windows-Subsystem-Linux }
 
 #removing mail app
 #Write-Host "Removing mail app"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { get-appxpackage *microsoft.windowscommunicationsapps* | remove-appxpackage }
 
-Write-Host "Renaming computer name"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
-
-Write-Host "password unset"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
-
 Write-Host "Installing update tools"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name PendingReboot }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name PendingReboot -Force }
+
+Write-Host "Renaming computer name"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 
 do {
+  $updatesNumber = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { return (Get-WindowsUpdate).Count }
+  $isRebootPending = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { return (Test-PendingReboot).IsRebootPending }
+
   Write-Host "Updating windows"
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
   Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 
-  $IsRebootPending = (Test-PendingReboot).IsRebootPending
-  
-  if($IsRebootPending) {
+  if($isRebootPending) {
     Write-Host "Restarting VM"
     Restart-VM $Name -Force
     Wait-VMPowershell -Name $Name -Credential $Credential
   }
-} while($IsRebootPending)
+} while($isRebootPending -or $updatesNumber -le 0)
 
+Write-Host "password unset"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
+$Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
+              
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
 
-$isoPath = 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail.img'
-$driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
-if($driveLetter -eq ":") {
-  #Dismount-DiskImage -ImagePath $isoPath
-  MOUNT-DISKIMAGE $isoPath
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock {
+  $isoPath = 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail.img'
   $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
-}
 
-"$($driveLetter)\Office\Setup64.exe /Configure /q"
+  if($driveLetter -eq ":") {
+    #Dismount-DiskImage -ImagePath $isoPath
+    MOUNT-DISKIMAGE $isoPath
+    $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
+  }
+
+  "$($driveLetter)\Office\Setup64.exe /Configure /q"
+}
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
 Write-Host "unpin microsoft edge"
