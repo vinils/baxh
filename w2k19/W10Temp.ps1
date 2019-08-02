@@ -119,8 +119,7 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object
 Write-Host "Installing Git"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress git }
 
-#Enable-ComputerRestore -Drive "C:\" -Confirm
-#Checkpoint-Computer -Description "W10PlusOffice"
-#$restorePoint = (Get-ComputerRestorePoint | Where {$_.Description -eq "Win10OfficeFirstRecovery"}).SequenceNumber
-#Restore-Computer -RestorePoint $restorePoint -Confirm
-#Get-ComputerRestorePoint -LastStatus
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-ComputerRestore -Confirm -Drive "C:\" }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Checkpoint-Computer -Description "W10PlusOffice" }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Restore-Computer -Confirm -RestorePoint (Get-ComputerRestorePoint | Where {$_.Description -eq "W10PlusOffice"}).SequenceNumber }
+##Get-ComputerRestorePoint -LastStatus
