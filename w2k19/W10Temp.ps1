@@ -1,12 +1,14 @@
 $Name = 'W10Temp'
 
-New-VM -Name $Name -MemoryStartupBytes 10GB `
- -Generation 2 `
- -NewVHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" `
- -NewVHDSizeBytes 100GB `
- -SwitchName ExternalSwitch
- 
-Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\10\Win10_1903_V1_EnglishInternational_x64.iso'
+New-VM -Name $Name `
+  -NewVHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" `
+  -NewVHDSizeBytes 100GB `
+  -MemoryStartupBytes 10GB `
+  -SwitchName ExternalSwitch
+
+SET-VMProcessor –VMName $Name –Count 2
+Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
+Add-VMDvdDrive -VMName $Name -Path 'D:\SOFTWARES\WORK\MS Windows\10\Win10_1903_V1_EnglishInternational_x64.iso'
 Start-VM -Name $Name
 
 Write-Host "Waiting you to install windows"
