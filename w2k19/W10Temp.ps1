@@ -84,7 +84,7 @@ if($driveLetter -eq ":") {
   $driveLetter = "$($(Get-DiskImage $isoPath | Get-Volume).DriveLetter):"
 }
 
-"$($driveLetter)\Setup.exe"
+"$($driveLetter)\Office\Setup64.exe /Configure /q"
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
 Write-Host "unpin microsoft edge"
