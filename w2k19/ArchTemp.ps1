@@ -1,4 +1,4 @@
-$Name = 'ArchTemp2'
+$Name = 'ArchTemp'
 New-VHD -Path "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" -SizeBytes 100GB -Dynamic -BlockSizeBytes 1MB
 New-VM -Name $Name -MemoryStartupBytes 10GB -VHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" -Generation 2 -SwitchName ExternalSwitch
 Add-VMScsiController -VMName $Name
