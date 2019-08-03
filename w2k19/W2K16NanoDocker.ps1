@@ -53,6 +53,8 @@ New-VM `
  -Generation 2 `
  -SwitchName ExternalSwitch
 
+SET-VMProcessor –VMName $Name –Count 2
+Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Start-VM $Name
 
 Wait-VMPowershell -Name $Name -Credential $Credential
