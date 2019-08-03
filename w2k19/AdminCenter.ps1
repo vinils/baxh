@@ -1,8 +1,4 @@
 Set-Item wsman:localhost\client\trustedhosts 192.168.15.243 -Concatenate -Force
-$cred = Get-Credential
-Enter-PSSession 192.168.15.251 -Credential $cred
-#Enter-PSSession -HostName UserA@LinuxServer02:22 -KeyFilePath c:\<path>\userAKey_rsa
-
 $dlPath = 'C:\Users\Administrator\Downloads\WAC.msi'
 Invoke-WebRequest 'http://aka.ms/WACDownload' -OutFile $dlPath
 
