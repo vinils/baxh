@@ -59,6 +59,19 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-Windo
 #Write-Host "Removing mail app"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { get-appxpackage *microsoft.windowscommunicationsapps* | remove-appxpackage }
 
+
+$officeDrive = Set-VMDvdDrive -VMName $Name -Path 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail - Copy.iso'
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { "D:\Office\Setup64.exe /Configure /q" }
+Write-Host "Install office opportunity"
+pause
+Remove-VMDvdDrive -VMDvdDrive $officeDrive
+
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-ComputerRestore -Confirm -Drive "C:\" }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Checkpoint-Computer -Description "W10PlusOffice" }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Restore-Computer -Confirm -RestorePoint (Get-ComputerRestorePoint | Where {$_.Description -eq "W10PlusOffice"}).SequenceNumber }
+##Get-ComputerRestorePoint -LastStatus
+
+
 Write-Host "Installing update tools"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
@@ -86,10 +99,6 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUse
 $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
               
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
-
-$officeDrive = Set-VMDvdDrive -VMName $Name -Path 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail - Copy.iso'
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { "D:\Office\Setup64.exe /Configure /q" }
-#Remove-VMDvdDrive -VMDvdDrive $officeDrive
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
 Write-Host "unpin microsoft edge"
@@ -126,8 +135,3 @@ Write-Host "pin chrome"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | Where-Object {$_.Name -eq "Google Chrome"}).Verbs() }
 Write-Host "Installing Git"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress git }
-
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-ComputerRestore -Confirm -Drive "C:\" }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Checkpoint-Computer -Description "W10PlusOffice" }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Restore-Computer -Confirm -RestorePoint (Get-ComputerRestorePoint | Where {$_.Description -eq "W10PlusOffice"}).SequenceNumber }
-##Get-ComputerRestorePoint -LastStatus
