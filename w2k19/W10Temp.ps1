@@ -25,6 +25,17 @@ $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", $p
 Write-Host "enable execution of PowerShell scripts"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { set-executionpolicy remotesigned }
 
+Write-Host "password unset"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
+$Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
+              
+Write-Host "Enabling Remote Desktop"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\' -Name "fDenyTSConnections" -Value 0 }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\' -Name "UserAuthentication" -Value 0 }
+# enable rdp with blank password
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name LimitBlankPasswordUse -Value 0 }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup "Remote Desktop" }
+
 #Write-Host "disable windows defender"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Stop-Service WinDefend }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-Service WinDefend -StartupType Disabled }
@@ -42,12 +53,16 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { set-executio
 #Write-Host "Disabling UAC"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\policies\system -Name EnableLUA -PropertyType DWord -Value 0 -Force }
 
-Write-Host "Enabling Remote Desktop"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\' -Name "fDenyTSConnections" -Value 0 }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\' -Name "UserAuthentication" -Value 0 }
-# enable rdp with blank password
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name LimitBlankPasswordUse -Value 0 }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup "Remote Desktop" }
+
+Write-Host "Install office opportunity"
+pause
+#\\192.168.15.250\d$\SOFTWARES\WORK\MS Office\2019\
+#D:\Setup.exe
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-ComputerRestore -Confirm -Drive "C:\" }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Checkpoint-Computer -Description "W10PlusOffice" }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Restore-Computer -Confirm -RestorePoint (Get-ComputerRestorePoint | Where {$_.Description -eq "W10PlusOffice"}).SequenceNumber }
+##Get-ComputerRestorePoint -LastStatus
+
 
 #Write-Host "Installing Net framework 3.5"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Add-WindowsCapability –Online -Name NetFx3~~~~ –Source D:\sources\sxs }
@@ -58,19 +73,6 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-Windo
 #removing mail app
 #Write-Host "Removing mail app"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { get-appxpackage *microsoft.windowscommunicationsapps* | remove-appxpackage }
-
-
-$officeDrive = Set-VMDvdDrive -VMName $Name -Path 'D:\SOFTWARES\WORK\MS Office\2019\Professional2019Retail - Copy.iso'
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { "D:\Office\Setup64.exe /Configure /q" }
-Write-Host "Install office opportunity"
-pause
-Remove-VMDvdDrive -VMDvdDrive $officeDrive
-
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-ComputerRestore -Confirm -Drive "C:\" }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Checkpoint-Computer -Description "W10PlusOffice" }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Restore-Computer -Confirm -RestorePoint (Get-ComputerRestorePoint | Where {$_.Description -eq "W10PlusOffice"}).SequenceNumber }
-##Get-ComputerRestorePoint -LastStatus
-
 
 Write-Host "Installing update tools"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
@@ -94,10 +96,6 @@ do {
   }
 } while($isRebootPending -or $updatesNumber -gt 0)
 
-Write-Host "password unset"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
-$Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
-              
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig }
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Microsoft Edge.lnk" }
