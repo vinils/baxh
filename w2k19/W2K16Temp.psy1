@@ -43,15 +43,26 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProp
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name LimitBlankPasswordUse -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup "Remote Desktop" }
 
-Write-Host "Updating windows"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Get-WindowsUpdate }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
+Write-Host $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig | findstr /i "ipv4" })
 
 Write-Host "Renaming computer name"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 
-Write-Host "Restarting VM"
-Restart-VM $Name -Force
-Wait-VMPowershell -Name $Name -Credential $Credential
+Write-Host "Installing update tools"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module PSWindowsUpdate -Force }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module -Name PendingReboot -Force }
+
+do {
+  $updatesNumber = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { return (Get-WindowsUpdate).Count }
+  $isRebootPending = Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { return (Test-PendingReboot).IsRebootPending }
+
+  Write-Host "Updating windows"
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
+
+  if($isRebootPending) {
+    Write-Host "Restarting VM"
+    Restart-VM $Name -Force
+    Wait-VMPowershell -Name $Name -Credential $Credential
+  }
+} while($isRebootPending -or $updatesNumber -gt 0)
