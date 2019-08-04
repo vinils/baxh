@@ -1,4 +1,4 @@
-$Name = 'W10Temp'
+$Name = 'W10Temp1'
 
 New-VM -Name $Name `
   -NewVHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" `
