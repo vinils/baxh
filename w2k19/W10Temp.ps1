@@ -38,6 +38,13 @@ Write-Host "password unset"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-LocalUser -name MyUser -Password ([securestring]::new()) }
 $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
 
+##Disable UAC
+##Write-Output "Lowering UAC level..."
+##Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Type DWord -Value 0
+##Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "PromptOnSecureDesktop" -Type DWord -Value 0
+#Write-Host "Disabling UAC"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\policies\system -Name EnableLUA -PropertyType DWord -Value 0 -Force }
+
 #Write-Host "disable windows defender"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Stop-Service WinDefend }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-Service WinDefend -StartupType Disabled }
@@ -48,22 +55,13 @@ $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (n
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Force }
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name "EnableFirewall" -Type DWord -Value 0 }
 
-##Disable UAC
-##Write-Output "Lowering UAC level..."
-##Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Type DWord -Value 0
-##Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "PromptOnSecureDesktop" -Type DWord -Value 0
-#Write-Host "Disabling UAC"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\policies\system -Name EnableLUA -PropertyType DWord -Value 0 -Force }
+#Write-Output "Stop showing messages of firewall and defender disbaled"
+#
 
-
-Write-Host "Install office opportunity"
-pause
 #\\192.168.15.250\d$\SOFTWARES\WORK\MS Office\2019\
 #D:\Setup.exe
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-ComputerRestore -Confirm -Drive "C:\" }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Checkpoint-Computer -Description "W10PlusOffice" }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Restore-Computer -Confirm -RestorePoint (Get-ComputerRestorePoint | Where {$_.Description -eq "W10PlusOffice"}).SequenceNumber }
-##Get-ComputerRestorePoint -LastStatus
+Write-Host "Custom windows install opportunity (office/disable firewall/defender)"
+pause
 
 
 #Write-Host "Installing Net framework 3.5"
@@ -113,6 +111,8 @@ Write-Host "install NotepePlusPlus"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress NotepadPlusPlus }
 Write-Host "install 7zip"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress 7zip }
+Write-Host "Installing Git"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress git }
 Write-Host "install docker cli"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --limit-output --no-progress docker-cli }
 
@@ -131,7 +131,9 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco instal
 Write-Host "removing microsoft chrome link from desktop"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\Public\Desktop\Google Chrome.lnk" }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Google Chrome.lnk" }
-Write-Host "pin chrome"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | Where-Object {$_.Name -eq "Google Chrome"}).Verbs() }
-Write-Host "Installing Git"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { choco install -y --no-progress git }
+#Write-Host "pin chrome"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | Where-Object {$_.Name -eq "Google Chrome"}).Verbs() }
+#Write-Host "Installing Chrome Adblock"
+#
+#Write-Host "Setting Chrome as default"
+#
