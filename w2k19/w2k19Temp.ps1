@@ -5,9 +5,9 @@ New-VM -Name $Name `
   -NewVHDSizeBytes 100GB `
   -SwitchName ExternalSwitch
 
-SET-VMProcessor –VMName $Name –Count 2
 Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\2019 Server\17763.379.190312-0539.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso'
+Set-VMProcessor -VMName $Name -Count 2
 Start-VM -Name $Name
 
 Write-Host "Waiting you to install windows"
