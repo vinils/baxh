@@ -70,6 +70,12 @@ pause
 Write-Host "Install Windows subsistem for linux"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName -NoRestart Microsoft-Windows-Subsystem-Linux }
 
+#Write-Host "Install Hyper-v management tools"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Dism /online /Get-FeatureInfo /FeatureName:Microsoft-Hyper-V-Tools-All }
+
+#Write-Host "Install Server Management"
+#https://www.microsoft.com/pt-BR/download/details.aspx?id=45520
+
 #removing mail app
 #Write-Host "Removing mail app"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { get-appxpackage *microsoft.windowscommunicationsapps* | remove-appxpackage }
@@ -136,4 +142,9 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\User
 #Write-Host "Setting Chrome as default"
 #
 #Write-Host "Installing Chrome Adblock"
+#
+
+#Write-Host "CMD as Administrator allways"
+#
+#Write-Host "Powershell as Administrator allways"
 #
