@@ -184,10 +184,10 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock {
 
   cmdkey /add:SRV1 /user:Administrator /pass
   #######
-
+  
+  #Enable-PSRemoting
+  #Enable-WSManCredSSP -Role server
   ##get-service winrm
   #start-service winrm
-  #set-Item WSMan:\localhost\Client\TrustedHosts -Value SRV1 -Force
-  #Enable-WSManCredSSP -Role Client –DelegateComputer SRV1 -Force
 }
 #############################################################
