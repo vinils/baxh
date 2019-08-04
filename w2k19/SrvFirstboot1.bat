@@ -71,6 +71,10 @@ New-VMSwitch -name InternalSwitch -SwitchType Internal
 New-VMSwitch -name ExternalSwitch  -NetAdapterName "Ethernet 2" -AllowManagementOS $true
 
 ###########################
+
+Set-Service vds -StartupType Automatic
+
+###########################
 # Drivers
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Drivers.bat
 
