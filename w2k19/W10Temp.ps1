@@ -156,3 +156,36 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\User
 #Write-Host "Installing Chrome Adblock"
 #
 
+#############################################################3
+### Remote connection
+#https://www.hasanhuseyinaltin.com/remotely-manage-hyper-v-2016-via-windows-10/
+#https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/manage/remotely-manage-hyper-v-hosts
+#https://blog.ropnop.com/remotely-managing-hyper-v-in-a-workgroup-environment/
+#http://pc-addicts.com/remotely-manage-hyper-v-server-2012-core/
+
+##localcomputer
+######
+Add-Content -Path C:\windows\System32\drivers\etc\hosts. -Value '192.168.15.251          SRV1 '
+Enable-PSRemoting -Force
+Set-Item WSMan:\localhost\Client\TrustedHosts -Value SRV1 -Force
+Enable-WSManCredSSP -Role client -DelegateComputer SRV1 -Force
+
+#Get-NetAdapter|Get-NetConnectionProfile
+#Set-NetConnectionProfile -InterfaceAlias 'Ethernet' -NetworkCategory Private
+
+#You might also need to configure the following group policy (run gpedit.msc):
+#Computer Configuration > Administrative Templates > System > Credentials Delegation > Allow delegating fresh credentials with NTLM-only server authentication
+New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation' -Name "AllowFreshCredentialsWhenNTLMOnly" -Value 1 -PropertyType Dword -Force
+New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation'  -Name "AllowFreshCredentialsWhenNTLMOnly" -Value "Default Value" -Force
+New-ItemProperty  -Path  'hklm:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly' -Name "1" -PropertyType "String" -Value '*'
+
+#---> dcomcnfg > COM SECURITY > Access Permissions > Edit Limits > Anonymous Login > ALLOW Remote Access
+
+cmdkey /add:SRV1 /user:Administrator /pass
+#######
+
+##get-service winrm
+#start-service winrm
+#set-Item WSMan:\localhost\Client\TrustedHosts -Value SRV1 -Force
+#Enable-WSManCredSSP -Role Client –DelegateComputer SRV1 -Force
+#############################################################3
