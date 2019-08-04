@@ -67,8 +67,8 @@ pause
 #Write-Host "Installing Net framework 3.5"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Add-WindowsCapability –Online -Name NetFx3~~~~ –Source D:\sources\sxs }
 
-Write-Host "Install Windows subsistem for linux"
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName -NoRestart Microsoft-Windows-Subsystem-Linux }
+#Write-Host "Install Windows subsistem for linux"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName -NoRestart Microsoft-Windows-Subsystem-Linux }
 
 #Write-Host "Install Hyper-v management tools"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Dism /online /Get-FeatureInfo /FeatureName:Microsoft-Hyper-V-Tools-All }
