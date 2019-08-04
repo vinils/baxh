@@ -133,7 +133,7 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\User
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\Users\MyUser\Desktop\Google Chrome.lnk" }
 #Write-Host "pin chrome"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | Where-Object {$_.Name -eq "Google Chrome"}).Verbs() }
-#Write-Host "Installing Chrome Adblock"
-#
 #Write-Host "Setting Chrome as default"
+#
+#Write-Host "Installing Chrome Adblock"
 #
