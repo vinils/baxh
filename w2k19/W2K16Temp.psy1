@@ -5,9 +5,9 @@ New-VM -Name $Name `
   -NewVHDSizeBytes 100GB `
   -SwitchName ExternalSwitch
   
-SET-VMProcessor –VMName $Name –Count 2
 Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\2016 Server\14393.0.161119-1705.RS1_REFRESH_SERVER_EVAL_X64FRE_EN-US.iso'
+Set-VMProcessor -VMName $Name -Count 2
 Start-VM -Name $Name
 
 Write-Host "Waiting you to install windows"
