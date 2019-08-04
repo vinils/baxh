@@ -53,6 +53,9 @@ netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir
 
 ########
 
+Enable-PSRemoting  
+Enable-WSManCredSSP -Role server
+
 ###########################
 # Hyper-v Switch
 #Get-NetAdapter 
