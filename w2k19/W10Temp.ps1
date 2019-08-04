@@ -63,12 +63,6 @@ $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (n
 #Write-Output "Stop showing messages of firewall and defender disbaled"
 #
 
-#\\192.168.15.250\d$\SOFTWARES\WORK\MS Office\2019\
-#D:\Setup.exe
-Write-Host "Custom windows install opportunity (office/disable firewall/defender)"
-pause
-
-
 #Write-Host "Installing Net framework 3.5"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Add-WindowsCapability –Online -Name NetFx3~~~~ –Source D:\sources\sxs }
 
@@ -80,6 +74,14 @@ pause
 
 #Write-Host "Install Server Management"
 #https://www.microsoft.com/pt-BR/download/details.aspx?id=45520
+
+#Write-Host "Remove extra keyboards"
+
+#\\192.168.15.250\d$\SOFTWARES\WORK\MS Office\2019\
+#D:\Setup.exe
+Write-Host "Custom windows install opportunity (office/disable firewall/defender)"
+pause
+
 
 #removing mail app
 #Write-Host "Removing mail app"
