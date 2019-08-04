@@ -50,11 +50,13 @@ $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (n
 #Write-Host "Disabling UAC"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\policies\system -Name EnableLUA -PropertyType DWord -Value 0 -Force }
 
-#Write-Host "disable windows defender"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Stop-Service WinDefend }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-Service WinDefend -StartupType Disabled }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -Value 1 -Type DWord -Force }
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows Defender" -Name "DisableRoutinelyTakingAction" -Value 1 }
+Write-Host "disable windows defender"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Stop-Service WinDefend }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v DDisableOnAccessProtection /t REG_DWORD /d 1 /f }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v DisableScanOnRealtimeEnable /t REG_DWORD /d 1 /f }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v DisableRoutinelyTakingAction /t REG_DWORD /d 1 /f }
 
 #Write-Output "Disabling Firewall..."
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Force }
@@ -76,6 +78,11 @@ $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (n
 #https://www.microsoft.com/pt-BR/download/details.aspx?id=45520
 
 #Write-Host "Remove extra keyboards"
+
+#Write-Host "CMD as Administrator allways"
+
+#Write-Host "Powershell as Administrator allways"
+
 
 #\\192.168.15.250\d$\SOFTWARES\WORK\MS Office\2019\
 #D:\Setup.exe
@@ -149,7 +156,3 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { del "C:\User
 #Write-Host "Installing Chrome Adblock"
 #
 
-#Write-Host "CMD as Administrator allways"
-#
-#Write-Host "Powershell as Administrator allways"
-#
