@@ -4,10 +4,15 @@ New-VM -Name $Name `
   -NewVHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" `
   -NewVHDSizeBytes 100GB `
   -MemoryStartupBytes 10GB `
+  -Generation 2 `
   -SwitchName ExternalSwitch
 
-Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
+Add-VMScsiController -VMName $Name
 Add-VMDvdDrive -VMName $Name -Path 'D:\SOFTWARES\WORK\MS Windows\10\Win10_1903_V1_EnglishInternational_x64.iso'
+#$DVDDrive = Get-VMDvdDrive -VMName $Name
+#Set-VMFirmware -VMName $Name -EnableSecureBoot Off -FirstBootDevice $DVDDrive
+
+Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Set-VMProcessor -VMName $Name -Count 2
 Start-VM -Name $Name
 
