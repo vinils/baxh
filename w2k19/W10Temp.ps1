@@ -10,7 +10,7 @@ New-VM -Name $Name `
 Add-VMScsiController -VMName $Name
 Add-VMDvdDrive -VMName $Name -ControllerNumber 1 -ControllerLocation 0 -Path 'D:\SOFTWARES\WORK\MS Windows\10\Win10_1903_V1_EnglishInternational_x64.iso'
 $DVDDrive = Get-VMDvdDrive -VMName $Name
-Set-VMFirmware -VMName $Name -EnableSecureBoot Off -FirstBootDevice $DVDDrive
+Set-VMFirmware -VMName $Name -FirstBootDevice $DVDDrive
 
 Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Set-VMProcessor -VMName $Name -Count 2
