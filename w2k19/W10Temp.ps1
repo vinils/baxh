@@ -30,6 +30,10 @@ $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", $p
 Write-Host "enable execution of PowerShell scripts"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { set-executionpolicy remotesigned }
 
+Write-Host "Downloading basic scripts"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/windows/onlinerun.bat -OutFile C:\WINDOWS\System32\onlinerun.bat" }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/windows/onlinerun.ps1 -OutFile C:\WINDOWS\System32\onlinerun.ps1" }
+
 Write-Host "Enabling Remote Desktop"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\' -Name "fDenyTSConnections" -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\' -Name "UserAuthentication" -Value 0 }
