@@ -29,12 +29,15 @@ Set-VMProcessor -VMName $Name -Count 2
 $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
 Wait-VMPowershell -Name $Name -Credential $Credential
 
+if($args[2] -ne $null) { 
+  Write-Host "Installing custom configurations"
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { onlinerun $using:args[2] }
+}
+
 Write-Host "Renaming computer name"
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:Name }
 
+Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
 Write-Host $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig | findstr /i "ipv4" })
 
-if($args[2] -ne $null) { 
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { onlinerun $using:args[2] }
-}
