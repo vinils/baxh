@@ -19,6 +19,7 @@ powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/v
 powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/windows/onlinerun.ps1 -OutFile C:\WINDOWS\System32\onlinerun.ps1"
 powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Wait-VMPowershell.ps1 -OutFile C:\WINDOWS\System32\Wait-VMPowershell.ps1"
 powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/EnableNestedVM.ps1 -OutFile C:\WINDOWS\System32\EnableNestedVM.ps1"
+powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/New-VMW10.ps1 -OutFile C:\WINDOWS\System32\New-VMW10.ps1"
 
 ###########################
 # Firewall
