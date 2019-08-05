@@ -39,5 +39,5 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Rename-compu
 
 Restart-VM $Name -Force
 Wait-VMPowershell -Name $Name -Credential $Credential
-Write-Host $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig | findstr /i "ipv4" })
 
+Write-Host $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig | findstr /i "ipv4" })
