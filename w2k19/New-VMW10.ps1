@@ -1,4 +1,6 @@
 #https://blogs.msdn.microsoft.com/virtual_pc_guy/2017/04/18/editing-a-vmcx-file/
+#Import-VM -Path 'E:\W10Temp\8A3A77D4-C45E-4161-856D-1A7745A769CC.vmcx' -Copy -GenerateNewId -VhdDestinationPath 'E:\Hyper-V\Virtual hard disks\W10Temp'
+#Import-VM -Path 'E:\W10Temp_oldG1\Virtual Machines\B54C094D-610C-41DA-A510-49246A11E6D4.vmcx' -Copy -GenerateNewId
 
 $baseName = 'W10Temp'
 $Name = $args[0]
