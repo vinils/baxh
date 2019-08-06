@@ -72,11 +72,14 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Reg add "HKE
 #Write-Host "Installing Net framework 3.5"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Add-WindowsCapability –Online -Name NetFx3~~~~ –Source D:\sources\sxs }
 
-#Write-Host "Install Windows subsistem for linux"
+##Write-Host "Install Windows subsystem for linux"
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName -NoRestart Microsoft-Windows-Subsystem-Linux }
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { DISM /online /enable-feature /NoRestart /FeatureName:Microsoft-Windows-Subsystem-Linux }
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { DISM /online /enable-feature /NoRestart /FeatureName:VirtualMachinePlatform }
 
-#Write-Host "Install Hyper-v management tools"
-#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Dism /online /Get-FeatureInfo /FeatureName:Microsoft-Hyper-V-Tools-All }
+##Write-Host "Install Hyper-v management tools"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { DISM /online /enable-feature /NoRestart /FeatureName:Microsoft-Hyper-V-Tools-All }
 
 #Write-Host "Install Server Management"
 #https://www.microsoft.com/pt-BR/download/details.aspx?id=45520
