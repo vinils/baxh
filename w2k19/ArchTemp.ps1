@@ -15,4 +15,5 @@ Start-VM -Name $Name
 Write-Host "Waiting you to install Arch"
 Wait-VM -Name $Name -For Heartbeat
 
-#onlinerun ArchSetup
+###
+# onlinerun ArchSetup
