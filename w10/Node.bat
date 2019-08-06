@@ -5,8 +5,9 @@ choco install vscode -y --limit-output --no-progress --params "/NoDesktopIcon /N
 
 #NodeJs throw NVM
 choco install -y --limit-output --no-progress nvm
-nvm install latest
-#nvm use 12.1.0 64
+start /wait nvm install latest
+#nvm ls
+#nvm use 12.7.0
 
 #Yarn
 choco install -y --limit-output --no-progress yarn
