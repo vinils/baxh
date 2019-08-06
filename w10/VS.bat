@@ -30,7 +30,8 @@
 ##https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=16
 ##Invoke-WebRequest https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=16 -OutFile C:\Users\MyUser\Downloads\vs_community.exe
 ##vs_community.exe --includeRecommended --quiet --wait
-#vs_community.exe --includeRecommended --passive --wait
+##vs_community.exe --includeRecommended --passive --wait
+#start /wait vs_community.exe --includeRecommended --passive --wait > nul
 
 ##VS build
 #choco install -y --limit-output --no-progress microsoft-build-tools
