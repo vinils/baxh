@@ -1,1 +1,1 @@
-New-VMTemp 'W10Temp' $args
+New-VMTemp 'W10Temp' @args
