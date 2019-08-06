@@ -84,6 +84,10 @@ arch-chroot /"$mntDir" /root/$install2 $bootDir $pwd $hostName
 rm /mnt/root/$install2
 rm $install2
 
+## change UEFI boot for removable (required in case you want vhdx dettached from vm xml)
+cp –r /"$mntDir"/EFI/arch/ /"$mntDir"/EFI/boot
+mv /"$mntDir"/EFI/boot/grubx64.efi /"$mntDir"/EFI/boot/bootx64.efi
+
 umount /dev/"$device""$uefiPartitionNumber"
 umount /dev/"$device""$linuxFSPartitionNumber"
 reboot
