@@ -27,11 +27,14 @@
 ######
 #vs_enterprise.exe --all
 
-#https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=19
+##https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=16
+##Invoke-WebRequest https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=16 -OutFile C:\Users\MyUser\Downloads\vs_community.exe
+##vs_community.exe --includeRecommended --quiet --wait
+#vs_community.exe --includeRecommended --passive --wait
 
 ##VS build
 #choco install -y --limit-output --no-progress microsoft-build-tools
-choco install -y --limit-output --no-progress visualstudio2017buildtools
+#choco install -y --limit-output --no-progress visualstudio2017buildtools
 
 #Nuget prompt
 choco install -y --limit-output --no-progress nuget.commandline
