@@ -1,8 +1,8 @@
 #JDK11
-choco install -y jdk11
+choco install -y --limit-output --no-progress jdk11
 #Eclipse
-choco install -y eclipse
+choco install -y --limit-output --no-progress eclipse
 #Gradle
-choco install -y gradle
+choco install -y --limit-output --no-progress gradle
 #android
-choco install -y androidstudio
+choco install -y --limit-output --no-progress androidstudio
