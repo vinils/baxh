@@ -30,8 +30,8 @@
 #https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=19
 
 ##VS build
-#choco install -y microsoft-build-tools
-choco install -y visualstudio2017buildtools
+#choco install -y --limit-output --no-progress microsoft-build-tools
+choco install -y --limit-output --no-progress visualstudio2017buildtools
 
 #Nuget prompt
-choco install -y nuget.commandline
+choco install -y --limit-output --no-progress nuget.commandline
