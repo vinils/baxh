@@ -85,8 +85,9 @@ rm /mnt/root/$install2
 rm $install2
 
 ## change UEFI boot for removable (required in case you want vhdx dettached from vm xml)
-cp –r /"$mntDir"/EFI/arch/ /"$mntDir"/EFI/boot
-mv /"$mntDir"/EFI/boot/grubx64.efi /"$mntDir"/EFI/boot/bootx64.efi
+cd /"$mntDir"/"$bootDir"/EFI/
+mv arch/grubx64.efi boot/bootx64.efi
+cd
 
 umount /dev/"$device""$uefiPartitionNumber"
 umount /dev/"$device""$linuxFSPartitionNumber"
