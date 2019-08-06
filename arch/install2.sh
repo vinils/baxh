@@ -71,13 +71,13 @@ echo "root:$pwd" | chpasswd
 
 pacman -S --noconfirm grub efibootmgr os-prober
 #changing to fit VM
-#grub-install --target=x86_64-efi --efi-directory=/"$bootDir"
-grub-install --target=x86_64-efi --efi-directory=/"$bootDir" –no-nvram –removable
+grub-install --target=x86_64-efi --efi-directory=/"$bootDir"
+#grub-install --target=x86_64-efi --efi-directory=/"$bootDir" –no-nvram –removable
 cd /boot/efi/arch
 grub-install --target=x86_64-efi --efi-directory=/"$bootDir" --recheck
 #changing to fit VM
-#grub-install --target=x86_64-efi --efi-directory=/"$bootDir" --bootloader-id=arch_gru
-grub-install --target=x86_64-efi --efi-directory=/"$bootDir" --bootloader-id=arch_gru –no-nvram –removable
+grub-install --target=x86_64-efi --efi-directory=/"$bootDir" --bootloader-id=arch_gru
+#grub-install --target=x86_64-efi --efi-directory=/"$bootDir" --bootloader-id=arch_gru –no-nvram –removable
 #(if intell virtualization VT-x)
 sed -i 's/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"intremap=no_x2apic_optout\ intel_iommu=on\ iommu=pt/g' /etc/default/grub
 grub-mkconfig -o /"$bootDir"/grub/grub.cfg
