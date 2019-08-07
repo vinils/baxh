@@ -3,9 +3,11 @@
 #Import-VM -Path 'E:\W10Temp_oldG1\Virtual Machines\B54C094D-610C-41DA-A510-49246A11E6D4.vmcx' -Copy -GenerateNewId
 
 $baseName = 'W10Temp'
-$Name = $args[1]
+$Name = $args[0]
+$DriveOpt = $args[1]
+$UriSettings = $args[2]
 
-switch($args[2]) {
+switch($DriveOpt) {
    1 { $drive = 'D:' }
    2 { $drive = 'E:' }
    3 { $drive = 'F:' }
@@ -29,9 +31,9 @@ Set-VMProcessor -VMName $Name -Count 2
 $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
 Wait-VMPowershell -Name $Name -Credential $Credential
 
-if($args[3] -ne $null) { 
+if($UriSettings -ne $null) { 
   Write-Host "Installing custom configurations"
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { onlinerun $using:args[3] }
+  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { onlinerun $using:UriSettings }
 }
 
 Write-Host "Renaming computer name"
