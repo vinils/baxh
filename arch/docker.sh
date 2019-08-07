@@ -3,10 +3,24 @@ systemctl enable --now docker.service
 gpasswd -a myuser docker
 
 
+ssh-keygen -t rsa
+ssh-copy-id <ubuntu_username>@<ubuntu_ip>
+
 eval "$(ssh-agent -s)"
 eval "$(ssh-add ~/.ssh/id_rsa)"
 docker-machine create --driver generic --generic-ip-address=192.168.15.26 --generic-ssh-key ~/.ssh/id_rsa --generic-ssh-user=myuser --generic-ssh-port=22 remote-docker-host
-docker-machine regenerate-certs remote-docker-host
+docker-machine regenerate-certs ArchDocker2
+
+#docker-machine env ArchDocker2
+
+##bash
+#eval $(docker-machine env ArchDocker2)
+##cmd
+#@FOR /f "tokens=*" %i IN ('docker-machine env ArchDocker2') DO @%i
+##powershell
+#& "docker-machine.exe" env ArchDocker2 | Invoke-Expression
+
+#docker info
 
 ##################################
 /etc/systemd/system/docker.socket.d/socket.conf
