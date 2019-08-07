@@ -28,6 +28,7 @@ Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Set-VMProcessor -VMName $Name -Count 2
 Set-VMFirmware -VMName $Name -EnableSecureBoot Off
 
+Write-Host "Starting VM"
 Start-VM -VMName $Name
 
 Write-Host "Rename Computer"
