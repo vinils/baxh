@@ -3,9 +3,10 @@
 #Import-VM -Path 'E:\W10Temp_oldG1\Virtual Machines\B54C094D-610C-41DA-A510-49246A11E6D4.vmcx' -Copy -GenerateNewId
 
 $baseName = 'ArchTemp'
-$Name = $args[1]
+$Name = $args[0]
+$DriveOpt = $args[1]
 
-switch($args[2]) {
+switch($DriveOpt) {
    1 { $drive = 'D:' }
    2 { $drive = 'E:' }
    3 { $drive = 'F:' }
