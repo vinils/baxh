@@ -39,3 +39,8 @@
 
 #Nuget prompt
 choco install -y --limit-output --no-progress nuget.commandline
+
+
+
+
+##### INSTALL SQL - https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
