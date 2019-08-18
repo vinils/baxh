@@ -7,7 +7,7 @@
 
 ##https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=16
 ##Invoke-WebRequest https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=16 -OutFile C:\Users\MyUser\Downloads\vs_community.exe
-Invoke-WebRequest -Uri 'https://download.visualstudio.microsoft.com/download/pr/818029a2-ea31-4a6a-8bed-f50abbaf9716/ff2d0f080b97ad9de29126e301f93a26/vs_community.exe' -OutFile VS2019Community.exe
+Invoke-WebRequest -Uri 'https://download.visualstudio.microsoft.com/download/pr/818029a2-ea31-4a6a-8bed-f50abbaf9716/ff2d0f080b97ad9de29126e301f93a26/vs_community.exe' -OutFile C:\Users\Public\Downloads\VS2019Community.exe
 
 #.\VS2019Community.exe --layout 'Z:\SOFTWARES\WORK\MS Visual Studio\DOT NET 2019 Community' --lang en-US
 #.\VS2019Community.exe --passive --wait --norestart
@@ -40,7 +40,7 @@ Invoke-WebRequest -Uri 'https://download.visualstudio.microsoft.com/download/pr/
 
 #to get the add list - open visual studio installer > go to more > export configuration
 #& "Z:\SOFTWARES\WORK\MS Visual Studio\DOT NET 2019 Community\VS2019Community.exe" `
-& .\VS2019Community.exe `
+& C:\Users\Public\Downloads\VS2019Community.exe `
 --add "Microsoft.VisualStudio.Component.CoreEditor" `
 --add "Microsoft.VisualStudio.Workload.CoreEditor" `
 --add "Microsoft.VisualStudio.Component.NuGet" `
@@ -102,6 +102,8 @@ Invoke-WebRequest -Uri 'https://download.visualstudio.microsoft.com/download/pr/
 --add "Microsoft.ComponentGroup.Blend" `
 --add "Microsoft.VisualStudio.Workload.ManagedDesktop" `
 --quiet --wait --norestart | Out-Null
+
+del C:\Users\Public\Downloads\VS2019Community.exe
 
 ##Nuget prompt
 #choco install -y --limit-output --no-progress nuget.commandline
