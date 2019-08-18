@@ -1,3 +1,5 @@
+dism.exe /Online /Enable-Feature /FeatureName:NetFX3 /All /Source:d:\sources\sxs /LimitAccess 
+
 #https://github.com/MicrosoftDocs/visualstudio-docs/blob/master/docs/install/create-a-network-installation-of-visual-studio.md
 #https://github.com/MicrosoftDocs/visualstudio-docs/blob/master/docs/install/automated-installation-with-response-file.md
 #https://docs.microsoft.com/en-us/visualstudio/install/command-line-parameter-examples?view=vs-2019
