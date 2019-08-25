@@ -21,7 +21,7 @@ New-VM -Name $Name `
   -Generation 2 `
   -SwitchName ExternalSwitch
 
-Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 8GB
+Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Set-VMProcessor -VMName $Name -Count 2
 
 $Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
