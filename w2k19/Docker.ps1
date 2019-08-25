@@ -7,3 +7,5 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-WebRe
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-WebRequest https://dockermsft.blob.core.windows.net/dockercontainer/docker-19-03-1.zip -OutFile C:\Users\ADMINI~1\AppData\Local\Temp\2\DockerMsftProvider\Docker-19-03-1.zip }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
+
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { NetSh Advfirewall set allprofiles state off }
