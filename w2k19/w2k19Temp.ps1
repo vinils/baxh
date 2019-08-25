@@ -43,6 +43,9 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProp
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name LimitBlankPasswordUse -Value 0 }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Enable-NetFirewallRule -DisplayGroup "Remote Desktop" }
 
+#Write-Host "Add compatibility (taskschd.msc, diskmgmt.msc, explorer.exe, etc)"
+#Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Add-WindowsCapability -Online -Name ServerCore.AppCompatibility~~~~0.0.1.0 }
+
 Write-Host $(Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { ipconfig | findstr /i "ipv4" })
 
 Write-Host "Renaming computer name"
