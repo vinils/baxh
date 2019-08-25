@@ -18,13 +18,14 @@ copy "E:\Hyper-V\Virtual hard disks\$baseName.vhdx" $filePath
 New-VM -Name $Name `
   -VHDPath $filePath `
   -MemoryStartupBytes 10GB `
-  -Generation 2 `
+  -Generation 1 `
   -SwitchName ExternalSwitch
 
 Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
 Set-VMProcessor -VMName $Name -Count 2
 
-$Credential = New-Object System.Management.Automation.PSCredential ("MyUser", (new-object System.Security.SecureString))
+#$Credential = New-Object System.Management.Automation.PSCredential ("Administrator", $pwd)
+$Credential=Get-Credential
 Wait-VMPowershell -Name $Name -Credential $Credential
 
 if($UriSettings -ne $null) { 
