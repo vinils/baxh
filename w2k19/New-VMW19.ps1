@@ -32,7 +32,8 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { powershell.e
 
 if($UriSettings -ne $null) { 
   Write-Host "Installing custom configurations"
-  Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { onlinerun $using:UriSettings }
+  #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { onlinerun $using:UriSettings }
+  onlinerun $UriSettings
 }
 
 Write-Host "Renaming computer name"
