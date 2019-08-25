@@ -8,4 +8,5 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Invoke-WebRe
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package -Name docker -ProviderName DockerMsftProvider }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
 
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { cmd.exe /c "sc config docker binpath=^"C:\Program Files\docker\dockerd.exe^" --run-service -H tcp://0.0.0.0:2375" }
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { NetSh Advfirewall set allprofiles state off }
