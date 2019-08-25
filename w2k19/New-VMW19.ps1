@@ -28,6 +28,8 @@ Set-VMProcessor -VMName $Name -Count 2
 $Credential=Get-Credential
 Wait-VMPowershell -Name $Name -Credential $Credential
 
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/windows/onlinerun.bat -OutFile C:\WINDOWS\System32\onlinerun.bat" }
+
 if($UriSettings -ne $null) { 
   Write-Host "Installing custom configurations"
   Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { onlinerun $using:UriSettings }
