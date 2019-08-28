@@ -7,7 +7,7 @@ New-VM -Name $Name `
   -SwitchName ExternalSwitch
 
 Add-VMScsiController -VMName $Name
-Add-VMDvdDrive -VMName $Name -ControllerNumber 1 -ControllerLocation 0 -Path 'D:\SOFTWARES\WORK\MS Windows\2019 Server\17763.379.190312-0539.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso'
+Add-VMDvdDrive -VMName $Name -ControllerNumber 1 -ControllerLocation 0 -Path 'Z:\SOFTWARES\WORK\MS Windows\2019 Server\17763.379.190312-0539.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso'
 $DVDDrive = Get-VMDvdDrive -VMName $Name
 Set-VMFirmware -VMName $Name -FirstBootDevice $DVDDrive
 
