@@ -18,7 +18,7 @@ copy "E:\Hyper-V\Virtual hard disks\$baseName.vhdx" $filePath
 New-VM -Name $Name `
   -VHDPath $filePath `
   -MemoryStartupBytes 10GB `
-  -Generation 1 `
+  -Generation 2 `
   -SwitchName ExternalSwitch
 
 Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
