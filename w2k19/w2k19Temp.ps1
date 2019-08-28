@@ -1,12 +1,17 @@
 $Name = 'W19Temp'
 New-VM -Name $Name `
-  -MemoryStartupBytes 10GB `
   -NewVHDPath "E:\Hyper-V\Virtual Hard Disks\$Name.vhdx" `
   -NewVHDSizeBytes 100GB `
+  -MemoryStartupBytes 10GB `
+  -Generation 2 `
   -SwitchName ExternalSwitch
 
+Add-VMScsiController -VMName $Name
+Add-VMDvdDrive -VMName $Name -ControllerNumber 1 -ControllerLocation 0 -Path 'D:\SOFTWARES\WORK\MS Windows\2019 Server\17763.379.190312-0539.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso'
+$DVDDrive = Get-VMDvdDrive -VMName $Name
+Set-VMFirmware -VMName $Name -FirstBootDevice $DVDDrive
+
 Set-VMMemory -VMName $Name -DynamicMemoryEnabled $true -StartupBytes 2GB
-Set-VMDvdDrive -VMName $Name -Path 'd:\SOFTWARES\WORK\MS Windows\2019 Server\17763.379.190312-0539.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso'
 Set-VMProcessor -VMName $Name -Count 2
 Start-VM -Name $Name
 
