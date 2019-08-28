@@ -16,3 +16,12 @@ onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/samba.sh $PW
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/arch/kvm.sh
 - W2k19 Drivers<br>
 onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Drivers.bat
+
+
+
+
+HOST - W2K19<BR>
+GUESTs:<BR>
+ - W19Temp<BR>
+   onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/w2k19Temp.ps1
+  - 
