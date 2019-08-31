@@ -21,9 +21,9 @@ onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Drivers.bat
 
 
 COMMMANDs:<BR>
- - New-VMW19 $Name $DriveOpt $UriSettings
+ - New-VMW19 $Name $DriveOpt $UriSettings <BR>
    powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/New-VMW19.ps1 -OutFile C:\WINDOWS\System32\New-VMW19.ps1"
-  - New-VMW19Docker $Name $DriveOpt
+  - New-VMW19Docker $Name $DriveOpt <BR>
    powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/New-VMW19Docker.ps1 -OutFile C:\WINDOWS\System32\New-VMW19Docker.ps1"
 
 
