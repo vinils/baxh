@@ -1,4 +1,6 @@
 Write-Host "Installing Docker"
+Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { NetSh Advfirewall set allprofiles state off }
+
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Module DockerMsftProvider -Force }
 ##Bug Cannot verify the file SHA256 - problem to download file
 #Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Package Docker -ProviderName DockerMsftProvider -Force }
@@ -9,4 +11,4 @@ Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Install-Pack
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { Start-Service docker }
 
 Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { cmd.exe /c "sc config docker binpath=^"C:\Program Files\docker\dockerd.exe^" --run-service -H tcp://0.0.0.0:2375" }
-Invoke-Command -VMName $Name -Credential $Credential -ScriptBlock { NetSh Advfirewall set allprofiles state off }
+
