@@ -21,15 +21,22 @@ onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/Drivers.bat
 
 
 COMMMANDs:<BR>
- - New-VMW19 $Name $DriveOpt $UriSettings <BR>
+ - New-VMW19 <BR>
    powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/New-VMW19.ps1 -OutFile C:\WINDOWS\System32\New-VMW19.ps1"
-  - New-VMW19Docker $Name $DriveOpt <BR>
+  - New-VMW19Docker <BR>
    powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/New-VMW19Docker.ps1 -OutFile C:\WINDOWS\System32\New-VMW19Docker.ps1"
+ - New-VMW10 <BR>
+   powershell.exe -command "& Invoke-WebRequest https://raw.githubusercontent.com/vinils/baxh/master/w2k19/New-VMW10.ps1 -OutFile C:\WINDOWS\System32\New-VMW10.ps1"
 
 
 
-HOST - W2K19<BR>
-GUESTs:<BR>
- - W19Temp<BR>
+SAMPLES: <BR>
+ - W19Temp <BR>
    onlinerun https://raw.githubusercontent.com/vinils/baxh/master/w2k19/w2k19Temp.ps1
-  - 
+ - W19Docker <BR>
+   New-VMW19Docker W19Docker 4 
+  - W10 Node <BR>
+   New-VMW10 VMNode1 5 https://raw.githubusercontent.com/vinils/baxh/master/w10/Node.ps1
+  - W10 VS <BR>
+   New-VMW10 VMNode1 5 https://raw.githubusercontent.com/vinils/baxh/master/w10/VS%2BSQLClient.ps1
+ 
