@@ -2,6 +2,9 @@
 #load module automatically https://stackoverflow.com/questions/23909746/powershell-v4-not-importing-module-automatically
 #install module  Find-Module -Name windows | Install-Module -Force -AllowClobber
 #Publish-Module -Path C:\Users\MyUser\source\repos\baxh\windows\ -NuGetApiKey $nugetapikey
+#import raw file https://stackoverflow.com/questions/48751933/get-content-fails-from-a-file-in-a-shared-folder
+#iex (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/vinils/baxh/master/windows/windows.psm1')
+#iex (iwr https://raw.githubusercontent.com/vinils/baxh/master/windows/windows.psm1 -UseBasicParsing | Select-Object -Expand Content)
 
 <#
 @FncParam = @{
@@ -72,15 +75,41 @@ Function New-VM
 	Set-VMFirmware -VMName $Name -FirstBootDevice $DVDDrive
 }
 
-Function Install-DotNetFrameWork35
+#$global:VMName="#W10Temp"
+#$global:VMCredential=$(Get-Credential MyVMUser)
+#$global:WindowsSource='https://raw.githubusercontent.com/vinils/baxh/master/windows/windows.psm1'
+#$global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hyperv/hyperv.psm1'
+Function SwitchToHyperV
 {
-	Param(
-		[string]$LocalPath='d:\sources\sxs'
-	)
+	if(!$global:HyperVSource) {
+		$global:HyperVSource = Read-Host -Prompt 'hyperv.psm1 source'
+	}
+	
+	if (!$global:VMName) {
+		$global:VMName = Read-Host -Prompt 'VM Name'
+	}
 
-	if($InstallDotNetFrameWork35) {
-		Write-Host "Installing Net Framework 3.5"
-		dism /online /enable-feature /featurename:NetFX3 /all /Source:$LocalPath /LimitAccess
+	if(!$global:Session) {	
+	
+		if(!$global:VMCredential) {	
+			$global:VMCredential = $(Get-Credential VMUser)
+		}
+
+		Get-PSSession | where { $_.ComputerName -eq $VMName } | Remove-PSSession
+		$global:Session = New-PSSession -VMName $VMName -Credential $VMCredential
+	}
+	
+	if(!$global:WindowsSource) {
+		$global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
+	}
+	
+	if(!$global:NetWorkCredential) {
+		Write-host "Does windows.psm1 require ntework access? (Default is No)" -ForegroundColor Yellow 
+		$Readhost = Read-Host " ( y / n ) " 
+		if(!$ReadHost -eq "Y")
+		{
+			$global:NetWorkCredential = $global:NetWorkCredential
+		}
 	}
 }
 
@@ -310,6 +339,18 @@ Function Wait-WebAccess
 		# Finally, we clean up the http request by closing it.
 		$HTTP_Response.Close()
 	}while(!$hasConnection)
+}
+
+Function Install-DotNetFrameWork35
+{
+	Param(
+		[string]$LocalPath='d:\sources\sxs'
+	)
+
+	if($InstallDotNetFrameWork35) {
+		Write-Host "Installing Net Framework 3.5"
+		dism /online /enable-feature /featurename:NetFX3 /all /Source:$LocalPath /LimitAccess
+	}
 }
 
 Function Install-VS2008
