@@ -111,6 +111,12 @@ Function SwitchToHyperV
 			$global:NetWorkCredential = $global:NetWorkCredential
 		}
 	}
+	
+	iex (New-Object Net.WebClient).DownloadString($global:HyperVSource)
+	
+	Wait-VM
+	
+	SetDefaultScriptsSession
 }
 
 #SetupMachine -InstallProxyScript -InstallProxyEnviromentVariable -InstallRDP -EnableRDPBlankPassword -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChocolatey
