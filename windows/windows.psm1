@@ -89,16 +89,10 @@ Function SwitchToHyperV
 		$global:VMName = Read-Host -Prompt 'VM Name'
 	}
 
-	if(!$global:Session) {	
-	
-		if(!$global:VMCredential) {	
-			$global:VMCredential = $(Get-Credential VMUser)
-		}
-
-		Get-PSSession | where { $_.ComputerName -eq $VMName } | Remove-PSSession
-		$global:Session = New-PSSession -VMName $VMName -Credential $VMCredential
+	if(!$global:VMCredential) {	
+		$global:VMCredential = $(Get-Credential VMUser)
 	}
-	
+
 	if(!$global:WindowsSource) {
 		$global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
 	}
