@@ -96,7 +96,7 @@ Function SetupMachine
 		Write-Host "enable execution of PowerShell scripts"
 		set-executionpolicy remotesigned
 		
-		if($InstallDotNetFrameWork35) {
+		if($using:InstallDotNetFrameWork35) {
 			Write-Host "Installing Net Framework 3.5"
 			dism /online /enable-feature /featurename:NetFX3 /all /Source:d:\sources\sxs /LimitAccess
 		}
