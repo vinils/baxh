@@ -97,15 +97,6 @@ Function SwitchToHyperV
 		$global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
 	}
 	
-	if(!$global:NetWorkCredential) {
-		Write-host "Does windows.psm1 require ntework access? (Default is No)" -ForegroundColor Yellow 
-		$Readhost = Read-Host " ( y / n ) " 
-		if(!$ReadHost -eq "Y")
-		{
-			$global:NetWorkCredential = $global:NetWorkCredential
-		}
-	}
-	
 	Set-ExecutionPolicy Bypass -Scope Process -Force
 	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 	iex (New-Object Net.WebClient).DownloadString($global:HyperVSource)
