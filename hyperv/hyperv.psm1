@@ -2,7 +2,7 @@
 
 # $global:VMName="#VMATTemp"
 # $global:VMCredential=$(Get-Credential MyVMUser)
-# $global:WindowsSource="\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
+# $global:W10Source="\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
 # $global:NetWorkCredential=$(Get-Credential WindowsPSM1NetWorkCredential)
 
 
@@ -272,14 +272,14 @@ Function Move-VMVHD
 # }
 
 
-#SetDefaultScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -WindowsSource "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
+#SetDefaultScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -W10Source "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
 Function SetDefaultScriptsSession
 {
 	Param(
 		[string]$VMName,
 		[System.Management.Automation.PSCredential]$VMCredential,
 		[System.Management.Automation.Runspaces.PSSession]$OldSession=$Global:Session,
-		[string]$WindowsSource=$global:WindowsSource,
+		[string]$W10Source=$global:W10Source,
 		[System.Management.Automation.PSCredential]$NetWorkCredential=$Global:NetWorkCredential
 	)
 	
@@ -305,19 +305,19 @@ Function SetDefaultScriptsSession
 	
 	$global:Session = New-PSSession -VMName $VMName -Credential $VMCredential
 	
-	if(!$WindowsSource) {
-		$global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
+	if(!$W10Source) {
+		$global:W10Source = Read-Host -Prompt 'windows.psm1 source'
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
 
-		if(($using:WindowsSource).substring(0,4) -eq "http") {
+		if(($using:W10Source).substring(0,4) -eq "http") {
 			Set-ExecutionPolicy Bypass -Scope Process -Force
 			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-			iex (iwr $using:WindowsSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
+			iex (iwr $using:W10Source -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
 		}
 		
-		if(($using:WindowsSource).substring(0,2) -eq "\\") {
+		if(($using:W10Source).substring(0,2) -eq "\\") {
 			if($using:NetWorkCredential) {
 				$netCred=$using:NetWorkCredential
 			}
@@ -325,13 +325,13 @@ Function SetDefaultScriptsSession
 			if($netCred) {
 				$usr=$netCred.UserName
 				$pwd=$netCred.GetNetworkCredential().Password
-				$path=($using:WindowsSource).Substring(0,($using:WindowsSource).LastIndexOf('\'))
+				$path=($using:W10Source).Substring(0,($using:W10Source).LastIndexOf('\'))
 				net use $path $pwd /USER:$usr
 			}
 
 			Set-ExecutionPolicy Bypass -Scope Process -Force
 			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-			Import-Module $using:WindowsSource -Force -Global
+			Import-Module $using:W10Source -Force -Global
 		}
 	}
 }
