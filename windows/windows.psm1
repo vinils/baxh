@@ -106,6 +106,25 @@ Function SwitchToHyperV
 	SetDefaultScriptsSession
 }
 
+Function ChangeUser
+{
+	Param(
+		[System.Management.Automation.PSCredential]$Credential=$Global:DefaultCredential
+	)
+
+	if(!$Credential) {
+		SetDefaultCredential
+		$Credential = $Global:DefaultCredential
+		if(!$Credential) {
+			$Credential = Get-Credential
+		}
+	}
+
+	Write-Host "password unset"
+	Set-LocalUser -name $NewVMCredential.Username -Password $NewVMCredential.Password
+	$Credential = $NewVMCredential
+}
+
 #SetupMachine -InstallProxyScript -InstallProxyEnviromentVariable -InstallRDP -EnableRDPBlankPassword -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChocolatey
 Function SetupMachine
 {

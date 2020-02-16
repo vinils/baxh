@@ -22,6 +22,21 @@ Function Wait-WebAccess
 	}
 }
 
+Function ChangeUser
+{
+	Param(
+		[System.Management.Automation.PSCredential]$Credential=$Global:DefaultCredential
+	)
+	
+	if(!$global:Session) {
+		SetDefaultScriptsSession
+	}
+
+	Invoke-Command -Session $global:Session -ScriptBlock {
+		ChangeUser -Credential $using:Credential
+	}
+}
+
 # Function New-VMTemplate
 # {
 	# Param(
