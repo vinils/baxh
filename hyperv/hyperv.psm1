@@ -81,7 +81,7 @@ Function Update-VMW
 	)
 	
 	if(!$Credential) {	
-		SetDefaultVMCredential
+		SetDefaultScriptsSession
 	}
 
 	if ($Install) {
@@ -113,10 +113,6 @@ Function Update-VMW
 #Wait-VM
 Function Wait-VM
 {
-	if(!$Credential) {
-		SetDefaultVMCredential
-	}
-
 	# Turn on virtual machine if it is not running
 	If ((Get-VM -Name $global:VMName).State -eq "Off") {
 		Write-Host "Starting VM $($global:VMName)"
@@ -132,6 +128,10 @@ Function Wait-VM
 			Write-Host "Could not connect to PS Direct after 10 minutes"
 			throw
 		} 
+		
+		if(!$Credential) {
+			SetDefaultScriptsSession
+		}
 
 		Start-Sleep -sec 1
 		$psReady = Invoke-Command -Session $global:Session `
@@ -161,7 +161,7 @@ Function Move-VMVHD
 	# "Import-Module $Destination\Scripts\windows.psm1 -force -global" > C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1
 # }
 
-#New-ScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -WindowsSource "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
+#SetDefaultScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -WindowsSource "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
 Function SetDefaultScriptsSession
 {
 	if ($global:VMName) {
@@ -189,36 +189,27 @@ Function SetDefaultScriptsSession
 		$WindowsSource = Read-Host -Prompt 'windows.psm1 source'
 	}
 	
-	if(!$global:NetWorkCredential) {
-		Write-host "Does windows.psm1 require ntework access? (Default is No)" -ForegroundColor Yellow 
-		$Readhost = Read-Host " ( y / n ) " 
-		if($ReadHost -eq "Y")
-		{
-			$NetWorkCredential=$(Get-Credential WindowsPSM1NetWorkCredential)
-		} else {
-			$NetWorkCredential = $global:NetWorkCredential
-		}
-	} else {
-		$NetWorkCredential = $global:NetWorkCredential
-	}
-	
 	Invoke-Command -Session $global:Session -ScriptBlock {
 		$netCred=$using:NetWorkCredential
 
 		if(($using:windowssource).substring(0,4) -eq "http") {
-			iex (New-Object Net.WebClient).DownloadString($using:windowssource) -credential $netcred
+			Set-ExecutionPolicy Bypass -Scope Process -Force
+			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+			iex (iwr $global:WindowsSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
 		}
+		
+		if(($using:windowssource).substring(0,4) -eq "http") {
+			if($netCred) {
+				$usr=$netCred.UserName
+				$pwd=$netCred.GetNetworkCredential().Password
+				$path=($using:WindowsSource).Substring(0,($using:WindowsSource).LastIndexOf('\'))
+				net use $path $pwd /USER:$usr
+			}
 
-		if($netCred) {
-			$usr=$netCred.UserName
-			$pwd=$netCred.GetNetworkCredential().Password
-			$path=($using:WindowsSource).Substring(0,($using:WindowsSource).LastIndexOf('\'))
-			net use $path $pwd /USER:$usr
+			Set-ExecutionPolicy Bypass -Scope Process -Force
+			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+			Import-Module $using:WindowsSource -Force -Global
 		}
-
-		Set-ExecutionPolicy Bypass -Scope Process -Force
-		[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-		Import-Module $using:WindowsSource -Force -Global
 	}
 }
 
@@ -234,7 +225,7 @@ Function Download
 	)
 	
 	if(!$VMCredential) {	
-		SetDefaultVMCredential
+		SetDefaultScriptsSession
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
