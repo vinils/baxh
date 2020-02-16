@@ -205,7 +205,6 @@ Function SetDefaultScriptsSession
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
-		$netCred=$using:NetWorkCredential
 
 		if(($using:windowssource).substring(0,4) -eq "http") {
 			Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -214,6 +213,10 @@ Function SetDefaultScriptsSession
 		}
 		
 		if(($using:windowssource).substring(0,2) -eq "\\") {
+			if($global:WindowsSource) {
+				$netCred=$using:NetWorkCredential
+			}
+
 			if($netCred) {
 				$usr=$netCred.UserName
 				$pwd=$netCred.GetNetworkCredential().Password
