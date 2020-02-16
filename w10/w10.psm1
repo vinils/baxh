@@ -75,6 +75,97 @@ Function New-VM
 	Set-VMFirmware -VMName $Name -FirstBootDevice $DVDDrive
 }
 
+# New-VMW10 `
+	# -Name VMWDev1 `
+	# -VHDTemplate 'D:\Hyper-V\Virtual Hard Disks\Virtual Hard Disks\W10Temp.vhdx' `
+	# -VHDFolderPath 'C:\Hyper-V\Virtual Hard Disks\' `
+	# -SwitchName "ExternalSwitch"
+Function New-VMW10
+{
+	Param(
+		[System.Management.Automation.PSCredential]$Credential=$Global:VMCredential,
+		[string]$Name=$Global:VMName,
+		[string]$VHDTemplate,
+		[string]$OSISOFilePath,
+		[string]$VHDFolderPath,
+		[string]$NewVHDFolderPath,
+		[int]$Generation=2,
+		[string]$MemoryStartUpBytes=2GB,
+		[string]$SwitchName,
+		[string]$NewVHDSizeBytes,
+		[int]$ProcessorCount=2,
+		[bool]$DynamicMemory=$True,
+		[string]$MemoryMinimumBytes=512MB,
+		[string]$MemoryMaximumBytes=6Gb
+	)
+	
+	if(!$Credential) {
+		$Credential = Get-Credential
+		$global:VMCredential=$Credential
+	}
+
+	if ($Name -eq "") {
+		$Name = Read-Host -Prompt 'VM Name'
+		$Global:VMName = $Name
+	}
+	
+	if ($VHDTemplate -eq "") {
+		$VHDTemplate = Read-Host -Prompt 'VHD Windows 10 Template'
+	}
+	
+	if ($VHDFolderPath -eq "") {
+		$VHDFolderPath = Read-Host -Prompt 'Virtual hard disk folder path'
+	}
+	
+	if ($SwitchName -eq "") {
+		$SwitchName = Read-Host -Prompt 'VM Switch name (eg.: Default Switch)'
+	}
+	
+	Write-Host "Copying VM Template file..."
+	$NewVHDFilePath="$VHDFolderPath\$Name.vhdx"
+	Copy-Item $VHDTemplate $NewVHDFilePath
+
+	if($NewVHDSizeBytes) {
+		Write-Host "Extending VM HD size..."
+		Resize-VHD -Path $NewVHDFilePath -SizeBytes $NewVHDSizeBytes
+	}
+
+	Write-Host "Creating VM"
+	$NewVMParam = @{
+		Name = $Name
+		Generation = $Generation
+		MemoryStartUpBytes = $MemoryStartUpBytes
+		SwitchName = $SwitchName
+		VHDPath = $NewVHDFilePath
+		#  ErrorAction =  'Stop'
+		Verbose =  $True
+	}
+
+	$VM = hyper-v\New-VM @NewVMParam
+
+	Write-Host "Setting VM configurations"
+	$SetVMParam = @{
+		ProcessorCount =  $ProcessorCount
+		DynamicMemory =  $DynamicMemory
+		MemoryMinimumBytes =  $MemoryMinimumBytes
+		MemoryMaximumBytes =  $MemoryMaximumBytes
+		#  ErrorAction =  'Stop'
+		#  PassThru =  $True
+		Verbose =  $True
+	}
+
+	$VM = $VM | Set-VM @SetVMParam
+	
+	Write-Host "Startting VM"
+	Start-VM -Name $Name
+	Wait-VM -Name $Name -Credential $Credential
+	
+	if($NewVHDSizeBytes) {
+		Write-Host "Extending VM partition..."
+		Extend-WinOSDiskSize -Name $Name -Credential $Credential
+	}
+}
+
 # #$global:VMName="#W10Temp"
 # #$global:VMCredential=$(Get-Credential MyVMUser)
 # #$global:WindowsSource='https://raw.githubusercontent.com/vinils/baxh/master/windows/windows.psm1'
@@ -268,7 +359,7 @@ Function ActiveWindows
 
 	$computer = gc env:computername
 	$service = get-wmiObject -query "select * from SoftwareLicensingService" -computername $computer
-	$service.InstallProductKey($key)
+	$service.InstallProductKey($Key)
 	$service.RefreshLicenseStatus()
 }
 
@@ -451,3 +542,18 @@ Function Download
 	}
 }
 
+function DoUnpin([string]$appname){
+    $ErrorActionPreference= 'silentlycontinue'
+    ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | Where-Object {$_.Name -eq $appname}).Verbs() | Where-Object {$_.Name.replace('&','') -match 'Unpin from taskbar'} | ForEach-Object {$_.DoIt();}
+    $ErrorActionPreference= 'continue'
+}
+
+function DoPin([string]$appname){
+    if((Get-Process explorer).count -eq 1){
+        Write-Host "Not running as explorer.exe! cannot pin to taskbar!"
+        return
+    }
+    $ErrorActionPreference= 'silentlycontinue'
+    ((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | Where-Object {$_.Name -eq $appname}).Verbs() | Where-Object {$_.Name.replace('&','') -match 'Pin to Taskbar'} |  ForEach-Object {$_.DoIt();}
+    $ErrorActionPreference= 'continue'
+}
