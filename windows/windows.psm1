@@ -142,18 +142,6 @@ Function SetupMachine
 		[switch]$InstallDotNetFramework472
 	)
 
-	if ($InstallNugetPackageProvider) {
-		Write-Host "Installing Nuget"
-		Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-		Install-PackageProvider -Name NuGet -Force
-	}
-
-	if ($InstallNugetPSWindowsUpdate) {
-		Write-Host "Installing update tools"
-		Install-Module PSWindowsUpdate -Force
-		Install-Module -Name PendingReboot -Force
-	}
-	
 	if($EnableRDP) {
 		Write-Host "Enabling Remote Desktop"
 		Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\' -Name "fDenyTSConnections" -Value 0
@@ -188,6 +176,18 @@ Function SetupMachine
 		Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0
 	}
 
+	if ($InstallNugetPackageProvider) {
+		Write-Host "Installing Nuget"
+		Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+		Install-PackageProvider -Name NuGet -Force
+	}
+
+	if ($InstallNugetPSWindowsUpdate) {
+		Write-Host "Installing update tools"
+		Install-Module PSWindowsUpdate -Force
+		Install-Module -Name PendingReboot -Force
+	}
+	
 	if ($InstallChocolatey `
 	-or $InstallNotepadPlusPlus `
 	-or $Install7Zip `

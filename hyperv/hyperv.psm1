@@ -25,15 +25,90 @@ Function Wait-WebAccess
 Function ChangeUser
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Credential=$Global:DefaultCredential
+		[System.Management.Automation.PSCredential]$Credential
 	)
 	
+	if(!$Credential) {
+		$Credential=$(Get-Credential NewUser)
+	}
+
 	if(!$global:Session) {
 		SetDefaultScriptsSession
 	}
 
 	Invoke-Command -Session $global:Session -ScriptBlock {
 		ChangeUser -Credential $using:Credential
+	}
+	
+	$global:VMCredential=$Credential
+}
+
+Function SetupMachine
+{
+	Param(
+		[switch]$EnableVMIntegrationService,
+		[switch]$EnableRDP,
+		[switch]$EnableRDPBlankPassword,
+		[switch]$UACLower,
+		[switch]$ControlPainelSmallIcons,
+		[switch]$ShowHiddenFiles,
+		[switch]$ShowFileExtensions,
+		[switch]$InstallChocolatey,
+		[switch]$InstallNotepadPlusPlus,
+		[switch]$Install7Zip,
+		[switch]$InstallGit,
+		[switch]$InstallDockerCli,
+		[switch]$InstallVisualstudio2017testagent,
+		[switch]$InstallDotNetFramework471DeveloperPack,
+		[switch]$InstallPython2_7_15,
+		[switch]$InstallCurl,
+		[switch]$InstallCMake,
+		[switch]$InstallNugetPackageProvider,
+		[switch]$InstallNugetPSWindowsUpdate,
+		[switch]$InstallIIS,
+		[switch]$InstallDotNetFrameWork35,
+		[switch]$InstallDotNetFramework472,
+		[switch]$DisableAutomaticCheckpoints
+	)
+	
+	if(!$global:Session) {
+		SetDefaultScriptsSession
+	}
+
+	if($EnableVMIntegrationService) {
+		Write-Host "enable VM Integration Service"
+		Get-VM -Name $global:VMName | Get-VMIntegrationService | ? {-not($_.Enabled)} | Enable-VMIntegrationService -Verbose
+	}
+	
+	if($DisableAutomaticCheckpoints) {
+		Set-VM -Name $global:VMName -AutomaticCheckpointsEnabled $false
+	}
+
+	Invoke-Command -Session $global:Session -ScriptBlock {
+		Write-Host "enable execution of PowerShell scripts"
+		set-executionpolicy remotesigned
+		
+		if(!$NoDotNetFrameWork35) {
+			Write-Host "Installing Net Framework 3.5"
+			dism /online /enable-feature /featurename:NetFX3 /all /Source:d:\sources\sxs /LimitAccess
+		}
+
+		SetupMachine @using:psboundparameters
+	}
+}
+
+Function ActiveWindows
+{
+	Param(
+		[switch]$Key
+	)
+
+	if(!$global:Session) {
+		SetDefaultScriptsSession
+	}
+
+	Invoke-Command -Session $global:Session -ScriptBlock {
+		ActiveWindows @using:Key
 	}
 }
 
@@ -74,14 +149,6 @@ Function ChangeUser
 	
 	# Setup-Machine -Name $global:VMName -Credential = $Credential
 	
-			# # [string]$global:VMName,
-		# # [System.Management.Automation.PSCredential]$Credential=$Global:DefaultCredential,
-		# # [switch]$NoVMIntegrationService,
-		# # [switch]$NoUACLower,
-		# # [switch]$NoControlPainelSmallIcons,
-		# # [switch]$NoShowingHiddenFiles,
-		# # [switch]$NoShowingFileExtensions,
-	
 	# Restart-VM $global:VMName -Force
 	# Wait-VM -Name $global:VMName -Credential $Credential
 
@@ -100,12 +167,9 @@ Function Update-VMW
 	}
 
 	if ($Install) {
-		Write-Host "Installing Nuget"
-		Invoke-Command -Session $global:Session -ScriptBlock { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force }
-		Invoke-Command -Session $global:Session -ScriptBlock { Install-PackageProvider -Name NuGet -Force }
-		Write-Host "Installing update tools"
-		Invoke-Command -Session $global:Session -ScriptBlock { Install-Module PSWindowsUpdate -Force }
-		Invoke-Command -Session $global:Session -ScriptBlock { Install-Module -Name PendingReboot -Force }
+		Invoke-Command -Session $global:Session -ScriptBlock {
+			SetupMachine -InstallNugetPackageProvider -InstallNugetPSWindowsUpdate
+		}
 	}
 
 	Wait-VM -Name $global:VMName -Credential $Credential
