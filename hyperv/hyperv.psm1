@@ -1,8 +1,8 @@
 #https://trycatch.me/publishing-custom-powershell-modules-to-myget/
 
 # $global:VMName="#VMATTemp"
-# $global:VMCredential=$(Get-Credential MyVMUser)
-# $global:W10Source="\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
+# $global:VMCredential=$(Get-Credential VMUser)
+# $global:W10Source="\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\w10\w10.psm1"
 # $global:NetWorkCredential=$(Get-Credential WindowsPSM1NetWorkCredential)
 
 
@@ -109,7 +109,7 @@ Function ActiveWindows
 {
 	Param(
 		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
-		[switch]$Key
+		[string]$Key
 	)
 
 	if(!$Session) {
@@ -117,7 +117,23 @@ Function ActiveWindows
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
-		ActiveWindows @using:Key
+		ActiveWindows -Key @using:Key
+	}
+}
+
+Function RunVMCommand
+{
+	Param(
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
+		[string]$Command
+	)
+
+	if(!$Session) {
+		SetDefaultScriptsSession
+	}
+	
+	Invoke-Command -Session $global:Session -ScriptBlock {
+		iex $using:Command
 	}
 }
 
@@ -171,11 +187,11 @@ Function Update-VMW
 		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
 		[switch]$Install
 	)
-	
-	if(!$Session) {
+
+	if(!$global:Session) {
 		SetDefaultScriptsSession
 	}
-	
+
 	$Name=$Session.ComputerName
 
 	if ($Install) {
@@ -187,6 +203,7 @@ Function Update-VMW
 	Wait-VM -Session $global:Session
 
 	do {
+
 		$updatesNumber = Invoke-Command -Session $global:Session -ScriptBlock { return (Get-WindowsUpdate).Count }
 		$isRebootPending = Invoke-Command -Session $global:Session -ScriptBlock { return (Test-PendingReboot).IsRebootPending }
 
@@ -196,7 +213,9 @@ Function Update-VMW
 		if($isRebootPending) {
 			Write-Host "Restarting VM"
 			Restart-VM $Name -Force
+			hyper-v\Wait-VM -Name $global:VMName -For Heartbeat
 			Wait-VM -Session $global:Session
+			SetDefaultScriptsSession -OldSession Session
 		}
 	} while($isRebootPending -or $updatesNumber -gt 0)
 }
@@ -268,11 +287,11 @@ Function Move-VMVHD
 # {
 	# [string]$Destination="c:\"
 	
-	# "Import-Module $Destination\Scripts\windows.psm1 -force -global" > C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1
+	# "Import-Module $Destination\Scripts\w10\w10.psm1 -force -global" > C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1
 # }
 
 
-#SetDefaultScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -W10Source "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
+#SetDefaultScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -W10Source "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\w10\w10.psm1"
 Function SetDefaultScriptsSession
 {
 	Param(
@@ -292,21 +311,23 @@ Function SetDefaultScriptsSession
 			$VMCredential=$OldSession.Runspace.ConnectionInfo.Credential
 		}
 		
-		Get-PSSession | where { $_.ComputerName -eq $VMName } | Remove-PSSession
+		Get-PSSession | where { $_.ComputerName -eq $OldSession.ComputerName } | Remove-PSSession
 	} else {
 		if(!$VMName) {
 			$VMName = Read-Host -Prompt 'Virtual machine name'
 		}
 
 		if(!$VMCredential) {
-			$VMCredential = $(Get-Credential MyVMUser)
+			$VMCredential = $(Get-Credential VMUser)
 		}
 	}
 	
+	$global:VMName=$VMName
+	$global:VMCredential=$VMCredential
 	$global:Session = New-PSSession -VMName $VMName -Credential $VMCredential
 	
 	if(!$W10Source) {
-		$global:W10Source = Read-Host -Prompt 'windows.psm1 source'
+		$global:W10Source = Read-Host -Prompt 'w10.psm1 source'
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
