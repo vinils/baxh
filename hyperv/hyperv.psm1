@@ -206,13 +206,13 @@ Function SetDefaultScriptsSession
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
 
-		if(($using:windowssource).substring(0,4) -eq "http") {
+		if(($using:WindowsSource).substring(0,4) -eq "http") {
 			Set-ExecutionPolicy Bypass -Scope Process -Force
 			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-			iex (iwr $global:WindowsSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
+			iex (iwr $using:WindowsSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
 		}
 		
-		if(($using:windowssource).substring(0,2) -eq "\\") {
+		if(($using:WindowsSource).substring(0,2) -eq "\\") {
 			if($global:WindowsSource) {
 				$netCred=$using:NetWorkCredential
 			}
