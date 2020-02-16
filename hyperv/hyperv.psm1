@@ -213,7 +213,7 @@ Function SetDefaultScriptsSession
 			iex (iwr $global:WindowsSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
 		}
 		
-		if(($using:windowssource).substring(0,4) -eq "\\") {
+		if(($using:windowssource).substring(0,2) -eq "\\") {
 			if($netCred) {
 				$usr=$netCred.UserName
 				$pwd=$netCred.GetNetworkCredential().Password
