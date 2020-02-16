@@ -125,13 +125,11 @@ Function ChangeUser
 	$Credential = $NewVMCredential
 }
 
-#SetupMachine -InstallProxyScript -InstallProxyEnviromentVariable -InstallRDP -EnableRDPBlankPassword -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChocolatey
+#SetupMachine -InstallProxyScript -InstallProxyEnviromentVariable -EnableRDP -EnableRDPBlankPassword -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChocolatey
 Function SetupMachine
 {
 	Param(
-		[switch]$InstallProxyScript,
-		[switch]$InstallProxyEnviromentVariable,
-		[switch]$InstallRDP,
+		[switch]$EnableRDP,
 		[switch]$EnableRDPBlankPassword,
 		[switch]$UACLower,
 		[switch]$ControlPainelSmallIcons,
@@ -156,12 +154,6 @@ Function SetupMachine
 	Write-Host "enable execution of PowerShell scripts"
 	set-executionpolicy remotesigned
 	
-	if($InstallProxyScript) {
-	  $reg = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
-	  Set-ItemProperty -Path $reg -Name AutoConfigURL -Value "http://pac.schneider-electric.com/schneider-electric.com/br.filtering.pac"
-	  Set-ItemProperty -Path $reg -Name AutoDetect -Value 0
-	}
-
 	if ($InstallNugetPackageProvider) {
 		Write-Host "Installing Nuget"
 		Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
@@ -174,7 +166,7 @@ Function SetupMachine
 		Install-Module -Name PendingReboot -Force
 	}
 	
-	if($InstallRDP) {
+	if($EnableRDP) {
 		Write-Host "Enabling Remote Desktop"
 		Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\' -Name "fDenyTSConnections" -Value 0
 		Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\' -Name "UserAuthentication" -Value 0
@@ -336,6 +328,8 @@ Function Wait-WebAccess
 	}
 	
 	do{
+		Start-Sleep -sec 2
+
 		Write-Host "Veriffing $URL access"
 		# First we create the request.
 		$HTTP_Request = [System.Net.WebRequest]::Create($URL)
@@ -350,7 +344,7 @@ Function Wait-WebAccess
 
 		# Finally, we clean up the http request by closing it.
 		$HTTP_Response.Close()
-		Start-Sleep -sec 2
+		
 	}while(!$hasConnection)
 }
 
