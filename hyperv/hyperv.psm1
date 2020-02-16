@@ -15,9 +15,7 @@ Function Wait-WebAccess
 	)
 	
 	if(!$Session) {
-		$Name = Read-Host -Prompt 'VM Name'
-		SetDefaultScriptsSession -VMName $Name
-		$Session=$global:Session
+		SetDefaultScriptsSession
 	}
 
 	Invoke-Command -Session $global:Session -ScriptBlock {
@@ -37,9 +35,7 @@ Function ChangeUser
 	}
 
 	if(!$Session) {
-		$Name = Read-Host -Prompt 'VM Name'
-		SetDefaultScriptsSession -VMName $Name
-		$Session=$global:Session
+		SetDefaultScriptsSession
 	}
 	
 	$Name=$Session.ComputerName
@@ -81,9 +77,7 @@ Function SetupMachine
 	)
 	
 	if(!$Session) {
-		$Name = Read-Host -Prompt 'VM Name'
-		SetDefaultScriptsSession -VMName $Name
-		$Session=$global:Session
+		SetDefaultScriptsSession
 	}
 	
 	$Name=$Session.ComputerName
@@ -98,7 +92,7 @@ Function SetupMachine
 		Set-VM -Name $Name -AutomaticCheckpointsEnabled $false
 	}
 
-	Invoke-Command -Session $Session -ScriptBlock {
+	Invoke-Command -Session $global:Session -ScriptBlock {
 		Write-Host "enable execution of PowerShell scripts"
 		set-executionpolicy remotesigned
 		
@@ -119,12 +113,10 @@ Function ActiveWindows
 	)
 
 	if(!$Session) {
-		$Name = Read-Host -Prompt 'VM Name'
-		SetDefaultScriptsSession -VMName $Name
-		$Session=$global:Session
+		SetDefaultScriptsSession
 	}
 	
-	Invoke-Command -Session $Session -ScriptBlock {
+	Invoke-Command -Session $global:Session -ScriptBlock {
 		ActiveWindows @using:Key
 	}
 }
@@ -181,32 +173,30 @@ Function Update-VMW
 	)
 	
 	if(!$Session) {
-		$Name = Read-Host -Prompt 'VM Name'
-		SetDefaultScriptsSession -VMName $Name
-		$Session=$global:Session
+		SetDefaultScriptsSession
 	}
 	
 	$Name=$Session.ComputerName
 
 	if ($Install) {
-		Invoke-Command -Session $Session -ScriptBlock {
+		Invoke-Command -Session $global:Session -ScriptBlock {
 			SetupMachine -InstallNugetPackageProvider -InstallNugetPSWindowsUpdate
 		}
 	}
 
-	Wait-VM -Name $Name -Credential $Credential
+	Wait-VM -Session $global:Session
 
 	do {
-		$updatesNumber = Invoke-Command -Session $Session -ScriptBlock { return (Get-WindowsUpdate).Count }
-		$isRebootPending = Invoke-Command -Session $Session -ScriptBlock { return (Test-PendingReboot).IsRebootPending }
+		$updatesNumber = Invoke-Command -Session $global:Session -ScriptBlock { return (Get-WindowsUpdate).Count }
+		$isRebootPending = Invoke-Command -Session $global:Session -ScriptBlock { return (Test-PendingReboot).IsRebootPending }
 
 		Write-Host "Updating windows"
-		Invoke-Command -Session $Session -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
+		Invoke-Command -Session $global:Session -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 
 		if($isRebootPending) {
 			Write-Host "Restarting VM"
 			Restart-VM $Name -Force
-			Wait-VM -Name $Name -Credential $Credential
+			Wait-VM -Session $global:Session
 		}
 	} while($isRebootPending -or $updatesNumber -gt 0)
 }
@@ -219,9 +209,7 @@ Function Wait-VM
 	)
 	
 	if(!$Session) {
-		$Name = Read-Host -Prompt 'VM Name'
-		SetDefaultScriptsSession -VMName $Name
-		$Session=$global:Session
+		SetDefaultScriptsSession
 	}
 	
 	$Name=$Session.ComputerName
@@ -360,9 +348,7 @@ Function Download
 	)
 	
 	if(!$Session) {
-		$Name = Read-Host -Prompt 'VM Name'
-		SetDefaultScriptsSession -VMName $Name
-		$Session=$global:Session
+		SetDefaultScriptsSession
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
