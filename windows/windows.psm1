@@ -109,20 +109,11 @@ Function SwitchToHyperV
 Function ChangeUser
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Credential=$Global:DefaultCredential
+		[System.Management.Automation.PSCredential]$Credential
 	)
 
-	if(!$Credential) {
-		SetDefaultCredential
-		$Credential = $Global:DefaultCredential
-		if(!$Credential) {
-			$Credential = Get-Credential
-		}
-	}
-
 	Write-Host "password unset"
-	Set-LocalUser -name $NewVMCredential.Username -Password $NewVMCredential.Password
-	$Credential = $NewVMCredential
+	Set-LocalUser -name $Credential.Username -Password $Credential.Password
 }
 
 #SetupMachine -InstallProxyScript -InstallProxyEnviromentVariable -EnableRDP -EnableRDPBlankPassword -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChocolatey
@@ -151,9 +142,6 @@ Function SetupMachine
 		[switch]$InstallDotNetFramework472
 	)
 
-	Write-Host "enable execution of PowerShell scripts"
-	set-executionpolicy remotesigned
-	
 	if ($InstallNugetPackageProvider) {
 		Write-Host "Installing Nuget"
 		Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
@@ -173,7 +161,7 @@ Function SetupMachine
 	}
 
 	if($EnableRDPBlankPassword) {
-		# enable rdp with blank password
+		Write-Host "enable rdp with blank password"
 		Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name LimitBlankPasswordUse -Value 0
 		netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
 	}
@@ -190,12 +178,12 @@ Function SetupMachine
 		Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" -Name "AllItemsIconView" -Type DWord -Value 1
 	}
 	
-	if (!$ShowHiddenFiles) {
+	if ($ShowHiddenFiles) {
 		Write-Output "Showing hidden files..."
 		Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Type DWord -Value 1
 	}
 
-	if (!$ShowFileExtensions) {
+	if ($ShowFileExtensions) {
 		Write-Output "Showing known file extensions..."
 		Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0
 	}
