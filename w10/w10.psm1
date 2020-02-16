@@ -92,7 +92,6 @@ Function New-VMW10
 		[int]$Generation=2,
 		[string]$MemoryStartUpBytes=2GB,
 		[string]$SwitchName,
-		[string]$NewVHDSizeBytes,
 		[int]$ProcessorCount=2,
 		[bool]$DynamicMemory=$True,
 		[string]$MemoryMinimumBytes=512MB,
@@ -125,11 +124,6 @@ Function New-VMW10
 	$NewVHDFilePath="$VHDFolderPath\$Name.vhdx"
 	Copy-Item $VHDTemplate $NewVHDFilePath
 
-	if($NewVHDSizeBytes) {
-		Write-Host "Extending VM HD size..."
-		Resize-VHD -Path $NewVHDFilePath -SizeBytes $NewVHDSizeBytes
-	}
-
 	Write-Host "Creating VM"
 	$NewVMParam = @{
 		Name = $Name
@@ -158,12 +152,8 @@ Function New-VMW10
 	
 	Write-Host "Startting VM"
 	Start-VM -Name $Name
-	Wait-VM -Name $Name -Credential $Credential
+	hyper-v\Wait-VM -Name $Name -For Heartbeat
 	
-	if($NewVHDSizeBytes) {
-		Write-Host "Extending VM partition..."
-		Extend-WinOSDiskSize -Name $Name -Credential $Credential
-	}
 }
 
 # #$global:VMName="#W10Temp"

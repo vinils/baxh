@@ -44,7 +44,7 @@ Function ChangeUser
 		ChangeUser -Credential $using:Credential
 	}
 	
-	SetDefaultScriptsSession -VMName $Name -OldCredential $Session
+	SetDefaultScriptsSession -VMName $Name -Credential $Credential -OldCredential $Session
 }
 
 Function SetupMachine
@@ -213,9 +213,8 @@ Function Update-VMW
 		if($isRebootPending) {
 			Write-Host "Restarting VM"
 			Restart-VM $Name -Force
-			hyper-v\Wait-VM -Name $global:VMName -For Heartbeat
 			Wait-VM -Session $global:Session
-			SetDefaultScriptsSession -OldSession Session
+			SetDefaultScriptsSession -OldSession $Session
 		}
 	} while($isRebootPending -or $updatesNumber -gt 0)
 }
@@ -303,7 +302,7 @@ Function SetDefaultScriptsSession
 	)
 	
 	if($OldSession) {
-		if(!$VMName) {
+		if($VMName -eq "") {
 			$VMName = $OldSession.ComputerName
 		}
 
