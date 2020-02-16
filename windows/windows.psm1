@@ -75,36 +75,36 @@ Function New-VM
 	Set-VMFirmware -VMName $Name -FirstBootDevice $DVDDrive
 }
 
-#$global:VMName="#W10Temp"
-#$global:VMCredential=$(Get-Credential MyVMUser)
-#$global:WindowsSource='https://raw.githubusercontent.com/vinils/baxh/master/windows/windows.psm1'
-#$global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hyperv/hyperv.psm1'
-Function SwitchToHyperV
-{
-	if(!$global:HyperVSource) {
-		$global:HyperVSource = Read-Host -Prompt 'hyperv.psm1 source'
-	}
+# #$global:VMName="#W10Temp"
+# #$global:VMCredential=$(Get-Credential MyVMUser)
+# #$global:WindowsSource='https://raw.githubusercontent.com/vinils/baxh/master/windows/windows.psm1'
+# #$global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hyperv/hyperv.psm1'
+# Function SwitchToHyperV
+# {
+	# if(!$global:HyperVSource) {
+		# $global:HyperVSource = Read-Host -Prompt 'hyperv.psm1 source'
+	# }
 	
-	if (!$global:VMName) {
-		$global:VMName = Read-Host -Prompt 'VM Name'
-	}
+	# if (!$global:VMName) {
+		# $global:VMName = Read-Host -Prompt 'VM Name'
+	# }
 
-	if(!$global:VMCredential) {	
-		$global:VMCredential = $(Get-Credential VMUser)
-	}
+	# if(!$global:VMCredential) {	
+		# $global:VMCredential = $(Get-Credential VMUser)
+	# }
 
-	if(!$global:WindowsSource) {
-		$global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
-	}
+	# if(!$global:WindowsSource) {
+		# $global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
+	# }
 	
-	Set-ExecutionPolicy Bypass -Scope Process -Force
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-	iex (iwr $global:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
+	# Set-ExecutionPolicy Bypass -Scope Process -Force
+	# [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+	# iex (iwr $global:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
 	
-	Wait-VM
+	# Wait-VM
 	
-	SetDefaultScriptsSession
-}
+	# SetDefaultScriptsSession
+# }
 
 Function ChangeUser
 {
