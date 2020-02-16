@@ -179,6 +179,10 @@ Function Move-VMVHD
 #SetDefaultScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -WindowsSource "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
 Function SetDefaultScriptsSession
 {
+	Param(
+		[System.Management.Automation.PSCredential]$NetWorkCredential=$Global:NetWorkCredential
+	)
+
 	if ($global:VMName) {
 		$VMName = $global:VMName
 	} else {
