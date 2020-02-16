@@ -260,6 +260,19 @@ Function SetupMachine
 	}
 }
 
+Function ActiveWindows
+{
+	Param(
+		[switch]$Key
+	)
+
+	$computer = gc env:computername
+	$service = get-wmiObject -query "select * from SoftwareLicensingService" -computername $computer
+	$service.InstallProductKey($key)
+	$service.RefreshLicenseStatus()
+}
+
+
 Function UpdateWindows
 {
 	Param(
