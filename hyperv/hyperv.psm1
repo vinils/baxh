@@ -10,7 +10,7 @@
 Function Wait-WebAccess
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Session=$Global:Session,
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
 		[string]$URL
 	)
 	
@@ -28,7 +28,7 @@ Function Wait-WebAccess
 Function ChangeUser
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Session=$Global:Session,
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
 		[System.Management.Automation.PSCredential]$Credential
 	)
 	
@@ -54,7 +54,7 @@ Function ChangeUser
 Function SetupMachine
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Session=$Global:Session,
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
 		[switch]$EnableVMIntegrationService,
 		[switch]$EnableRDP,
 		[switch]$EnableRDPBlankPassword,
@@ -114,7 +114,7 @@ Function SetupMachine
 Function ActiveWindows
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Session=$Global:Session,
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
 		[switch]$Key
 	)
 
@@ -176,7 +176,7 @@ Function ActiveWindows
 Function Update-VMW
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Session=$Global:Session,
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
 		[switch]$Install
 	)
 	
@@ -215,7 +215,7 @@ Function Update-VMW
 Function Wait-VM
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Session=$Global:Session
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session
 	)
 	
 	if(!$Session) {
@@ -289,21 +289,34 @@ Function SetDefaultScriptsSession
 {
 	Param(
 		[string]$VMName,
-		[System.Management.Automation.PSCredential]$OldSession=$Global:Session,
+		[System.Management.Automation.PSCredential]$VMCredential,
+		[System.Management.Automation.Runspaces.PSSession]$OldSession=$Global:Session,
 		[string]$WindowsSource=$global:WindowsSource,
 		[System.Management.Automation.PSCredential]$NetWorkCredential=$Global:NetWorkCredential
 	)
 	
-	if($VMName -ne "" -and $OldSession) {
-		$global:Session = Enter-PSSession -VMName $VMName
-	} else {
-		if($OldSession) {	
-			Get-PSSession | where { $_.ComputerName -eq $OldSession.ComputerName } | Remove-PSSession
+	if($OldSession) {
+		if(!$VMName) {
+			$VMName = $OldSession.ComputerName
 		}
 
-		$global:Session = Enter-PSSession -VMName $VMName
-	}
+		if(!$VMCredential) {
+			$VMCredential=$OldSession.Runspace.ConnectionInfo.Credential
+		}
+		
+		Get-PSSession | where { $_.ComputerName -eq $VMName } | Remove-PSSession
+	} else {
+		if(!$VMName) {
+			$VMName = Read-Host -Prompt 'Virtual machine name'
+		}
 
+		if(!$VMCredential) {
+			$VMCredential = $(Get-Credential MyVMUser)
+		}
+	}
+	
+	$global:Session = New-PSSession -VMName $VMName -Credential $VMCredential
+	
 	if(!$WindowsSource) {
 		$global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
 	}
@@ -339,7 +352,7 @@ Function SetDefaultScriptsSession
 Function Download
 {
 	Param(
-		[System.Management.Automation.PSCredential]$Session=$Global:Session,
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session,
 		[string]$Source,
 		[string]$Destination,
 		[System.Management.Automation.PSCredential]$NetWorkCredential=$Global:NetWorkCredential,
