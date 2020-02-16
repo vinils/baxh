@@ -349,18 +349,6 @@ Function Wait-WebAccess
 	}while(!$hasConnection)
 }
 
-Function Install-DotNetFrameWork35
-{
-	Param(
-		[string]$LocalPath='d:\sources\sxs'
-	)
-
-	if($InstallDotNetFrameWork35) {
-		Write-Host "Installing Net Framework 3.5"
-		dism /online /enable-feature /featurename:NetFX3 /all /Source:$LocalPath /LimitAccess
-	}
-}
-
 Function Install-VS2008
 {
 	Param(

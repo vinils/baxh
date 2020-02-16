@@ -10,11 +10,14 @@
 Function Wait-WebAccess
 {
 	Param(
+		[System.Management.Automation.PSCredential]$Session=$Global:Session,
 		[string]$URL
 	)
 	
-	if(!$global:Session) {
-		SetDefaultScriptsSession
+	if(!$Session) {
+		$Name = Read-Host -Prompt 'VM Name'
+		SetDefaultScriptsSession -VMName $Name
+		$Session=$global:Session
 	}
 
 	Invoke-Command -Session $global:Session -ScriptBlock {
@@ -25,6 +28,7 @@ Function Wait-WebAccess
 Function ChangeUser
 {
 	Param(
+		[System.Management.Automation.PSCredential]$Session=$Global:Session,
 		[System.Management.Automation.PSCredential]$Credential
 	)
 	
@@ -32,20 +36,25 @@ Function ChangeUser
 		$Credential=$(Get-Credential NewUser)
 	}
 
-	if(!$global:Session) {
-		SetDefaultScriptsSession
+	if(!$Session) {
+		$Name = Read-Host -Prompt 'VM Name'
+		SetDefaultScriptsSession -VMName $Name
+		$Session=$global:Session
 	}
+	
+	$Name=$Session.ComputerName
 
 	Invoke-Command -Session $global:Session -ScriptBlock {
 		ChangeUser -Credential $using:Credential
 	}
 	
-	$global:VMCredential=$Credential
+	SetDefaultScriptsSession -VMName $Name -OldCredential $Session
 }
 
 Function SetupMachine
 {
 	Param(
+		[System.Management.Automation.PSCredential]$Session=$Global:Session,
 		[switch]$EnableVMIntegrationService,
 		[switch]$EnableRDP,
 		[switch]$EnableRDPBlankPassword,
@@ -71,24 +80,29 @@ Function SetupMachine
 		[switch]$DisableAutomaticCheckpoints
 	)
 	
-	if(!$global:Session) {
-		SetDefaultScriptsSession
+	if(!$Session) {
+		$Name = Read-Host -Prompt 'VM Name'
+		SetDefaultScriptsSession -VMName $Name
+		$Session=$global:Session
 	}
+	
+	$Name=$Session.ComputerName
 
 	if($EnableVMIntegrationService) {
 		Write-Host "enable VM Integration Service"
-		Get-VM -Name $global:VMName | Get-VMIntegrationService | ? {-not($_.Enabled)} | Enable-VMIntegrationService -Verbose
+		Get-VM -Name $Name | Get-VMIntegrationService | ? {-not($_.Enabled)} | Enable-VMIntegrationService -Verbose
 	}
 	
 	if($DisableAutomaticCheckpoints) {
-		Set-VM -Name $global:VMName -AutomaticCheckpointsEnabled $false
+		Write-Host "disabling automatic checkpoints"
+		Set-VM -Name $Name -AutomaticCheckpointsEnabled $false
 	}
 
-	Invoke-Command -Session $global:Session -ScriptBlock {
+	Invoke-Command -Session $Session -ScriptBlock {
 		Write-Host "enable execution of PowerShell scripts"
 		set-executionpolicy remotesigned
 		
-		if(!$NoDotNetFrameWork35) {
+		if($InstallDotNetFrameWork35) {
 			Write-Host "Installing Net Framework 3.5"
 			dism /online /enable-feature /featurename:NetFX3 /all /Source:d:\sources\sxs /LimitAccess
 		}
@@ -100,14 +114,17 @@ Function SetupMachine
 Function ActiveWindows
 {
 	Param(
+		[System.Management.Automation.PSCredential]$Session=$Global:Session,
 		[switch]$Key
 	)
 
-	if(!$global:Session) {
-		SetDefaultScriptsSession
+	if(!$Session) {
+		$Name = Read-Host -Prompt 'VM Name'
+		SetDefaultScriptsSession -VMName $Name
+		$Session=$global:Session
 	}
-
-	Invoke-Command -Session $global:Session -ScriptBlock {
+	
+	Invoke-Command -Session $Session -ScriptBlock {
 		ActiveWindows @using:Key
 	}
 }
@@ -159,32 +176,37 @@ Function ActiveWindows
 Function Update-VMW
 {
 	Param(
+		[System.Management.Automation.PSCredential]$Session=$Global:Session,
 		[switch]$Install
 	)
 	
-	if(!$Credential) {	
-		SetDefaultScriptsSession
+	if(!$Session) {
+		$Name = Read-Host -Prompt 'VM Name'
+		SetDefaultScriptsSession -VMName $Name
+		$Session=$global:Session
 	}
+	
+	$Name=$Session.ComputerName
 
 	if ($Install) {
-		Invoke-Command -Session $global:Session -ScriptBlock {
+		Invoke-Command -Session $Session -ScriptBlock {
 			SetupMachine -InstallNugetPackageProvider -InstallNugetPSWindowsUpdate
 		}
 	}
 
-	Wait-VM -Name $global:VMName -Credential $Credential
+	Wait-VM -Name $Name -Credential $Credential
 
 	do {
-		$updatesNumber = Invoke-Command -Session $global:Session -ScriptBlock { return (Get-WindowsUpdate).Count }
-		$isRebootPending = Invoke-Command -Session $global:Session -ScriptBlock { return (Test-PendingReboot).IsRebootPending }
+		$updatesNumber = Invoke-Command -Session $Session -ScriptBlock { return (Get-WindowsUpdate).Count }
+		$isRebootPending = Invoke-Command -Session $Session -ScriptBlock { return (Test-PendingReboot).IsRebootPending }
 
 		Write-Host "Updating windows"
-		Invoke-Command -Session $global:Session -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
+		Invoke-Command -Session $Session -ScriptBlock { Install-WindowsUpdate -AcceptAll -IgnoreReboot }
 
 		if($isRebootPending) {
 			Write-Host "Restarting VM"
-			Restart-VM $global:VMName -Force
-			Wait-VM -Name $global:VMName -Credential $Credential
+			Restart-VM $Name -Force
+			Wait-VM -Name $Name -Credential $Credential
 		}
 	} while($isRebootPending -or $updatesNumber -gt 0)
 }
@@ -192,13 +214,25 @@ Function Update-VMW
 #Wait-VM
 Function Wait-VM
 {
+	Param(
+		[System.Management.Automation.PSCredential]$Session=$Global:Session
+	)
+	
+	if(!$Session) {
+		$Name = Read-Host -Prompt 'VM Name'
+		SetDefaultScriptsSession -VMName $Name
+		$Session=$global:Session
+	}
+	
+	$Name=$Session.ComputerName
+
 	# Turn on virtual machine if it is not running
-	If ((Get-VM -Name $global:VMName).State -eq "Off") {
+	If ((Get-VM -Name $Name).State -eq "Off") {
 		Write-Host "Starting VM $($global:VMName)"
-		Start-VM -Name $global:VMName -ErrorAction Stop | Out-Null
+		Start-VM -Name $Name -ErrorAction Stop | Out-Null
 	}
 
-	hyper-v\Wait-VM -Name $global:VMName -For Heartbeat
+	hyper-v\Wait-VM -Name $Name -For Heartbeat
 	#Start-Sleep -Seconds 20
 	$startTime = Get-Date
 	do {
@@ -223,14 +257,23 @@ Function Wait-VM
 Function Move-VMVHD
 {
 	Param(
+		[string]$VMName,
 		[string]$DestinationPath
 	)
 	
+	if(!$VMName) {
+		if(!$global:Session) {
+			$VMName = Read-Host -Prompt 'VM Name'
+		} else {
+			$VMName=$Session.ComputerName
+		}
+	}
+
 	if ($DestinationPath -eq "") {
 		$DestinationPath = Read-Host -Prompt 'Destination path'
 	}
 
-	Move-VMStorage $global:VMName -DestinationStoragePath $DestinationPath
+	Move-VMStorage $VMName -DestinationStoragePath $DestinationPath
 }
 
 # Function InstallScripts
@@ -240,36 +283,29 @@ Function Move-VMVHD
 	# "Import-Module $Destination\Scripts\windows.psm1 -force -global" > C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1
 # }
 
+
 #SetDefaultScriptsSession -Name "#VMATTemp" -NetWorkCredential $(Get-Credential) -WindowsSource "\\WTBRSENXKQX2L.gmea.gad.schneider-electric.com\Files\Scripts\windows.psm1"
 Function SetDefaultScriptsSession
 {
 	Param(
+		[string]$VMName,
+		[System.Management.Automation.PSCredential]$OldSession=$Global:Session,
+		[string]$WindowsSource=$global:WindowsSource,
 		[System.Management.Automation.PSCredential]$NetWorkCredential=$Global:NetWorkCredential
 	)
-
-	if ($global:VMName) {
-		$VMName = $global:VMName
-	} else {
-		$VMName = Read-Host -Prompt 'VM Name'
-		$global:VMName = $VMName
-	}
-
-	if(!$global:Session) {	
 	
-		if($global:VMCredential) {	
-			$VMCredential = $global:VMCredential
-		} else {
-			$VMCredential = $(Get-Credential VMUser)
+	if($VMName -ne "" -and $OldSession) {
+		$global:Session = Enter-PSSession -VMName $VMName
+	} else {
+		if($OldSession) {	
+			Get-PSSession | where { $_.ComputerName -eq $OldSession.ComputerName } | Remove-PSSession
 		}
 
-		Get-PSSession | where { $_.ComputerName -eq $VMName } | Remove-PSSession
-		$global:Session = New-PSSession -VMName $VMName -Credential $VMCredential
+		$global:Session = Enter-PSSession -VMName $VMName
 	}
-	
-	if($global:WindowsSource) {
-		$WindowsSource = $global:WindowsSource
-	} else {
-		$WindowsSource = Read-Host -Prompt 'windows.psm1 source'
+
+	if(!$WindowsSource) {
+		$global:WindowsSource = Read-Host -Prompt 'windows.psm1 source'
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
@@ -303,19 +339,21 @@ Function SetDefaultScriptsSession
 Function Download
 {
 	Param(
+		[System.Management.Automation.PSCredential]$Session=$Global:Session,
 		[string]$Source,
 		[string]$Destination,
-		[System.Management.Automation.PSCredential]$VMCredential=$Global:DefaultCredential,
-		[System.Management.Automation.PSCredential]$NetCredential,
+		[System.Management.Automation.PSCredential]$NetWorkCredential=$Global:NetWorkCredential,
 		[switch]$Force
 	)
 	
-	if(!$VMCredential) {	
-		SetDefaultScriptsSession
+	if(!$Session) {
+		$Name = Read-Host -Prompt 'VM Name'
+		SetDefaultScriptsSession -VMName $Name
+		$Session=$global:Session
 	}
 	
 	Invoke-Command -Session $global:Session -ScriptBlock {
-		$netCred=$using:NetCredential
+		$netCred=$using:NetWorkCredential
 
 		if (!(Test-Path $using:Destination)) {
 			mkdir $using:Destination
