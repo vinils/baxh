@@ -350,6 +350,7 @@ Function Wait-WebAccess
 
 		# Finally, we clean up the http request by closing it.
 		$HTTP_Response.Close()
+		Start-Sleep -sec 2
 	}while(!$hasConnection)
 }
 
