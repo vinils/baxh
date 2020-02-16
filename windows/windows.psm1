@@ -99,7 +99,7 @@ Function SwitchToHyperV
 	
 	Set-ExecutionPolicy Bypass -Scope Process -Force
 	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-	iex (New-Object Net.WebClient).DownloadString($global:HyperVSource)
+	iex (iwr $using:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
 	
 	Wait-VM
 	
