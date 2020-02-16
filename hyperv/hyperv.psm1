@@ -217,7 +217,7 @@ Function SetDefaultScriptsSession
 		}
 		
 		if(($using:WindowsSource).substring(0,2) -eq "\\") {
-			if($global:WindowsSource) {
+			if($using:NetWorkCredential) {
 				$netCred=$using:NetWorkCredential
 			}
 
