@@ -37,3 +37,9 @@ Update-VMW
 Update-VMW
 
 Stop-VM -Name $global:VMName -Force
+
+
+
+
+--docker-machine create -d hyperv dckMyHealth1
+--docker-machine env dckMyHealth1

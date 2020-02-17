@@ -36,6 +36,11 @@ SetupMachine  -EnableVMIntegrationService -UACLower -ControlPainelSmallIcons -Sh
 RunVMCommand -Command "choco install -y --limit-output --no-progress visualstudio2019community"
 RunVMCommand -Command "choco install -y --limit-output --no-progress googlechrome --ignore-checksums"
 RunVMCommand -Command "DoUnpin 'Microsoft Edge'; DoUnpin 'Microsoft Store'; DoUnpin 'Mail'; DoPin 'Google Chrome'; DoPin 'Visual Studio 2019'"
+--RunVMCommand -Command "Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart"
+--RunVMCommand -Command "Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V-Tools-All -NoRestart"
+
+RunVMCommand -Command "choco install -y --limit-output --no-progress sql-server-management-studio"
+
 
 Restart-VM $global:VMName -Force
 Wait-VM -Session $global:Session
