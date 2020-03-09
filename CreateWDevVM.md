@@ -41,6 +41,31 @@ RunVMCommand -Command "DoUnpin 'Microsoft Edge'; DoUnpin 'Microsoft Store'; DoUn
 
 RunVMCommand -Command "choco install -y --limit-output --no-progress sql-server-management-studio"  
 
+RunVMCommand -Command "DISM /online /enable-feature /NoRestart /FeatureName:Microsoft-Windows-Subsystem-Linux"
+RunVMCommand -Command "DISM /online /enable-feature /NoRestart /FeatureName:VirtualMachinePlatform"
+RunVMCommand -Command "Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All"
+
+Write-Host "disable windows defender"
+RunVMCommand -Command "Stop-Service WinDefend"
+RunVMCommand -Command "Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender' /v DisableAntiSpyware /t REG_DWORD /d 1 /f"
+RunVMCommand -Command "Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f"
+RunVMCommand -Command "Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DDisableOnAccessProtection /t REG_DWORD /d 1 /f"
+RunVMCommand -Command "Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableScanOnRealtimeEnable /t REG_DWORD /d 1 /f"
+RunVMCommand -Command "Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableRoutinelyTakingAction /t REG_DWORD /d 1 /f"
+
+
+Write-Host "enalbe hyperv remote connection"
+RunVMCommand -Command "Add-Content -Path C:\windows\System32\drivers\etc\hosts. -Value '192.168.15.251          SRV1 '"
+RunVMCommand -Command "Enable-PSRemoting -Force"
+RunVMCommand -Command "Set-Item WSMan:\localhost\Client\TrustedHosts -Value SRV1 -Force"
+RunVMCommand -Command "Enable-WSManCredSSP -Role client -DelegateComputer SRV1 -Force"
+
+RunVMCommand -Command "New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation' -Name 'AllowFreshCredentialsWhenNTLMOnly' -Value 1 -PropertyType Dword -Force"
+RunVMCommand -Command "New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation'  -Name 'AllowFreshCredentialsWhenNTLMOnly' -Value 'Default Value' -Force"
+RunVMCommand -Command "New-ItemProperty  -Path  'hklm:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly' -Name '1' -PropertyType 'String' -Value '*'"
+
+#---> dcomcnfg > COM SECURITY > Access Permissions > Edit Limits > Anonymous Login > ALLOW Remote Access
+RunVMCommand -Command "cmdkey /add:SRV1 /user:Administrator /pass"
 
 Restart-VM $global:VMName -Force  
 Wait-VM -Session $global:Session  
