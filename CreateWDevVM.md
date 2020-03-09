@@ -13,7 +13,7 @@ New-VMW10 `
 	-SwitchName "ExternalSwitch"  
 
 ## Load Hyper-V scripts
-$global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hyperv/hyperv.psm1'  
+$global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hypervW10/hyperv.psm1'  
 iex (iwr $global:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)  
 
 ## SetUp VM
