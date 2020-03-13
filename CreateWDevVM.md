@@ -26,10 +26,10 @@ iex (iwr $global:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicPa
 
 ## SetUp VM
 ```powershell
--- Optional  
+####### Optional #######
 Resize-VHD -Path $VHDFilePath -SizeBytes 30GB  
 Extend-WinOSDiskSize -Name $VMName -Credential $Credential  
--------------------  
+########################
 
 $global:Session = New-PSSession -VMName $global:VMName -Credential $global:VMCredential  
 SetDefaultScriptsSession  
