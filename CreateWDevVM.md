@@ -1,8 +1,11 @@
 ## Load Windows scripts
+```powershell
 $global:W10Source='https://raw.githubusercontent.com/vinils/baxh/master/w10/w10.psm1'  
 iex (iwr $global:W10Source -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)  
+```
 
 ## Create VM
+```powershell
 $global:VMName="VMDev1"  
 $DefaultPassword = (new-object System.Security.SecureString)  
 $global:VMCredential = New-Object System.Management.Automation.PSCredential ("MyUser", $DefaultPassword)  
@@ -11,12 +14,16 @@ New-VMW10 `
 	-VHDTemplate 'E:\Hyper-V\Virtual Hard Disks\W10Temp.vhdx' `  
 	-VHDFolderPath 'F:\Hyper-V\Virtual Hard Disks\' `  
 	-SwitchName "ExternalSwitch"  
+```
 
 ## Load Hyper-V scripts
+```powershell
 $global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hypervW10/hyperv.psm1'  
 iex (iwr $global:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)  
+```
 
 ## SetUp VM
+```powershell
 -- Optional  
 Resize-VHD -Path $VHDFilePath -SizeBytes 30GB  
 Extend-WinOSDiskSize -Name $VMName -Credential $Credential  
@@ -71,3 +78,4 @@ RunVMCommand -Command "cmdkey /add:SRV1 /user:Administrator /pass"
 
 Restart-VM $global:VMName -Force  
 Wait-VM -Session $global:Session  
+```
