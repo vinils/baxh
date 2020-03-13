@@ -47,14 +47,12 @@ RunVMCommand -Command "choco install -y --limit-output --no-progress visualstudi
 
 RunVMCommand -Command "choco install -y --limit-output --no-progress googlechrome --ignore-checksums"  
 RunVMCommand -Command "DoUnpin 'Microsoft Edge'; DoUnpin 'Microsoft Store'; DoUnpin 'Mail'; DoPin 'Google Chrome'; DoPin 'Visual Studio 2019'"  
---RunVMCommand -Command "Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart"  
---RunVMCommand -Command "Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V-Tools-All -NoRestart"  
 
 RunVMCommand -Command "choco install -y --limit-output --no-progress sql-server-management-studio"  
 
-RunVMCommand -Command "DISM /online /enable-feature /NoRestart /FeatureName:Microsoft-Windows-Subsystem-Linux"
-RunVMCommand -Command "DISM /online /enable-feature /NoRestart /FeatureName:VirtualMachinePlatform"
-RunVMCommand -Command "Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All"
+RunVMCommand -Command "DISM /online /enable-feature /NoRestart /FeatureName:Microsoft-Windows-Subsystem-Linux -NoRestart"
+RunVMCommand -Command "DISM /online /enable-feature /NoRestart /FeatureName:VirtualMachinePlatform -NoRestart"
+RunVMCommand -Command "Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart"
 
 Write-Host "disable windows defender"
 RunVMCommand -Command "Stop-Service WinDefend"
