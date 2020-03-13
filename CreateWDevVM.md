@@ -14,6 +14,8 @@ New-VMW10 `
 	-VHDTemplate 'E:\Hyper-V\Virtual Hard Disks\W10Temp.vhdx' `  
 	-VHDFolderPath 'F:\Hyper-V\Virtual Hard Disks\' `  
 	-SwitchName "ExternalSwitch"  
+	
+Set-VM -VMName $global:VMName -AutomaticCheckpointsEnabled $True
 ```
 
 ## Load Hyper-V scripts
