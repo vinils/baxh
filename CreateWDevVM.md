@@ -1,7 +1,8 @@
 ## Load Windows scripts
 ```powershell
-$global:W10Source='https://raw.githubusercontent.com/vinils/baxh/master/w10/w10.psm1'  
-iex (iwr $global:W10Source -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)  
+$global:W10Source='https://raw.githubusercontent.com/vinils/baxh/master/w10/w10.psm1'
+iex (iwr $global:W10Source -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
+
 ```
 
 ## Create VM
