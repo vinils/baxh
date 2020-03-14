@@ -25,15 +25,15 @@ $global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hyper
 iex (iwr $global:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)  
 ```
 
+$global:Session = New-PSSession -VMName $global:VMName -Credential $global:VMCredential  
+SetDefaultScriptsSession  
+
 ## SetUp VM
 ```powershell
 ####### Optional #######
-Resize-VHD -Path $VHDFilePath -SizeBytes 30GB  
-Extend-WinOSDiskSize -Name $VMName -Credential $Credential  
+Resize-VHD -Path 'F:\Hyper-V\Virtual Hard Disks\' -SizeBytes 90GB
+Extend-WinOSDiskSize -Session $Session
 ########################
-
-$global:Session = New-PSSession -VMName $global:VMName -Credential $global:VMCredential  
-SetDefaultScriptsSession  
 
 Write-Host "Renaming computer name"  
 Invoke-Command -Session $global:Session -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:VMName }  
