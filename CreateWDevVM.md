@@ -10,10 +10,10 @@ $global:VMName="VMDev1"
 $DefaultPassword = (new-object System.Security.SecureString)  
 $global:VMCredential = New-Object System.Management.Automation.PSCredential ("MyUser", $DefaultPassword)  
 
-New-VMW10 `  
-	-VHDTemplate 'E:\Hyper-V\Virtual Hard Disks\W10Temp.vhdx' `  
-	-VHDFolderPath 'F:\Hyper-V\Virtual Hard Disks\' `  
-	-SwitchName "ExternalSwitch"  
+New-VMW10 `
+	-VHDTemplate 'E:\Hyper-V\Virtual Hard Disks\W10Temp.vhdx' `
+	-VHDFolderPath 'F:\Hyper-V\Virtual Hard Disks\' `
+	-SwitchName "ExternalSwitch"
 	
 Set-VM -VMName $global:VMName -AutomaticCheckpointsEnabled $True
 ```
