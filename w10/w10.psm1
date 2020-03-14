@@ -234,48 +234,64 @@ Function SetupMachine
 	)
 
 	if($EnableRDP) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Enabling Remote Desktop"
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\' -Name "fDenyTSConnections" -Value 0
 		Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\' -Name "UserAuthentication" -Value 0
 	}
 
 	if($EnableRDPBlankPassword) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> enabling rdp with blank password"
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name LimitBlankPasswordUse -Value 0
 		netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
 	}
 	
 	if ($UACLower) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Lowering UAC"
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
 	}
 
 	if ($UnpinEdge) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> UnpinEdge"
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
 	}
 
 	if ($UnpinMSStore) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> UnpinEdge"
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
 	}
 
 	if ($UnpinMail) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> UnpinEdge"
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
 	}
 	
 	#DoPin 'Google Chrome'; DoPin 'Visual Studio 2019'
 	
 	if ($ControlPainelSmallIcons) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> control painel small icons"
+		Write-Host "-----------------------------------------------------"
 		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel"
 		Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" -Name "StartupPage" -Type DWord -Value 1
 		Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" -Name "AllItemsIconView" -Type DWord -Value 1
 	}
 	
 	if ($DisableWindowsDefender) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Disabling windows defender..."
+		Write-Host "-----------------------------------------------------"
 		Stop-Service WinDefend
 		Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender' /v DisableAntiSpyware /t REG_DWORD /d 1 /f
 		Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f
@@ -285,23 +301,31 @@ Function SetupMachine
 	}
 	
 	if ($ShowHiddenFiles) {
+		Write-Host "-----------------------------------------------------"
 		Write-Output "---> Showing hidden files..."
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Type DWord -Value 1
 	}
 
 	if ($ShowFileExtensions) {
+		Write-Host "-----------------------------------------------------"
 		Write-Output "---> Showing known file extensions..."
+		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0
 	}
 
 	if ($InstallNugetPackageProvider) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing Nuget"
+		Write-Host "-----------------------------------------------------"
 		Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 		Install-PackageProvider -Name NuGet -Force
 	}
 
 	if ($InstallNugetPSWindowsUpdate) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing update tools"
+		Write-Host "-----------------------------------------------------"
 		Install-Module PSWindowsUpdate -Force
 		Install-Module -Name PendingReboot -Force
 	}
@@ -318,95 +342,131 @@ Function SetupMachine
 	-or $InstallChrome `
 	-or $InstallSQLManagementStudio `
 	-or $InstallCurl) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing chocolatey..."
+		Write-Host "-----------------------------------------------------"
 		Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 	}
 
 	if ($Install7Zip) {
 		#Wait-WebAccess -Name $Name -Credential $Credential -URL https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0 
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing 7zip..."
+		Write-Host "-----------------------------------------------------"
 		#choco install -y 7zip
 		Install-7zip
 	}
 
 	if ($InstallNotepadPlusPlus) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing notepad++..."
-		choco install -y --limit-output --no-progress notepadplusplus
+		Write-Host "-----------------------------------------------------"
+		choco install -y --limit-output notepadplusplus
 	}
 
 	if ($InstallGit) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing Git..."
-		choco install -y --no-progress git
+		Write-Host "-----------------------------------------------------"
+		choco install -y git
 	}
 
 	if ($InstallDockerCli) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing docker cli..."
+		Write-Host "-----------------------------------------------------"
 		choco install -y --limit-output docker-cli
 	}
 	
 	if ($InstallVisualstudio2017testagent) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing Visual Studio 2017 Test Agent..."
+		Write-Host "-----------------------------------------------------"
 		choco install -y --limit-output visualstudio2017testagent
 	}
 	
 	if ($InstallDotNetFramework471DeveloperPack) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing .Net Framework 4.7.1 Developer Pack..."
+		Write-Host "-----------------------------------------------------"
 		choco install -y --limit-output netfx-4.7.1-devpack
 	}
 
 	if ($InstallPython2_7_15) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing Python 2.7.15..."
+		Write-Host "-----------------------------------------------------"
 		choco install -y --limit-output python2 --version=2.7.15
 	}
 
 	if ($InstallCurl) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing Curl..."
+		Write-Host "-----------------------------------------------------"
 		choco install curl -y --limit-output
 	}
 
 	if ($InstallCMake) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing CMake..."
+		Write-Host "-----------------------------------------------------"
 		choco install -y --limit-output cmake --installargs '"ADD_CMAKE_TO_PATH=System"'
 	}
 	
 	if ($InstallChrome) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing Chrome..."
+		Write-Host "-----------------------------------------------------"
 		choco install -y --limit-output googlechrome --ignore-checksums
 	}
 	
 	if ($InstallSQLManagementStudio) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing SQL Management Studio..."
-		choco install -y --limit-output --no-progress sql-server-management-studio
+		Write-Host "-----------------------------------------------------"
+		choco install -y --limit-output sql-server-management-studio
 	}
 	
 	if ($InstallSQLManagementStudio) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing SQL Management Studio..."
-		choco install -y --limit-output --no-progress sql-server-management-studio
+		Write-Host "-----------------------------------------------------"
+		choco install -y --limit-output sql-server-management-studio
 	}
 	
 	if ($InstallVisualStudio2019Community) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing IISASPNet45..."
+		Write-Host "-----------------------------------------------------"
 		#choco install -y visualstudio2019enterprise --package-parameters='--add Microsoft.VisualStudio.Component.Git'
-		choco install -y --limit-output --no-progress visualstudio2019community --package-parameters='--add Microsoft.VisualStudio.Component.CoreEditor --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.NetCore.Component.SDK --add Microsoft.VisualStudio.Component.NuGet --add Microsoft.Net.Component.4.6.1.TargetingPack --add Microsoft.VisualStudio.Component.Roslyn.Compiler --add Microsoft.VisualStudio.Component.Roslyn.LanguageServices --add Microsoft.VisualStudio.Component.FSharp --add Microsoft.NetCore.Component.DevelopmentTools --add Microsoft.VisualStudio.Component.FSharp.WebTemplates --add Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions --add Microsoft.VisualStudio.Component.DockerTools --add Microsoft.NetCore.Component.Web --add Microsoft.Net.Component.4.8.SDK --add Microsoft.Net.Component.4.7.2.TargetingPack --add Microsoft.Net.ComponentGroup.DevelopmentPrerequisites --add Microsoft.VisualStudio.Component.TypeScript.3.7 --add Microsoft.VisualStudio.Component.JavaScript.TypeScript --add Microsoft.VisualStudio.Component.JavaScript.Diagnostics --add Microsoft.Component.MSBuild --add Microsoft.VisualStudio.Component.TextTemplating --add Component.Microsoft.VisualStudio.RazorExtension --add Microsoft.VisualStudio.Component.IISExpress --add Microsoft.VisualStudio.Component.SQL.ADAL --add Microsoft.VisualStudio.Component.SQL.LocalDB.Runtime --add Microsoft.VisualStudio.Component.Common.Azure.Tools --add Microsoft.VisualStudio.Component.SQL.CLR --add Microsoft.VisualStudio.Component.MSODBC.SQL --add Microsoft.VisualStudio.Component.MSSQL.CMDLnUtils --add Microsoft.VisualStudio.Component.ManagedDesktop.Core --add Microsoft.Net.Component.4.5.2.TargetingPack --add Microsoft.Net.Component.4.5.TargetingPack --add Microsoft.VisualStudio.Component.SQL.SSDT --add Microsoft.VisualStudio.Component.SQL.DataSources --add Component.Microsoft.Web.LibraryManager --add Microsoft.VisualStudio.ComponentGroup.Web --add Microsoft.VisualStudio.Component.Web --add Microsoft.VisualStudio.Component.IntelliCode --add Microsoft.Net.Component.4.TargetingPack --add Microsoft.Net.Component.4.5.1.TargetingPack --add Microsoft.Net.Component.4.6.TargetingPack --add Microsoft.Net.ComponentGroup.TargetingPacks.Common --add Microsoft.Net.Core.Component.SDK.2.1 --add Component.Microsoft.VisualStudio.Web.AzureFunctions --add Microsoft.VisualStudio.ComponentGroup.AzureFunctions --add Microsoft.VisualStudio.Component.Azure.Compute.Emulator --add Microsoft.VisualStudio.Component.Azure.Storage.Emulator --add Microsoft.VisualStudio.Component.Azure.ClientLibs --add Microsoft.VisualStudio.Component.Azure.AuthoringTools --add Microsoft.VisualStudio.Component.CloudExplorer --add Microsoft.VisualStudio.ComponentGroup.Web.CloudTools --add Microsoft.VisualStudio.Component.DiagnosticTools --add Microsoft.VisualStudio.Component.EntityFramework --add Microsoft.VisualStudio.Component.AspNet45 --add Microsoft.VisualStudio.Component.AppInsights.Tools --add Microsoft.VisualStudio.Component.WebDeploy --add Component.Microsoft.VisualStudio.LiveShare --add Microsoft.VisualStudio.Workload.NetWeb'
+		choco install -y --limit-output visualstudio2019community --package-parameters='--add Microsoft.VisualStudio.Component.CoreEditor --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.NetCore.Component.SDK --add Microsoft.VisualStudio.Component.NuGet --add Microsoft.Net.Component.4.6.1.TargetingPack --add Microsoft.VisualStudio.Component.Roslyn.Compiler --add Microsoft.VisualStudio.Component.Roslyn.LanguageServices --add Microsoft.VisualStudio.Component.FSharp --add Microsoft.NetCore.Component.DevelopmentTools --add Microsoft.VisualStudio.Component.FSharp.WebTemplates --add Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions --add Microsoft.VisualStudio.Component.DockerTools --add Microsoft.NetCore.Component.Web --add Microsoft.Net.Component.4.8.SDK --add Microsoft.Net.Component.4.7.2.TargetingPack --add Microsoft.Net.ComponentGroup.DevelopmentPrerequisites --add Microsoft.VisualStudio.Component.TypeScript.3.7 --add Microsoft.VisualStudio.Component.JavaScript.TypeScript --add Microsoft.VisualStudio.Component.JavaScript.Diagnostics --add Microsoft.Component.MSBuild --add Microsoft.VisualStudio.Component.TextTemplating --add Component.Microsoft.VisualStudio.RazorExtension --add Microsoft.VisualStudio.Component.IISExpress --add Microsoft.VisualStudio.Component.SQL.ADAL --add Microsoft.VisualStudio.Component.SQL.LocalDB.Runtime --add Microsoft.VisualStudio.Component.Common.Azure.Tools --add Microsoft.VisualStudio.Component.SQL.CLR --add Microsoft.VisualStudio.Component.MSODBC.SQL --add Microsoft.VisualStudio.Component.MSSQL.CMDLnUtils --add Microsoft.VisualStudio.Component.ManagedDesktop.Core --add Microsoft.Net.Component.4.5.2.TargetingPack --add Microsoft.Net.Component.4.5.TargetingPack --add Microsoft.VisualStudio.Component.SQL.SSDT --add Microsoft.VisualStudio.Component.SQL.DataSources --add Component.Microsoft.Web.LibraryManager --add Microsoft.VisualStudio.ComponentGroup.Web --add Microsoft.VisualStudio.Component.Web --add Microsoft.VisualStudio.Component.IntelliCode --add Microsoft.Net.Component.4.TargetingPack --add Microsoft.Net.Component.4.5.1.TargetingPack --add Microsoft.Net.Component.4.6.TargetingPack --add Microsoft.Net.ComponentGroup.TargetingPacks.Common --add Microsoft.Net.Core.Component.SDK.2.1 --add Component.Microsoft.VisualStudio.Web.AzureFunctions --add Microsoft.VisualStudio.ComponentGroup.AzureFunctions --add Microsoft.VisualStudio.Component.Azure.Compute.Emulator --add Microsoft.VisualStudio.Component.Azure.Storage.Emulator --add Microsoft.VisualStudio.Component.Azure.ClientLibs --add Microsoft.VisualStudio.Component.Azure.AuthoringTools --add Microsoft.VisualStudio.Component.CloudExplorer --add Microsoft.VisualStudio.ComponentGroup.Web.CloudTools --add Microsoft.VisualStudio.Component.DiagnosticTools --add Microsoft.VisualStudio.Component.EntityFramework --add Microsoft.VisualStudio.Component.AspNet45 --add Microsoft.VisualStudio.Component.AppInsights.Tools --add Microsoft.VisualStudio.Component.WebDeploy --add Component.Microsoft.VisualStudio.LiveShare --add Microsoft.VisualStudio.Workload.NetWeb'
 	}
 
 	if ($InstallWindowsSubsystemLinux) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing Windows Subsystem Linux..."
+		Write-Host "-----------------------------------------------------"
 		DISM /online /enable-feature /NoRestart /FeatureName:Microsoft-Windows-Subsystem-Linux -NoRestart
 	}
 
 	if ($InstallVirtualMachinePlatform) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing VirtualMachinePlatform..."
+		Write-Host "-----------------------------------------------------"
 		DISM /online /enable-feature /NoRestart /FeatureName:VirtualMachinePlatform -NoRestart
 	}
 
 	if ($InstallHyperV) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing VirtualMachinePlatform..."
+		Write-Host "-----------------------------------------------------"
 		Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
 	}
 
 	if ($InstallDotNetFramework472) {
+		Write-Host "-----------------------------------------------------"
 		Write-Host "---> Installing .NET472..."
+		Write-Host "-----------------------------------------------------"
 		choco install dotnet4.7.2 -y
 	}
 }
