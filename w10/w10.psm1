@@ -220,7 +220,13 @@ Function SetupMachine
 		[switch]$InstallNugetPackageProvider,
 		[switch]$InstallNugetPSWindowsUpdate,
 		[switch]$InstallIIS,
-		[switch]$InstallDotNetFramework472
+		[switch]$InstallDotNetFramework472,
+		[switch]$InstallChrome,
+		[switch]$InstallDotNetFramework472,
+		[switch]$InstallDotNetFramework472,
+		[switch]$InstallDotNetFramework472,
+		[switch]$InstallDotNetFramework472,
+		[switch]$InstallDotNetFramework472,
 	)
 
 	if($EnableRDP) {
@@ -278,6 +284,7 @@ Function SetupMachine
 	-or $InstallDotNetFramework471DeveloperPack `
 	-or $InstallPython2_7_15 `
 	-or $InstallCMake `
+	-or $InstallChrome `
 	-or $InstallCurl) {
 		Write-Host "Installing chocolatey..."
 		Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
@@ -302,32 +309,37 @@ Function SetupMachine
 
 	if ($InstallDockerCli) {
 		Write-Host "Installing docker cli..."
-		choco install -y --limit-output --no-progress docker-cli
+		choco install -y --limit-output docker-cli
 	}
 	
 	if ($InstallVisualstudio2017testagent) {
 		Write-Host "Installing Visual Studio 2017 Test Agent..."
-		choco install -y --limit-output --no-progress visualstudio2017testagent
+		choco install -y --limit-output visualstudio2017testagent
 	}
 	
 	if ($InstallDotNetFramework471DeveloperPack) {
 		Write-Host "Installing .Net Framework 4.7.1 Developer Pack..."
-		choco install -y --limit-output --no-progress netfx-4.7.1-devpack
+		choco install -y --limit-output netfx-4.7.1-devpack
 	}
 
 	if ($InstallPython2_7_15) {
 		Write-Host "Installing Python 2.7.15..."
-		choco install -y --limit-output --no-progress python2 --version=2.7.15
+		choco install -y --limit-output python2 --version=2.7.15
 	}
 
 	if ($InstallCurl) {
 		Write-Host "Installing Curl..."
-		choco install curl -y --limit-output --no-progress
+		choco install curl -y --limit-output
 	}
 
 	if ($InstallCMake) {
 		Write-Host "Installing CMake..."
-		choco install -y --limit-output --no-progress cmake --installargs '"ADD_CMAKE_TO_PATH=System"'
+		choco install -y --limit-output cmake --installargs '"ADD_CMAKE_TO_PATH=System"'
+	}
+	
+	if ($InstallChrome) {
+		Write-Host "Installing CMake..."
+		choco install -y --limit-output googlechrome --ignore-checksums
 	}
 	
 	if ($InstallIIS) {
