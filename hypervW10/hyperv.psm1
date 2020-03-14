@@ -82,7 +82,7 @@ Function SetupMachine
 		[switch]$DisableWindowsDefender,
 		[switch]$UnpinEdge,
 		[switch]$UnpinMSStore,
-		[switch]$UnpinMail
+		[switch]$UnpinMail,
 		[switch]$DisableAutomaticCheckpoints
 	)
 	
