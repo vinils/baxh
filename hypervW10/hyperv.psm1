@@ -321,8 +321,8 @@ Function Move-VMVHD
 Function SetDefaultScriptsSession
 {
 	Param(
-		[string]$VMName,
-		[System.Management.Automation.PSCredential]$VMCredential,
+		[string]$VMName=$Global:VMName,
+		[System.Management.Automation.PSCredential]$VMCredential=$Global:VMCredential,
 		[System.Management.Automation.Runspaces.PSSession]$OldSession=$Global:Session,
 		[string]$W10Source=$global:W10Source,
 		[System.Management.Automation.PSCredential]$NetWorkCredential=$Global:NetWorkCredential
