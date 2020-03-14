@@ -73,6 +73,16 @@ Function SetupMachine
 		[switch]$InstallIIS,
 		[switch]$InstallDotNetFrameWork35,
 		[switch]$InstallDotNetFramework472,
+		[switch]$InstallChrome,
+		[switch]$InstallSQLManagementStudio,
+		[switch]$InstallWindowsSubsystemLinux,
+		[switch]$InstallVirtualMachinePlatform,
+		[switch]$InstallHyperV,
+		[switch]$InstallVisualStudio2019Community,
+		[switch]$DisableWindowsDefender,
+		[switch]$UnpinEdge,
+		[switch]$UnpinMSStore,
+		[switch]$UnpinMail
 		[switch]$DisableAutomaticCheckpoints
 	)
 	
@@ -104,6 +114,23 @@ Function SetupMachine
 		SetupMachine @using:psboundparameters
 	}
 }
+
+Function Extend-WinOSDiskSize
+{
+	Param(
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session
+	)
+	
+	if(!$Session) {
+		SetDefaultScriptsSession
+	}
+	
+	Invoke-Command -Session $global:Session -ScriptBlock {
+		Extend-WinOSDiskSize
+	}
+}
+
+
 
 Function ActiveWindows
 {
