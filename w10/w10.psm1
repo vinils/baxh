@@ -223,10 +223,14 @@ Function SetupMachine
 		[switch]$InstallDotNetFramework472,
 		[switch]$InstallChrome,
 		[switch]$InstallSQLManagementStudio,
-		[switch]$InstallDotNetFramework472,
-		[switch]$InstallDotNetFramework472,
-		[switch]$InstallDotNetFramework472,
-		[switch]$InstallDotNetFramework472,
+		[switch]$InstallWindowsSubsystemLinux,
+		[switch]$InstallVirtualMachinePlatform,
+		[switch]$InstallHyperV,
+		[switch]$InstallVisualStudio2019Community,
+		[switch]$DisableWindowsDefender,
+		[switch]$UnpinEdge,
+		[switch]$UnpinMSStore,
+		[switch]$UnpinMail
 	)
 
 	if($EnableRDP) {
@@ -246,11 +250,38 @@ Function SetupMachine
 		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
 	}
 
+	if ($UnpinEdge) {
+		Write-Host "Lowering UAC"
+		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+	}
+
+	if ($UnpinMSStore) {
+		Write-Host "Lowering UAC"
+		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+	}
+
+	if ($UnpinMail) {
+		Write-Host "Lowering UAC"
+		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+	}
+	
+	#DoPin 'Google Chrome'; DoPin 'Visual Studio 2019'
+	
 	if ($ControlPainelSmallIcons) {
 		Write-Host "control painel small icons"
 		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel"
 		Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" -Name "StartupPage" -Type DWord -Value 1
 		Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" -Name "AllItemsIconView" -Type DWord -Value 1
+	}
+	
+	if ($DisableWindowsDefender) {
+		Write-Host "disabling windows defender..."
+		Stop-Service WinDefend
+		Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender' /v DisableAntiSpyware /t REG_DWORD /d 1 /f
+		Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f
+		Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableOnAccessProtection /t REG_DWORD /d 1 /f
+		Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableScanOnRealtimeEnable /t REG_DWORD /d 1 /f
+		Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableRoutinelyTakingAction /t REG_DWORD /d 1 /f
 	}
 	
 	if ($ShowHiddenFiles) {
@@ -339,22 +370,43 @@ Function SetupMachine
 	}
 	
 	if ($InstallChrome) {
-		Write-Host "Installing CMake..."
+		Write-Host "Installing Chrome..."
 		choco install -y --limit-output googlechrome --ignore-checksums
 	}
 	
 	if ($InstallSQLManagementStudio) {
-		Write-Host "Installing CMake..."
+		Write-Host "Installing SQL Management Studio..."
 		choco install -y --limit-output --no-progress sql-server-management-studio
 	}
 	
-	if ($InstallIIS) {
-		Write-Host "Installing CMake..."
-		dism /online /enable-feature /all /featurename:IIS-ASPNET45
+	if ($InstallSQLManagementStudio) {
+		Write-Host "Installing SQL Management Studio..."
+		choco install -y --limit-output --no-progress sql-server-management-studio
+	}
+	
+	if ($InstallVisualStudio2019Community) {
+		Write-Host "Installing IISASPNet45..."
+		#choco install -y visualstudio2019enterprise --package-parameters='--add Microsoft.VisualStudio.Component.Git'
+		choco install -y --limit-output --no-progress visualstudio2019community --package-parameters='--add Microsoft.VisualStudio.Component.CoreEditor --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.NetCore.Component.SDK --add Microsoft.VisualStudio.Component.NuGet --add Microsoft.Net.Component.4.6.1.TargetingPack --add Microsoft.VisualStudio.Component.Roslyn.Compiler --add Microsoft.VisualStudio.Component.Roslyn.LanguageServices --add Microsoft.VisualStudio.Component.FSharp --add Microsoft.NetCore.Component.DevelopmentTools --add Microsoft.VisualStudio.Component.FSharp.WebTemplates --add Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions --add Microsoft.VisualStudio.Component.DockerTools --add Microsoft.NetCore.Component.Web --add Microsoft.Net.Component.4.8.SDK --add Microsoft.Net.Component.4.7.2.TargetingPack --add Microsoft.Net.ComponentGroup.DevelopmentPrerequisites --add Microsoft.VisualStudio.Component.TypeScript.3.7 --add Microsoft.VisualStudio.Component.JavaScript.TypeScript --add Microsoft.VisualStudio.Component.JavaScript.Diagnostics --add Microsoft.Component.MSBuild --add Microsoft.VisualStudio.Component.TextTemplating --add Component.Microsoft.VisualStudio.RazorExtension --add Microsoft.VisualStudio.Component.IISExpress --add Microsoft.VisualStudio.Component.SQL.ADAL --add Microsoft.VisualStudio.Component.SQL.LocalDB.Runtime --add Microsoft.VisualStudio.Component.Common.Azure.Tools --add Microsoft.VisualStudio.Component.SQL.CLR --add Microsoft.VisualStudio.Component.MSODBC.SQL --add Microsoft.VisualStudio.Component.MSSQL.CMDLnUtils --add Microsoft.VisualStudio.Component.ManagedDesktop.Core --add Microsoft.Net.Component.4.5.2.TargetingPack --add Microsoft.Net.Component.4.5.TargetingPack --add Microsoft.VisualStudio.Component.SQL.SSDT --add Microsoft.VisualStudio.Component.SQL.DataSources --add Component.Microsoft.Web.LibraryManager --add Microsoft.VisualStudio.ComponentGroup.Web --add Microsoft.VisualStudio.Component.Web --add Microsoft.VisualStudio.Component.IntelliCode --add Microsoft.Net.Component.4.TargetingPack --add Microsoft.Net.Component.4.5.1.TargetingPack --add Microsoft.Net.Component.4.6.TargetingPack --add Microsoft.Net.ComponentGroup.TargetingPacks.Common --add Microsoft.Net.Core.Component.SDK.2.1 --add Component.Microsoft.VisualStudio.Web.AzureFunctions --add Microsoft.VisualStudio.ComponentGroup.AzureFunctions --add Microsoft.VisualStudio.Component.Azure.Compute.Emulator --add Microsoft.VisualStudio.Component.Azure.Storage.Emulator --add Microsoft.VisualStudio.Component.Azure.ClientLibs --add Microsoft.VisualStudio.Component.Azure.AuthoringTools --add Microsoft.VisualStudio.Component.CloudExplorer --add Microsoft.VisualStudio.ComponentGroup.Web.CloudTools --add Microsoft.VisualStudio.Component.DiagnosticTools --add Microsoft.VisualStudio.Component.EntityFramework --add Microsoft.VisualStudio.Component.AspNet45 --add Microsoft.VisualStudio.Component.AppInsights.Tools --add Microsoft.VisualStudio.Component.WebDeploy --add Component.Microsoft.VisualStudio.LiveShare --add Microsoft.VisualStudio.Workload.NetWeb'
+	}
+
+	if ($InstallWindowsSubsystemLinux) {
+		Write-Host "Installing Windows Subsystem Linux..."
+		DISM /online /enable-feature /NoRestart /FeatureName:Microsoft-Windows-Subsystem-Linux -NoRestart
+	}
+
+	if ($InstallVirtualMachinePlatform) {
+		Write-Host "Installing VirtualMachinePlatform..."
+		DISM /online /enable-feature /NoRestart /FeatureName:VirtualMachinePlatform -NoRestart
+	}
+
+	if ($InstallHyperV) {
+		Write-Host "Installing VirtualMachinePlatform..."
+		Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
 	}
 
 	if ($InstallDotNetFramework472) {
-		Write-Host "Installing CMake..."
+		Write-Host "Installing .NET472..."
 		choco install dotnet4.7.2 -y
 	}
 }
