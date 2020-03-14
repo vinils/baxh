@@ -222,7 +222,7 @@ Function SetupMachine
 		[switch]$InstallIIS,
 		[switch]$InstallDotNetFramework472,
 		[switch]$InstallChrome,
-		[switch]$InstallDotNetFramework472,
+		[switch]$InstallSQLManagementStudio,
 		[switch]$InstallDotNetFramework472,
 		[switch]$InstallDotNetFramework472,
 		[switch]$InstallDotNetFramework472,
@@ -285,6 +285,7 @@ Function SetupMachine
 	-or $InstallPython2_7_15 `
 	-or $InstallCMake `
 	-or $InstallChrome `
+	-or $InstallSQLManagementStudio `
 	-or $InstallCurl) {
 		Write-Host "Installing chocolatey..."
 		Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
@@ -340,6 +341,11 @@ Function SetupMachine
 	if ($InstallChrome) {
 		Write-Host "Installing CMake..."
 		choco install -y --limit-output googlechrome --ignore-checksums
+	}
+	
+	if ($InstallSQLManagementStudio) {
+		Write-Host "Installing CMake..."
+		choco install -y --limit-output --no-progress sql-server-management-studio
 	}
 	
 	if ($InstallIIS) {
