@@ -38,7 +38,7 @@ Extend-WinOSDiskSize -Session $Session
 Write-Host "Renaming computer name"  
 Invoke-Command -Session $global:Session -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:VMName }  
 
-SetupMachine -EnableVMIntegrationService -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChrome -Install7Zip -InstallNotepadPlusPlus -InstallGit
+SetupMachine -EnableVMIntegrationService -UACLower -DisableFirewall -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChrome -Install7Zip -InstallNotepadPlusPlus -InstallGit
 
 Restart-VM $global:VMName -Force  
 Wait-VM -Session $global:Session 
