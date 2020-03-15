@@ -25,26 +25,37 @@ $global:HyperVSource='https://raw.githubusercontent.com/vinils/baxh/master/hyper
 iex (iwr $global:HyperVSource -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)  
 ```
 
+## SetUp VM
+```powershell
 $global:Session = New-PSSession -VMName $global:VMName -Credential $global:VMCredential  
 SetDefaultScriptsSession  
 
-## SetUp VM
-```powershell
 ####### Optional #######
-Resize-VHD -Path 'F:\Hyper-V\Virtual Hard Disks\' -SizeBytes 90GB
+Resize-VHD -Path 'F:\Hyper-V\Virtual Hard Disks\VMDev1.vhdx' -SizeBytes 90GB
 Extend-WinOSDiskSize -Session $Session
 ########################
 
 Write-Host "Renaming computer name"  
 Invoke-Command -Session $global:Session -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:VMName }  
 
-SetupMachine -EnableVMIntegrationService -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions
+SetupMachine -EnableVMIntegrationService -UACLower -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChrome -Install7Zip -InstallNotepadPlusPlus -InstallGit
 
--UnpinEdge -UnpinMSStore -UnpinMail -DisableWindowsDefender -InstallChrome -Install7Zip -InstallNotepadPlusPlus -InstallGit -InstallDockerCli -InstallDotNetFramework471DeveloperPack -InstallWindowsSubsystemLinux -InstallVirtualMachinePlatform -InstallHyperV -InstallSQLManagementStudio -InstallVisualStudio2019Community -InstallPython2_7_15 -InstallCurl -InstallCMake  
+Restart-VM $global:VMName -Force  
+Wait-VM -Session $global:Session 
+SetDefaultScriptsSession  
+
+SetupMachine -DisableWindowsDefender -UnpinEdge -UnpinMSStore -UnpinMail -InstallDockerCli -InstallDotNetFramework471DeveloperPack -InstallWindowsSubsystemLinux -InstallVirtualMachinePlatform -InstallHyperV -InstallSQLManagementStudio -InstallVisualStudio2019Community -InstallCurl -InstallPython2_7_15 -InstallCMake  
 
 Write-Host "enalbe hyperv remote connection"
 RunVMCommand -Command "Add-Content -Path C:\windows\System32\drivers\etc\hosts. -Value '192.168.15.251          SRV1 '"
-RunVMCommand -Command "Enable-PSRemoting -Force"
+#Invoke-Command -Session $global:Session -ScriptBlock { 
+#	$networkListManager = [Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]'{DCB00C01-570F-4A9B-8D69-199FDBA5723B}')) 
+#	$connections = $networkListManager.GetNetworkConnections() 
+#	# Set network location to Private for all networks 
+#	$connections | % {$_.GetNetwork().SetCategory(1)}
+#}
+#RunVMCommand -Command "Enable-PSRemoting -Force"
+RunVMCommand -Command "Enable-PSRemoting -SkipNetworkProfileCheck"
 RunVMCommand -Command "Set-Item WSMan:\localhost\Client\TrustedHosts -Value SRV1 -Force"
 RunVMCommand -Command "Enable-WSManCredSSP -Role client -DelegateComputer SRV1 -Force"
 
