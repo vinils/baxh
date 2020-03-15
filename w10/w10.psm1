@@ -230,7 +230,8 @@ Function SetupMachine
 		[switch]$DisableWindowsDefender,
 		[switch]$UnpinEdge,
 		[switch]$UnpinMSStore,
-		[switch]$UnpinMail
+		[switch]$UnpinMail,
+		[switch]$DisableFirewall
 	)
 
 	if($EnableRDP) {
@@ -254,6 +255,13 @@ Function SetupMachine
 		Write-Host "---> Lowering UAC"
 		Write-Host "-----------------------------------------------------"
 		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+	}
+
+	if ($DisableFirewall) {
+		Write-Host "-----------------------------------------------------"
+		Write-Host "---> Disabling firewall"
+		Write-Host "-----------------------------------------------------"
+		NetSh Advfirewall set allprofiles state off
 	}
 
 	if ($UnpinEdge) {
