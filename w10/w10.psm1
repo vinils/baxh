@@ -258,23 +258,23 @@ Function SetupMachine
 
 	if ($UnpinEdge) {
 		Write-Host "-----------------------------------------------------"
-		Write-Host "---> UnpinEdge"
+		Write-Host "---> Unpinning Edge"
 		Write-Host "-----------------------------------------------------"
-		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+		DoUnpin 'Microsoft Edge'
 	}
 
 	if ($UnpinMSStore) {
 		Write-Host "-----------------------------------------------------"
-		Write-Host "---> UnpinEdge"
+		Write-Host "---> Unpinning MS Store"
 		Write-Host "-----------------------------------------------------"
-		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+		DoUnpin 'Microsoft Store'
 	}
 
 	if ($UnpinMail) {
 		Write-Host "-----------------------------------------------------"
-		Write-Host "---> UnpinEdge"
+		Write-Host "---> Unpinning Mail"
 		Write-Host "-----------------------------------------------------"
-		Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+		DoUnpin 'Mail'
 	}
 	
 	#DoPin 'Google Chrome'; DoPin 'Visual Studio 2019'
