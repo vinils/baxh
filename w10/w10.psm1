@@ -219,7 +219,7 @@ Function SetupMachine
 		[switch]$InstallCMake,
 		[switch]$InstallNugetPackageProvider,
 		[switch]$InstallNugetPSWindowsUpdate,
-		[switch]$InstallIIS,
+		[switch]$InstallIISASPNET45,
 		[switch]$InstallDotNetFramework472,
 		[switch]$InstallChrome,
 		[switch]$InstallSQLManagementStudio,
@@ -462,6 +462,13 @@ Function SetupMachine
 		Write-Host "---> Installing VirtualMachinePlatform..."
 		Write-Host "-----------------------------------------------------"
 		DISM /online /enable-feature /NoRestart /FeatureName:VirtualMachinePlatform -NoRestart
+	}
+
+	if ($InstallIISASPNET45) {
+		Write-Host "-----------------------------------------------------"
+		Write-Host "---> Installing IIS ASPNET45..."
+		Write-Host "-----------------------------------------------------"
+		dism /online /enable-feature /all /featurename:IIS-ASPNET45 -NoRestart
 	}
 
 	if ($InstallHyperV) {
