@@ -38,13 +38,13 @@ Extend-WinOSDiskSize -Session $Session
 Write-Host "Renaming computer name"  
 Invoke-Command -Session $global:Session -ScriptBlock { Rename-computer -computername $(HOSTNAME) -newname $using:VMName }  
 
-SetupMachine -UnpinEdge -UnpinMSStore -UnpinMail -EnableVMIntegrationService -UACLower -DisableFirewall -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChrome -Install7Zip -InstallNotepadPlusPlus -InstallGit
+SetupMachine -UnpinEdge -UnpinMSStore -UnpinMail -EnableVMIntegrationService -UACLower -DisableFirewall -ControlPainelSmallIcons -ShowHiddenFiles -ShowFileExtensions -InstallChrome -Install7Zip -InstallNotepadPlusPlus -DisableWindowsDefender
 
 Restart-VM $global:VMName -Force  
 Wait-VM -Session $global:Session 
 SetDefaultScriptsSession  
 
-SetupMachine -DisableWindowsDefender -InstallDockerCli -InstallDotNetFramework471DeveloperPack -InstallWindowsSubsystemLinux -InstallVirtualMachinePlatform -InstallHyperV -InstallSQLManagementStudio -InstallVisualStudio2019Community -InstallCurl -InstallPython2_7_15 -InstallCMake  
+SetupMachine -InstallGit -InstallDockerCli -InstallDotNetFramework471DeveloperPack -InstallWindowsSubsystemLinux -InstallVirtualMachinePlatform -InstallHyperV -InstallSQLManagementStudio -InstallVisualStudio2019Community -InstallCurl -InstallPython2_7_15 -InstallCMake  
 
 Write-Host "enalbe hyperv remote connection"
 RunVMCommand -Command "Add-Content -Path C:\windows\System32\drivers\etc\hosts. -Value '192.168.15.251          SRV1 '"
