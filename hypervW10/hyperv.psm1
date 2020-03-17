@@ -70,7 +70,7 @@ Function SetupMachine
 		[switch]$InstallCMake,
 		[switch]$InstallNugetPackageProvider,
 		[switch]$InstallNugetPSWindowsUpdate,
-		[switch]$InstallIIS,
+		[switch]$InstallIISASPNET45,
 		[switch]$InstallDotNetFrameWork35,
 		[switch]$InstallDotNetFramework472,
 		[switch]$InstallChrome,
