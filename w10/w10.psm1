@@ -159,11 +159,10 @@ Function New-VMW10
 Function Wait-VM
 {
 	Param(
-		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session
+		[string]$Name=$Global:VMName,
+		[System.Management.Automation.PSCredential]$Credential=$Global:VMCredential
 	)
 	
-	$Name=$Session.ComputerName
-
 	# Turn on virtual machine if it is not running
 	If ((Get-VM -Name $Name).State -eq "Off") {
 		Write-Host "Starting VM $($global:VMName)"
@@ -181,7 +180,7 @@ Function Wait-VM
 		} 
 		
 		Start-Sleep -sec 1
-		$psReady = Invoke-Command -Session $global:Session `
+		$psReady = Invoke-Command -VMName $Name -Credential $Credential `
 			-ScriptBlock { $True } -ErrorAction SilentlyContinue
 	} 
 	until ($psReady)
