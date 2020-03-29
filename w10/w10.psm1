@@ -156,6 +156,37 @@ Function New-VMW10
 	
 }
 
+Function Wait-VM
+{
+	Param(
+		[System.Management.Automation.Runspaces.PSSession]$Session=$Global:Session
+	)
+	
+	$Name=$Session.ComputerName
+
+	# Turn on virtual machine if it is not running
+	If ((Get-VM -Name $Name).State -eq "Off") {
+		Write-Host "Starting VM $($global:VMName)"
+		Start-VM -Name $Name -ErrorAction Stop | Out-Null
+	}
+
+	hyper-v\Wait-VM -Name $Name -For Heartbeat
+	#Start-Sleep -Seconds 20
+	$startTime = Get-Date
+	do {
+		$timeElapsed = $(Get-Date) - $startTime
+		if ($($timeElapsed).TotalMinutes -ge 10) {
+			Write-Host "Could not connect to PS Direct after 10 minutes"
+			throw
+		} 
+		
+		Start-Sleep -sec 1
+		$psReady = Invoke-Command -Session $global:Session `
+			-ScriptBlock { $True } -ErrorAction SilentlyContinue
+	} 
+	until ($psReady)
+}
+
 # #$global:VMName="#W10Temp"
 # #$global:VMCredential=$(Get-Credential MyVMUser)
 # #$global:WindowsSource='https://raw.githubusercontent.com/vinils/baxh/master/windows/windows.psm1'
