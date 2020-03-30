@@ -48,5 +48,5 @@ Stop-VM -Name $global:VMName -Force
 
 
 
---docker-machine create -d hyperv dckMyHealth1  
+--docker-machine create --hyperv-disk-size "500000" --hyperv-memory "15000" --hyperv-cpu-count "3" -d hyperv dckMyHealth1  
 --docker-machine env dckMyHealth1  
