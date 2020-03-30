@@ -48,5 +48,9 @@ Stop-VM -Name $global:VMName -Force
 
 
 
---docker-machine create --hyperv-disk-size "500000" --hyperv-memory "15000" --hyperv-cpu-count "3" -d hyperv dckMyHealth1  
+--docker-machine create --hyperv-disk-size "500000" --hyperv-memory "15000" --hyperv-cpu-count "3" -d hyperv dckMyHealth1 
+#change nat mac address ip  
+docker-machine restart dckmyhealth1  
+docker-machine regenerate-certs dckmyhealth1  
+ssh-keygen -R 192.168.15.147  
 --docker-machine env dckMyHealth1  
