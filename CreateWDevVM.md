@@ -58,6 +58,9 @@ Invoke-Command -Session $Session -ScriptBlock {
 	SetupMachine -InstallGit -InstallDockerCli -InstallDotNetFramework471DeveloperPack -InstallWindowsSubsystemLinux -InstallVirtualMachinePlatform -InstallHyperV -InstallSQLManagementStudio -InstallVisualStudio2019Community -InstallCurl -InstallPython2_7_15 -InstallCMake  
 }
 
+Restart-VM $global:VMName -Force  
+Wait-VM -Name $VMName -Credential $VMCredential
+
 Invoke-Command -Session $Session -ScriptBlock {
 	Write-Host "enalbe hyperv remote connection"
 	Add-Content -Path C:\windows\System32\drivers\etc\hosts. -Value '192.168.15.251          SRV1 '
