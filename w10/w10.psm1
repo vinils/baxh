@@ -149,11 +149,6 @@ Function New-VMW10
 	}
 
 	$VM = $VM | Set-VM @SetVMParam
-	
-	Write-Host "Startting VM"
-	Start-VM -Name $Name
-	hyper-v\Wait-VM -Name $Name -For Heartbeat
-	
 }
 
 Function Wait-VM
