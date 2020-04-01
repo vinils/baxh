@@ -51,8 +51,8 @@ Invoke-Command -Session $Session -ScriptBlock {
 
 Restart-VM $global:VMName -Force  
 Wait-VM -Name $VMName -Credential $VMCredential
-
 $session=New-PSSession -VMName $VMName -Credential $VMCredential
+
 Invoke-Command -Session $Session -ScriptBlock {
 	iex (iwr $using:W10Source -Headers @{"Cache-Control"="no-cache"} -UseBasicParsing | Select-Object -Expand Content)
 	SetupMachine -InstallGit -InstallDockerCli -InstallDotNetFramework471DeveloperPack -InstallWindowsSubsystemLinux -InstallVirtualMachinePlatform -InstallHyperV -InstallSQLManagementStudio -InstallVisualStudio2019Community -InstallCurl -InstallPython2_7_15 -InstallCMake  
@@ -60,6 +60,7 @@ Invoke-Command -Session $Session -ScriptBlock {
 
 Restart-VM $global:VMName -Force  
 Wait-VM -Name $VMName -Credential $VMCredential
+$session=New-PSSession -VMName $VMName -Credential $VMCredential
 
 Invoke-Command -Session $Session -ScriptBlock {
 	Write-Host "enalbe hyperv remote connection"
