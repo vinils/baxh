@@ -7,11 +7,13 @@ iex (iwr $global:W10Source -Headers @{"Cache-Control"="no-cache"} -UseBasicParsi
 
 ## Create VM
 ```powershell
-$global:VMName="VMDev1"  
+$VMName="VMDev1"  
 $DefaultPassword = (new-object System.Security.SecureString)  
-$global:VMCredential = New-Object System.Management.Automation.PSCredential ("MyUser", $DefaultPassword)  
+$VMCredential = New-Object System.Management.Automation.PSCredential ("MyUser", $DefaultPassword)  
 
 New-VMW10 `
+	-Name $VMName `
+	-Credential $VMCredential `
 	-VHDTemplate 'E:\Hyper-V\Virtual Hard Disks\W10Temp.vhdx' `
 	-VHDFolderPath 'F:\Hyper-V\Virtual Hard Disks\' `
 	-SwitchName "ExternalSwitch"
