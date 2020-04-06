@@ -52,3 +52,10 @@ Set-Location 'C:\Program Files\Balloon'
 #Enter-PSSession -ComputerName <server core ip or hostname> -Credential <server core username>
 
 #wmic logicaldisk get size,freespace,caption
+
+
+#Enable Remote disk management
+Enable-NetFirewallRule -name RVM-RPCSS-In-TCP,RVM-VDSLDR-In-TCP,RVM-VDS-In-TCP
+Configure-smremoting.exe -enable
+Enable-NetFirewallRule -DisplayGroup “Disk Management”
+Enable-NetFirewallRule -displayGroup “Remote Volume Management”
