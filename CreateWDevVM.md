@@ -66,7 +66,7 @@ $session=New-PSSession -VMName $VMName -Credential $VMCredential
 
 Invoke-Command -Session $Session -ScriptBlock {
 	Write-Host "enalbe hyperv remote connection"
-	Add-Content -Path C:\windows\System32\drivers\etc\hosts. -Value '192.168.15.251          SRV1 '
+	Add-Content -Path C:\windows\System32\drivers\etc\hosts. -Value '192.168.15.3          SRV1 '
 	#Invoke-Command -Session $global:Session -ScriptBlock { 
 	#	$networkListManager = [Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]'{DCB00C01-570F-4A9B-8D69-199FDBA5723B}')) 
 	#	$connections = $networkListManager.GetNetworkConnections() 
